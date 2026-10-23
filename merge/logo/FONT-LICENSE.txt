@@ -1,0 +1,9 @@
+Logo / art fonts (all SIL Open Font License 1.1 — free for commercial use; images rendered from them can be used freely):
+- Resource Han Rounded CN Heavy (源柔黑体, based on Adobe Source Han Sans) by Cyano Hao — logo letters, button labels
+- LXGW WenKai TC Bold (霞鹜文楷 TC) by LXGW — mahjong tile faces (萬 東 南 西 北 中 發), 發 on logo option A
+- Ma Shan Zheng (马善政毛笔楷书) — red seal 「雀」 on logo option C
+Logo sources: logo/optA.py, optB.py, optC.py (SVG composed from real font glyph outlines via fontTools; contours split so
+the 「口」 of 合 can be replaced), rendered by logo/render.py. Fonts themselves are not shipped in the repo (size).
+Option A (live): 金漆糖果字 — 「一」是一根翠绿竹条(一条)，「合」的「口」换成一张白板牌(白板蓝框本身就是个“口”，呼应“合到白板”)，右上角一筒/中/發 扇形牌。
+Option B: 开杠四连牌 — 四张大象牙麻将牌一字排开，每张刻一个字(一=竹条, 合=朱红, 到=藏青, 底=翠绿)，「合」戴金冠。
+Option C: 翡翠玉字 — 绿玉字配金边，「一」是竹节，「合」的「口」是一筒圆饼，朱红印章「雀」，底下一排牌。

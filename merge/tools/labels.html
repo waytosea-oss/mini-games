@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:WK;src:url(../logo/fonts/wenkai.ttf)}
+@font-face{font-family:HY;src:url(../logo/fonts/ResourceHanRoundedCN-Heavy.ttf)}</style></head><body>
+<canvas id="c" width="1024" height="1024"></canvas>
+<script>
+const L=[
+ ['deal','发牌',110,'#fff','#0b3d5c','HY'],['merge','合成',110,'#fff','#0d4a1c','HY'],
+ ['goal','本关目标',52,'#ffe9a6','#5a2a00','WK'],['temp','临时解锁',60,'#7a2a00','#fff3c4','HY'],
+ ['undo','撤销',56,'#fff','#5a2a00','HY'],['clear','消除',56,'#fff','#5a2a00','HY'],['rank','排行榜',44,'#fff','#3a1a00','HY'],
+ ['sort','理牌',56,'#fff','#5a2a00','HY'],
+];
+const c=document.getElementById('c'),x=c.getContext('2d');const meta={};
+(async()=>{
+ await document.fonts.load('700 40px WK','本关目标');await document.fonts.load('40px HY','发牌合成临时解锁撤销消除排行榜理牌');
+ let y=0;
+ for(const [k,s,sz,fill,stroke,f] of L){
+  x.font=`${f==='WK'?'700 ':''}${sz}px ${f}`;const w=Math.ceil(x.measureText(s).width+sz*.5),h=Math.ceil(sz*1.4);
+  x.textBaseline='middle';x.textAlign='center';x.lineJoin='round';
+  const cx=w/2,cy=y+h/2;
+  x.strokeStyle=stroke;x.lineWidth=sz*.2;x.strokeText(s,cx,cy+sz*.05);
+  x.strokeText(s,cx,cy);
+  if(fill==='#fff'){const g=x.createLinearGradient(0,cy-sz/2,0,cy+sz/2);g.addColorStop(0,'#ffffff');g.addColorStop(.55,'#fff7d6');g.addColorStop(1,'#ffd77a');x.fillStyle=g;} else x.fillStyle=fill;
+  x.fillText(s,cx,cy);
+  meta[k]=[0,y,w,h];y+=h+4;
+ }
+ window.META=meta;document.title='done';
+})();
+</script></body></html>
