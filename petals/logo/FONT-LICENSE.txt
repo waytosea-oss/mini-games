@@ -1,0 +1,3 @@
+Logo font: Resource Han Rounded CN Heavy (源柔黑体, derived from Adobe Source Han Sans) by Cyano Hao.
+License: SIL Open Font License 1.1. Free for commercial use; logo images rendered from it can be used freely. The font is not redistributed with the game.
+Logo sources: logo/lib.py + logo/make.py build SVG from the font's glyph outlines (petal and leaf strokes are custom vector paths), and logo/render.py renders them.
