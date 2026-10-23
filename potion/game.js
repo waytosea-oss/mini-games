@@ -836,7 +836,7 @@ function drawTutorial() {
 }
 function render() {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  if (mode !== 'play' || !G) { if (IMG.shop) drawMenuBG(); else { ctx.fillStyle = '#1a0b2e'; ctx.fillRect(0, 0, W, H); } return; }
+  if (mode !== 'play' || !G) { if (IMG.shop) drawMenuBG(); else { ctx.fillStyle = '#1a0b2e'; ctx.fillRect(0, 0, W, H); } if ($('menu').classList.contains('on')) drawTitleWitch(); return; }
   drawShop(); drawCustomers(); drawCounter(); drawMotes(.6); drawShelves();
   const active = new Set(G.pours.filter(p => !p.cau).map(p => p.a));
   G.vt.forEach((v, i) => {
@@ -848,6 +848,106 @@ function render() {
   for (const p of G.pours) { if (p.cau) continue; const v = G.vt[p.a], pose = pourPose(p); v.dirLip = p.dir * v.g.lipX; drawTubeAt(p.a, 0, 0, pose.th, pose.pv); }
   if (G.hint && !G.pours.length) { const i = G.sel === G.hint[0] ? G.hint[1] : G.hint[0], v = G.vt[i]; if (v) drawWand(v.x + LY.fw * .2, v.y - v.g.top * .5 - v.lift); }
   drawFlying(); drawParts(); drawHUD(); drawProps(); drawTutorial();
+}
+
+/* ---------- 封面小女巫：AI 生成的透明底序列帧（24fps · 120 帧无缝循环） ---------- */
+const WITCH = { fw: 392, fh: 511, cols: 6, per: 24, n: 120, fps: 24, body: [12,  15,  345,  498], nSheets: 5,
+  // 每帧魔杖星尖 / 药水瓶中心（精灵帧坐标，x,y 交错），用于实时星光粒子跟随
+  tip: [329,179,331,181,334,183,337,184,340,184,342,182,342,175,339,165,334,152,327,138,319,125,308,115,299,108,293,106,291,107,294,112,300,120,309,130,319,142,329,156,338,168,343,177,347,182,347,180,345,174,341,163,334,150,326,137,316,125,306,115,298,108,292,105,290,105,293,110,299,118,309,128,319,140,328,153,335,164,341,172,343,175,344,173,342,166,337,155,329,143,320,130,310,119,300,111,293,107,291,108,293,114,301,123,311,134,322,146,332,159,339,170,344,177,347,178,346,174,342,165,334,153,324,140,314,127,306,117,299,110,297,107,298,108,303,113,310,121,317,130,325,141,331,150,336,157,339,162,340,162,338,157,334,150,327,140,319,130,309,122,301,115,293,108,288,104,285,103,285,104,287,107,291,113,296,120,301,129,306,139,313,149,319,157,324,165,327,170,327,174,328,177,329,177,329,178,329,179,328,179,328,178,328,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178,327,178],
+  flask: [47,263,48,265,49,266,49,268,50,269,50,270,49,270,48,270,48,269,46,267,46,265,45,263,45,262,45,261,46,260,47,261,49,262,50,264,52,266,53,269,54,271,54,274,54,277,54,279,53,280,52,280,50,279,48,277,47,274,46,271,46,268,45,266,46,264,46,262,47,262,49,263,51,265,52,268,53,271,54,274,54,277,53,278,52,279,51,278,49,276,48,273,46,270,45,266,45,263,45,261,46,261,47,262,49,264,51,267,53,270,54,274,54,277,54,279,54,280,52,280,51,279,49,277,47,274,46,270,45,267,45,264,45,263,46,263,48,263,50,265,52,268,53,271,54,275,55,277,54,280,54,281,53,282,51,281,50,280,48,279,46,276,45,273,44,271,44,269,45,267,45,266,47,266,48,267,50,267,52,268,53,269,54,270,54,270,54,270,53,270,52,269,50,268,48,267,47,266,46,265,45,264,44,264,44,263,44,263,45,262,45,262,46,262,46,262,47,262,47,262,48,263,48,263,48,263,47,263,47,263,47,263,47,263,46,263,47,263,47,263],
+  sheets: [], ok: false, t: 0, parts: [], cdW: 0, cdF: .3, r: null, rc: 0, last: 0 };
+const WITCH_STATIC = { w: 390, h: 560, body: [3, 3, 387, 557] }; // assets/witch.webp 与首帧同姿势，序列帧就绪前做占位
+function loadWitch() {
+  let left = WITCH.nSheets, failed = false;
+  for (let i = 0; i < WITCH.nSheets; i++) {
+    const im = new Image(); let tried = false;
+    im.onload = () => {
+      // 解码一次后转成画布，避免每帧重复解码大图
+      try { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); WITCH.sheets[i] = c; } catch (e) { }
+      if (--left === 0 && !failed) { WITCH.ok = true; WITCH.t = 0; }
+    };
+    im.onerror = () => { if (!tried) { tried = true; im.src = 'assets/witch/witch_' + i + '.png'; } else failed = true; }; // 不支持 WebP 的老设备回退 PNG
+    im.src = 'assets/witch/witch_' + i + '.webp'; WITCH.sheets[i] = im;
+  }
+}
+// 预渲染发光精灵：四芒星光 / 五角星 / 柔光圆，按颜色缓存
+const WSPR = {};
+function wSprite(kind, col) {
+  const key = kind + col; if (WSPR[key]) return WSPR[key];
+  const S = 48, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d'), m = S / 2;
+  const g = x.createRadialGradient(m, m, 0, m, m, m); g.addColorStop(0, hexA(col, .55)); g.addColorStop(.35, hexA(col, .18)); g.addColorStop(1, hexA(col, 0));
+  x.fillStyle = g; x.fillRect(0, 0, S, S);
+  if (kind === 'star') { star(x, m, m, 11, 4.6); x.fillStyle = col; x.fill(); star(x, m, m - 1, 5, 2.2); x.fillStyle = '#fffbe6'; x.fill(); }
+  else if (kind === 'spark') { sparkle(x, m, m, 13, col); sparkle(x, m, m, 6, '#ffffff'); }
+  else { x.fillStyle = '#ffffff'; x.beginPath(); x.arc(m, m, 3.2, 0, 7); x.fill(); }
+  return (WSPR[key] = c);
+}
+function wGlow(col) {
+  const key = 'glow' + col; if (WSPR[key]) return WSPR[key];
+  const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'), g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, hexA(col, .5)); g.addColorStop(.45, hexA(col, .16)); g.addColorStop(1, hexA(col, 0)); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  return (WSPR[key] = c);
+}
+const W_WAND = ['#ffe27a', '#ffe27a', '#fff6c8', '#ffb8ec', '#8ff8ea'], W_FLASK = ['#ff7ad8', '#ffb8ec', '#ff5cc8', '#e0a8ff'];
+function drawTitleWitch() {
+  const now = performance.now() / 1000, dt = WITCH.last ? Math.min(.05, now - WITCH.last) : .016; WITCH.last = now;
+  if (!WITCH.r || ++WITCH.rc % 30 === 0 || WITCH.rw !== W || WITCH.rh !== H) { const el = $('mWitch'); if (!el) return; WITCH.r = el.getBoundingClientRect(); WITCH.rw = W; WITCH.rh = H; }
+  const r = WITCH.r; if (!r.width) { WITCH.r = null; return; }
+  const sm = IMG.witch; if (!WITCH.ok && !(sm && sm.naturalWidth)) return;
+  WITCH.t += dt; const t = TIME;
+  // 身体宽度略大于原静态图（×1.06）；轻柔悬浮 + 微摆
+  const bw = r.width * (WITCH_STATIC.body[2] - WITCH_STATIC.body[0]) / WITCH_STATIC.w * 1.06;
+  const dy = Math.sin(t * 1.55) * 4.5 + Math.sin(t * 3.1) * 1.2, dx = Math.sin(t * .8) * 2, rot = Math.sin(t * 1.1) * .018;
+  const cx = r.left + r.width / 2 + dx, cy = r.top + r.height * .5 + dy;
+  // 地面柔影：飘高时变淡变小
+  const ss = 1 - dy * .025, shw = bw * .7 * ss;
+  ctx.save(); ctx.globalAlpha = clamp(.9 * ss, 0, 1); ctx.drawImage(wGlow('#000000'), r.left + r.width / 2 - shw / 2, r.bottom + r.height * .02 - shw * .09, shw, shw * .18);
+  // 魔法光晕：身后淡紫光、药水瓶粉光（呼吸）
+  ctx.globalCompositeOperation = 'lighter';
+  const gw = bw * 1.35, pu = .75 + .25 * Math.sin(t * 2.2);
+  ctx.globalAlpha = .38 * pu; ctx.drawImage(wGlow('#a65aff'), cx - gw / 2, cy - gw * .55, gw, gw * 1.05);
+  ctx.restore();
+  // 女巫本体
+  let k, bcx, bcy, f = 0;
+  if (WITCH.ok) { f = Math.floor(WITCH.t * WITCH.fps) % WITCH.n; const B = WITCH.body; k = bw / (B[2] - B[0]); bcx = (B[0] + B[2]) / 2 * k; bcy = (B[1] + B[3]) / 2 * k; }
+  else { const B = WITCH_STATIC.body; k = bw / (B[2] - B[0]); bcx = (B[0] + B[2]) / 2 * k; bcy = (B[1] + B[3]) / 2 * k; }
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  if (WITCH.ok) { const j = f % WITCH.per; ctx.drawImage(WITCH.sheets[(f / WITCH.per) | 0], (j % WITCH.cols) * WITCH.fw, ((j / WITCH.cols) | 0) * WITCH.fh, WITCH.fw, WITCH.fh, -bcx, -bcy, WITCH.fw * k, WITCH.fh * k); }
+  else ctx.drawImage(sm, -bcx, -bcy, WITCH_STATIC.w * k, WITCH_STATIC.h * k);
+  ctx.restore();
+  // 跟随动画的魔杖星尖、药水瓶位置（静态占位时用首帧位置）
+  const ca = Math.cos(rot), sa = Math.sin(rot);
+  const kk = WITCH.ok ? k : bw / (WITCH.body[2] - WITCH.body[0]), ox = (WITCH.body[0] + WITCH.body[2]) / 2 * kk, oy = (WITCH.body[1] + WITCH.body[3]) / 2 * kk;
+  const P = (arr) => { const px = arr[f * 2] * kk - ox, py = arr[f * 2 + 1] * kk - oy; return [cx + px * ca - py * sa, cy + px * sa + py * ca]; };
+  const [tx, ty] = P(WITCH.tip), [fx, fy] = P(WITCH.flask);
+  const tvx = WITCH.ptx == null ? 0 : (tx - WITCH.ptx) / Math.max(dt, .001), tvy = WITCH.pty == null ? 0 : (ty - WITCH.pty) / Math.max(dt, .001); WITCH.ptx = tx; WITCH.pty = ty;
+  const sp = Math.hypot(tvx, tvy), u = bw / 200; // u：按女巫尺寸缩放粒子
+  // 药水瓶呼吸粉光 + 杖尖小光点
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const fg = bw * .5 * (.9 + .1 * Math.sin(t * 3.3)); ctx.globalAlpha = .55 + .2 * Math.sin(t * 3.3); ctx.drawImage(wGlow('#ff5cc8'), fx - fg / 2, fy - fg / 2, fg, fg);
+  const tg = bw * .22 * (.85 + .15 * Math.sin(t * 7)); ctx.globalAlpha = .7; ctx.drawImage(wGlow('#fff2a8'), tx - tg / 2, ty - tg / 2, tg, tg);
+  ctx.restore();
+  // 发射：杖尖星光（挥动越快越多，沿轨迹拖尾），药水瓶冒出粉色闪光泡泡
+  const PS = WITCH.parts;
+  if ((WITCH.cdW -= dt * (1 + Math.min(4, sp / (60 * u)))) <= 0 && PS.length < 46) {
+    WITCH.cdW = .11 + Math.random() * .1;
+    const a = Math.random() * 6.283, v = (8 + Math.random() * 22) * u;
+    PS.push({ x: tx + (Math.random() - .5) * 6 * u, y: ty + (Math.random() - .5) * 6 * u, vx: Math.cos(a) * v - tvx * .06, vy: Math.sin(a) * v - tvy * .06 - 6 * u, g: 14 * u, s: (.45 + Math.random() * .5) * u, rot: Math.random() * 6, vr: (Math.random() - .5) * 3, k: Math.random() < .42 ? 'star' : 'spark', c: W_WAND[(Math.random() * W_WAND.length) | 0], life: 0, max: .9 + Math.random() * .8, ph: Math.random() * 6 });
+  }
+  if ((WITCH.cdF -= dt) <= 0 && PS.length < 46) {
+    WITCH.cdF = .16 + Math.random() * .2;
+    const bub = Math.random() < .55;
+    PS.push({ x: fx + (Math.random() - .5) * bw * .16, y: fy - bw * .02 + (Math.random() - .5) * bw * .1, vx: (Math.random() - .5) * 8 * u, vy: -(16 + Math.random() * 18) * u, g: -4 * u, s: (bub ? .5 + Math.random() * .6 : .35 + Math.random() * .4) * u, rot: 0, vr: (Math.random() - .5) * 2, k: bub ? 'dot' : 'spark', c: W_FLASK[(Math.random() * W_FLASK.length) | 0], life: 0, max: 1.1 + Math.random() * .9, ph: Math.random() * 6, wob: 1 });
+  }
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let i = PS.length - 1; i >= 0; i--) {
+    const p = PS[i]; p.life += dt; if (p.life > p.max) { PS.splice(i, 1); continue; }
+    p.vy += p.g * dt; p.vx *= (1 - 1.2 * dt); p.x += (p.vx + (p.wob ? Math.sin(p.life * 5 + p.ph) * 6 * u : 0)) * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+    const tw = .65 + .35 * Math.sin(p.life * 14 + p.ph), a = Math.min(1, p.life / .12) * Math.min(1, (p.max - p.life) / .45) * tw;
+    const sz = 48 * p.s * (p.k === 'dot' ? .7 : 1) * (1 - .35 * p.life / p.max);
+    ctx.globalAlpha = a; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.drawImage(wSprite(p.k, p.c), -sz / 2, -sz / 2, sz, sz);
+  }
+  ctx.restore();
 }
 
 /* ---------- 界面 ---------- */
@@ -974,7 +1074,7 @@ function boot() {
   return Promise.all(keys.map(k => new Promise(res => { const im = new Image(); im.onload = im.onerror = () => { done++; bar.style.width = (done / keys.length * 100) + '%'; res(); }; im.src = SRC[k]; IMG[k] = im; })));
 }
 boot().then(() => {
-  syncToggles();
+  syncToggles(); loadWitch();
   requestAnimationFrame(frame);
   setTimeout(() => {
     if (DBG.level) startLevel(DBG.level - 1); else openMenu();
