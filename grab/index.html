@@ -21,6 +21,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 #load .bar i{display:block;height:100%;width:0;background:linear-gradient(#ffd36a,#ff8a1f);border-radius:9px;transition:width .2s}
 #load p{margin-top:12px;color:#d9b38c;font-size:14px;letter-spacing:2px}
 /* title */
+.logo{display:block;width:min(96vw,430px);height:auto;margin-top:-6px;transform-origin:50% 0;animation:sway 3.6s ease-in-out infinite;filter:drop-shadow(0 12px 16px rgba(0,0,0,.55));-webkit-user-drag:none;user-select:none;pointer-events:none}
+@keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
 .title{font-size:54px;font-weight:900;letter-spacing:2px;line-height:1.05;text-align:center;color:#fff3c4;
  background:linear-gradient(180deg,#fff7d6 0%,#ffd75a 45%,#ff9a1f 70%,#ff6a00 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
  filter:drop-shadow(0 3px 0 #7a2600) drop-shadow(0 -1px 0 #7a2600) drop-shadow(2px 0 0 #7a2600) drop-shadow(-2px 0 0 #7a2600) drop-shadow(0 8px 10px rgba(0,0,0,.6))}
@@ -81,17 +83,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 <div id="safe"></div>
 
 <div id="load" class="scr on">
-  <div class="title" style="font-size:44px">夜市撸串王</div>
+  <img class="logo" src="assets/logo.webp" alt="夜市撸串王" style="width:min(78vw,320px);animation:none">
   <div class="bar"><i id="lbar"></i></div>
   <p id="ltxt">炭火预热中…</p>
 </div>
 
 <div id="menu" class="scr">
   <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button><button class="tg" id="mSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M4 9h4l5-4v14l-5-4H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#6a3100" stroke-width="2" stroke-linecap="round"/></svg></button></div>
-  <div style="flex:1"></div>
-  <div class="title">夜市<br>撸串王</div>
-  <div class="sub">抓 串 串 · 三 个 就 开 吃</div>
-  <img class="lambhero" src="assets/lamb.webp" alt="">
+  <div style="flex:.5"></div>
+  <img class="logo" id="mLogo" src="assets/logo.webp" alt="夜市撸串王">
+  <div class="sub" style="margin-top:4px">抓 串 串 · 三 个 就 开 吃</div>
   <div style="flex:1.6"></div>
   <button class="btn" id="bPlay">开始营业</button>
   <button class="btn green small" id="bLevels" style="min-width:180px">选择关卡</button>
