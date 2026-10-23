@@ -27,7 +27,7 @@
   <section id="scrLoad" class="scr show">
     <img class="ldLogo" src="assets/logo.png" alt="星际雷霆 STAR THUNDER">
     <div class="ldBar"><i id="ldFill"></i></div>
-    <div class="ldTxt" id="ldTxt">LOADING 0%</div>
+    <div class="ldTxt" id="ldTxt">加载中 0%</div>
   </section>
 
   <!-- title -->
@@ -38,6 +38,7 @@
       <h1 class="tCn"><img id="tLogoImg" src="assets/logo.png" alt="星际雷霆 STAR THUNDER" draggable="false"><i class="tShine"></i></h1>
       <div class="tSub">— 银河防线保卫战 —</div>
     </div>
+    <img class="tShip" id="tShip" src="assets/ship/ship_static.webp" width="520" height="540" alt="">
     <div class="tMenu">
       <button class="btn big gold" id="btnStart">开始游戏</button>
       <button class="btn big blue" id="btnHangar1">机　库</button>
@@ -47,7 +48,7 @@
       </div>
     </div>
     <div class="tHi" id="tHi"></div>
-    <div class="tTap" id="tTap">TAP TO START</div>
+    <div class="tTap" id="tTap">点击屏幕开始</div>
     <div class="tCopy">© 2026 原创作品 · 全部美术与音乐原创</div>
   </section>
 
@@ -151,5 +152,60 @@
 <script src="js/game.js"></script>
 <script src="js/render.js"></script>
 <script src="js/ui.js"></script>
+<script src="mascot.js"></script>
+<script>
+/* 封面像素战机：三喷口尾焰脉动、左右压坡摆动、机身扫光（手工像素序列帧 · 24fps · 96 帧无缝循环）；
+   实时像素尾焰火花、高速星流、护盾闪烁与蓝色引擎光晕 */
+(function () {
+  const M = {"fw":520,"fh":540,"cols":6,"rows":4,"n":96,"fps":24,"sheets":["ship_0","ship_1","ship_2","ship_3"],"body":[26,35,494,294],"nozzles":[[180,284],[260,284],[338,284]]};
+  const scr = document.getElementById('scrTitle'), host = document.getElementById('tShip');
+  const SPK = ['#9ff3ff', '#ffffff', '#4fc8ff', '#2a8fff'], ST = [];
+  let cdP = 0, flick = 0;
+  // 主角区：副标题之下、菜单按钮之上
+  function layout() {
+    const sr = scr.getBoundingClientRect(), sub = scr.querySelector('.tSub').getBoundingClientRect(), mn = scr.querySelector('.tMenu').getBoundingClientRect();
+    const top = sub.bottom - sr.top + 6, bot = mn.top - sr.top - 4, h = Math.max(60, Math.min(bot - top, sr.height * .42));
+    host.style.top = Math.round(bot - h) + 'px'; host.style.height = Math.round(h) + 'px';
+  }
+  window.addEventListener('resize', layout); layout();
+  TitleMascot({ meta: M, base: 'assets/ship/', host, screen: scr, after: scr.querySelector('.tBg'), layout,
+    clipTop: () => scr.querySelector('.tSub'), clipBottom: () => scr.querySelector('.tMenu'), maxParts: 90, sway: 5, rot: .015,
+    back(A, S) {
+      const c = A.c, u = S.u, R = S.R;
+      // 高速星流：从上往下掠过，营造向前飞行感
+      if (ST.length < 26 && Math.random() < S.dt * 22) ST.push({ x: Math.random() * R.sw, y: R.y0 - 20, v: (380 + Math.random() * 520) * u, l: (14 + Math.random() * 30) * u, a: .25 + Math.random() * .45, w: Math.random() < .3 ? 2 : 1 });
+      c.globalCompositeOperation = 'lighter';
+      for (let i = ST.length - 1; i >= 0; i--) { const s = ST[i]; s.y += s.v * S.dt; if (s.y - s.l > R.y + R.h + 40) { ST.splice(i, 1); continue; }
+        c.globalAlpha = s.a; c.fillStyle = '#bfe4ff'; c.fillRect(Math.round(s.x), Math.round(s.y - s.l), s.w, Math.round(s.l)); }
+      const cx = S.ox + S.dw / 2 + S.dx, cy = S.oy + S.dh * .33 + S.bob;
+      A.glow('#2a8fff', cx, cy, S.dw * 1.1, S.dh * .8, .32 + .06 * Math.sin(S.t * 3));
+    },
+    front(A, S) {
+      const c = A.c, u = S.u; flick = .85 + .15 * Math.sin(S.t * 31) * Math.sin(S.t * 17);
+      c.globalCompositeOperation = 'lighter';
+      // 喷口蓝光（闪烁）+ 像素火花
+      M.nozzles.forEach((n, i) => {
+        const [x, y] = S.map(n[0], n[1] + 8), big = i === 1 ? 1.25 : 1;
+        A.glow('#4fc8ff', x, y + 30 * u * big, 70 * u * big, 150 * u * big, .55 * flick);
+        A.glow('#ffffff', x, y + 4 * u, 28 * u * big, 28 * u * big, .5 * flick);
+      });
+      if ((cdP -= S.dt) <= 0) {
+        cdP = .025 + Math.random() * .03; const i = (Math.random() * 3) | 0, n = M.nozzles[i], L = (i === 1 ? 150 : 115) * (.75 + Math.random() * .35);
+        const [x, y] = S.map(n[0] + (Math.random() - .5) * 18, n[1] + L);
+        A.add({ x, y, vx: (Math.random() - .5) * 30 * u, vy: (120 + Math.random() * 160) * u, drag: 2.2, s: (Math.random() < .3 ? .16 : .1) * Math.max(.7, u * 1.4), k: 'px', c: SPK[(Math.random() * SPK.length) | 0], max: .25 + Math.random() * .3, fin: .02, fout: .15 });
+      }
+      // 护盾闪烁：每 4 秒一次，像素点阵椭圆环 + 扫光
+      const ph = (S.t % 4) / 1.3;
+      if (ph < 1) {
+        const env = Math.sin(ph * Math.PI), B = M.body, [cx, cy] = S.map((B[0] + B[2]) / 2, (B[1] + B[3]) / 2 + 10);
+        const rx = (B[2] - B[0]) * S.k * .6, ry = (B[3] - B[1]) * S.k * .72, sw = ph * Math.PI * 2.4 - 1.2, g = Math.max(2, Math.round(3 * u));
+        A.glow('#6fe3ff', cx, cy, rx * 2.3, ry * 2.3, .16 * env);
+        c.fillStyle = '#9ff3ff';
+        for (let j = 0; j < 72; j++) { const a = j / 72 * Math.PI * 2, h = .25 + .75 * Math.max(0, Math.cos(a - sw)) ** 3;
+          c.globalAlpha = env * h * (j % 2 ? .55 : .95); c.fillRect(Math.round((cx + Math.cos(a) * rx) / g) * g, Math.round((cy + Math.sin(a) * ry) / g) * g, g, g); }
+      }
+    } });
+})();
+</script>
 </body>
 </html>

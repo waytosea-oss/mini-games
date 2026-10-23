@@ -69,7 +69,7 @@ function exitToMenu() { STATE = 'menu'; PAUSED = false; Sound.laser(false); $('#
 // ---------- title ----------
 function openTitle() {
   exitToMenu(); show('scrTitle'); updToggles();
-  $('#tHi').textContent = SAVE.hi ? 'HI-SCORE ' + String(SAVE.hi).padStart(8, '0') : '';
+  $('#tHi').textContent = SAVE.hi ? '最高分 ' + String(SAVE.hi).padStart(8, '0') : '';
   Sound.play('menu');
 }
 // ---------- map ----------
@@ -269,7 +269,7 @@ function loop(now) {
 (function boot() {
   resize(); loadSave(); updToggles();
   window.addEventListener('resize', () => { resize(); });
-  loadAssets((p) => { $('#ldFill').style.width = (p * 100 | 0) + '%'; $('#ldTxt').textContent = 'LOADING ' + (p * 100 | 0) + '%'; }).then(() => {
+  loadAssets((p) => { $('#ldFill').style.width = (p * 100 | 0) + '%'; $('#ldTxt').textContent = '加载中 ' + (p * 100 | 0) + '%'; }).then(() => {
     buildFX();
     STATE = 'menu';
     requestAnimationFrame((t) => { lastT = t; loop(t); });

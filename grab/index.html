@@ -26,6 +26,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 .title{font-size:54px;font-weight:900;letter-spacing:2px;line-height:1.05;text-align:center;color:#fff3c4;
  background:linear-gradient(180deg,#fff7d6 0%,#ffd75a 45%,#ff9a1f 70%,#ff6a00 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
  filter:drop-shadow(0 3px 0 #7a2600) drop-shadow(0 -1px 0 #7a2600) drop-shadow(2px 0 0 #7a2600) drop-shadow(-2px 0 0 #7a2600) drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+.hero{display:block;flex:1 1 0;min-height:0;width:100%;max-height:min(44vh,380px);margin:6px 0 -4px;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 10px 10px rgba(0,0,0,.55));pointer-events:none}
+@media (max-height:700px){#menu .logo{width:min(72vw,280px);margin-top:58px}#menu>div[style="flex:.5"]{flex:0!important}#menu .hero{max-height:none}}
 .sub{margin-top:10px;font-size:17px;font-weight:700;color:#ffe9c7;letter-spacing:6px;text-shadow:0 2px 4px #000c;background:rgba(120,30,10,.55);padding:5px 16px;border-radius:20px;border:1.5px solid rgba(255,200,120,.5)}
 .lambhero{width:120px;height:auto;margin:6px 0 0;animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 8px 8px rgba(0,0,0,.55))}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
@@ -101,7 +103,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
   <div style="flex:.5"></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="夜市撸串王">
   <div class="sub" style="margin-top:4px">抓 串 串 · 三 个 就 开 吃</div>
-  <div style="flex:1.6"></div>
+  <img class="hero" id="mHero" src="assets/vendor/vendor_static.webp" width="334" height="476" alt="">
   <button class="btn" id="bPlay">开始营业</button>
   <button class="btn green small" id="bLevels" style="min-width:180px">选择关卡</button>
   <div class="stat" id="mStat"></div>
@@ -159,5 +161,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 <script src="assets/matter.min.js"></script>
 <script src="audio.js"></script>
 <script src="game.js"></script>
+<script src="mascot.js"></script>
+<script>
+/* 封面烤串小哥：翻转挥舞串串、蹦跳、眨眼（AI 生成序列帧 · 24fps · 120 帧无缝循环）；炭火烟雾 + 火星 + 星光实时粒子 */
+(function () {
+  const M = {"fw":334,"fh":476,"cols":6,"rows":4,"n":120,"fps":24,"sheets":["vendor_0","vendor_1","vendor_2","vendor_3","vendor_4"],"body":[57,75,303,469],"track":[96,145,96,145,96,145,96,145,96,145,97,145,97,146,97,146,97,147,97,148,96,150,95,152,94,154,94,157,94,158,93,159,92,159,90,155,86,146,84,132,82,116,79,97,77,77,77,62,79,52,81,47,83,46,83,49,81,57,77,71,73,90,70,110,68,127,68,142,70,154,73,159,74,155,71,142,68,122,66,100,68,80,73,60,80,44,85,35,89,31,90,33,90,40,87,49,83,61,78,79,72,100,66,120,65,136,69,149,73,157,73,161,68,158,62,147,62,129,66,108,69,88,71,68,75,51,82,39,88,33,92,31,95,31,94,35,91,42,86,54,80,71,75,90,71,106,68,124,69,142,70,155,71,161,71,162,71,158,69,150,64,137,61,118,61,93,63,70,67,55,73,45,80,38,86,35,90,38,91,47,92,60,90,74,86,88,81,104,77,121,74,136,75,147,78,155,84,161,90,165,93,166,95,166,96,165,96,163,97,162,97,160,96,158,96,156,95,154,95,152,94,151,93,150,93,150,92,150,92,149,93,148,94,147,95,146,95,145,96,145]};
+  const EMB = ['#ff8a2a', '#ffb347', '#ff5a1f', '#ffd27a'], SPK = ['#ffe27a', '#fff3c4', '#ffc24a'];
+  let cdS = 0, cdE = .1, cdK = .5;
+  TitleMascot({ meta: M, base: 'assets/vendor/', host: document.getElementById('mHero'), screen: document.getElementById('menu'),
+    clipTop: () => document.querySelector('#menu .sub'), clipBottom: () => document.getElementById('bPlay'), maxParts: 80,
+    back(A, S) { // 身后暖橙光晕 + 地面柔影
+      const c = A.c, cx = S.ox + S.dw / 2 + S.dx, by = S.oy + S.dh;
+      c.globalAlpha = .5; c.drawImage(A.spr('glow', '#000000'), cx - S.dw * .3, by - S.dh * .04, S.dw * .6, S.dh * .07);
+      c.globalCompositeOperation = 'lighter'; const p = .8 + .2 * Math.sin(S.t * 2.4) + .05 * Math.sin(S.t * 11);
+      A.glow('#ff7a2a', cx, by - S.dh * .4 + S.bob, S.dw * 1.05, S.dh * .78, .3 * p);
+    },
+    front(A, S) {
+      const c = A.c, u = S.u, g = S.track(); if (!g) return;
+      const mx = g[0] + 4 * u, my = g[1] + 26 * u; // 串上的肉块中心
+      c.globalCompositeOperation = 'lighter';
+      A.glow('#ff9a3a', mx, my, 90 * u, 110 * u, .32 + .1 * Math.sin(S.t * 9) + .06 * Math.sin(S.t * 23));
+      // 炭烤烟雾：从肉串缓缓上升、变大变淡
+      if ((cdS -= S.dt) <= 0) {
+        cdS = .2 + Math.random() * .16;
+        A.add({ x: mx + (Math.random() - .5) * 26 * u, y: my - 14 * u, vx: (Math.random() - .5) * 8 * u, vy: -(26 + Math.random() * 18) * u, drag: .4, s: (.5 + Math.random() * .35) * u, grow: 1.6, k: 'smoke', c: Math.random() < .5 ? '#e8dccf' : '#c9b8a6', add: false, a: .5, max: 1.5 + Math.random() * .8, fin: .35, fout: .9, wob: 10 * u });
+      }
+      // 火星：向上蹦出、闪烁
+      if ((cdE -= S.dt) <= 0) {
+        cdE = .08 + Math.random() * .12; const a = -Math.PI / 2 + (Math.random() - .5) * 1.4, sp = (40 + Math.random() * 60) * u;
+        A.add({ x: mx + (Math.random() - .5) * 22 * u, y: my + (Math.random() - .3) * 30 * u, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 40 * u, drag: .8, s: (.12 + Math.random() * .12) * u * 1.4, k: 'dot', c: EMB[(Math.random() * EMB.length) | 0], max: .6 + Math.random() * .6, tw: .5, fin: .05, fout: .3 });
+      }
+      // 金色星光：香气四溢
+      if ((cdK -= S.dt) <= 0) {
+        cdK = .35 + Math.random() * .4;
+        A.add({ x: mx + (Math.random() - .5) * 90 * u, y: my + (Math.random() - .5) * 90 * u, vy: -10 * u, s: (.22 + Math.random() * .25) * u * 1.5, k: 'spark', c: SPK[(Math.random() * SPK.length) | 0], max: .7 + Math.random() * .5, fin: .2, fout: .35, rot: Math.random() * 3 });
+      }
+    } });
+})();
+</script>
 </body>
 </html>

@@ -26,8 +26,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
 .logo{display:block;margin-top:44px;width:min(98vw,440px);height:auto;transform-origin:50% 60%;animation:breathe 3.2s ease-in-out infinite;filter:drop-shadow(0 12px 16px rgba(0,0,0,.6));-webkit-user-drag:none;pointer-events:none}
 @keyframes breathe{0%,100%{transform:scale(1) rotate(-.6deg)}50%{transform:scale(1.025) rotate(.6deg)}}
 .sub{margin-top:2px;font-size:15px;font-weight:800;color:#ffe9b0;letter-spacing:5px;text-shadow:0 2px 4px #000c;background:linear-gradient(90deg,rgba(90,20,90,0),rgba(90,20,90,.75) 20%,rgba(90,20,90,.75) 80%,rgba(90,20,90,0));padding:6px 34px}
-.hero{position:relative;width:min(56vw,230px);height:auto;margin-top:auto;animation:bob 2.2s ease-in-out infinite;filter:drop-shadow(0 10px 10px rgba(0,0,0,.6));pointer-events:none}
+.hero{display:block;flex:1 1 0;min-height:0;width:100%;max-height:min(46vh,400px);margin-top:auto;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 10px 10px rgba(0,0,0,.6));pointer-events:none}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@media (max-height:700px){#menu{padding-top:calc(env(safe-area-inset-top) + 3vh)}#menu .logo{margin-top:40px;width:min(84vw,360px)}#menu .hero{max-height:none}}
 .menuBtns{display:flex;flex-direction:column;align-items:center;margin:4px 0 calc(env(safe-area-inset-bottom) + 3vh)}
 .btn{position:relative;margin-top:14px;min-width:220px;padding:14px 26px;border:none;border-radius:40px;font-family:inherit;font-weight:900;font-size:22px;line-height:1;color:#5a2300;letter-spacing:3px;cursor:pointer;
  background:linear-gradient(180deg,#fff2a8 0%,#ffd23f 45%,#ffab1a 100%);box-shadow:0 6px 0 #b25a00,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #fffbe0;text-shadow:0 1px 0 #fff6;transition:transform .08s}
@@ -100,7 +101,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
   <div class="toggles"><button class="tg" id="tMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button><button class="tg" id="tSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="宝石大盗">
   <div class="sub">妙 手 神 偷 · 30 座 宝 库</div>
-  <img class="hero" src="assets/mascot.webp" alt="">
+  <img class="hero" id="mHero" src="assets/thief/thief_static.webp" width="353" height="508" alt="">
   <div class="menuBtns">
     <button class="btn" id="bPlay">开始行动</button>
     <button class="btn purple small" id="bLevels" style="min-width:180px">选择关卡</button>
@@ -156,5 +157,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
 <script src="audio.js"></script>
 <script src="gen.js"></script>
 <script src="game.js"></script>
+<script src="mascot.js"></script>
+<script>
+/* 封面小浣熊大盗：眨眼、抛接红宝石（AI 生成序列帧 · 24fps · 120 帧无缝循环）；宝石闪光 + 金币星光实时粒子 */
+(function () {
+  const M = {"fw":353,"fh":508,"cols":6,"rows":4,"n":120,"fps":24,"sheets":["thief_0","thief_1","thief_2","thief_3","thief_4"],"body":[10,180,342,502],"track":[249,341,249,341,249,341,249,341,249,341,249,342,248,343,248,346,247,350,246,355,245,360,243,366,241,371,239,375,237,375,236,370,236,358,236,335,236,302,236,262,236,219,237,178,238,142,239,112,239,88,240,68,240,52,241,40,242,32,243,27,243,25,242,26,242,30,243,37,245,46,247,58,248,73,248,93,249,117,249,144,249,175,249,208,249,241,250,273,251,299,252,319,251,333,251,344,250,350,250,353,250,354,251,354,251,353,251,353,250,353,250,353,250,354,249,357,248,360,247,364,246,367,245,369,244,366,243,356,242,339,242,315,243,285,245,254,246,225,248,200,250,180,252,164,253,154,255,148,257,146,258,149,260,158,262,171,264,190,266,212,268,235,270,254,270,269,270,283,270,294,269,305,266,316,264,324,261,330,258,335,256,338,254,340,252,341,251,342,250,342,250,342,249,342,249,342,249,341,249,341,249,340,250,339,250,338,250,338,250,338,249,339,249,340,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341,249,341]};
+  const GEM = ['#ff4f7b', '#ff8fb0', '#ffd34a', '#ffffff', '#ff3355'], GOLD = ['#ffd34a', '#ffe9a0', '#fff6c8'];
+  let cdG = 0, cdC = .4, pv = null;
+  TitleMascot({ meta: M, base: 'assets/thief/', host: document.getElementById('mHero'), screen: document.getElementById('menu'),
+    clipTop: () => document.querySelector('#menu .sub'), clipBottom: () => document.querySelector('#menu .menuBtns'), maxParts: 70,
+    back(A, S) { // 身后金紫光晕 + 地面柔影
+      const c = A.c, u = S.u, cx = S.ox + S.dw / 2 + S.dx, by = S.oy + S.dh;
+      c.globalAlpha = .55; c.drawImage(A.spr('glow', '#000000'), cx - S.dw * .32, by - S.dh * .035 + S.bob * .2, S.dw * .64, S.dh * .07);
+      c.globalCompositeOperation = 'lighter'; const p = .8 + .2 * Math.sin(S.t * 2);
+      A.glow('#b066ff', cx, by - S.dh * .33 + S.bob, S.dw * 1.05, S.dh * .7, .34 * p);
+      A.glow('#ffb84a', cx, by - S.dh * .2 + S.bob, S.dw * .7, S.dh * .4, .16 * p);
+    },
+    front(A, S) {
+      const c = A.c, u = S.u, g = S.track(); if (!g) return;
+      const v = pv ? Math.hypot(g[0] - pv[0], g[1] - pv[1]) / Math.max(S.dt, .001) : 0; pv = g;
+      // 红宝石呼吸光 + 星芒
+      c.globalCompositeOperation = 'lighter';
+      A.glow('#ff3d6e', g[0], g[1], 70 * u, 70 * u, .55 + .2 * Math.sin(S.t * 5));
+      const tw = .5 + .5 * Math.sin(S.t * 3.3); c.globalAlpha = .55 + .45 * tw;
+      const ss = (26 + 14 * tw) * u; c.save(); c.translate(g[0] + 6 * u, g[1] - 6 * u); c.rotate(S.t * .8); c.drawImage(A.spr('spark', '#ffd0dc'), -ss / 2, -ss / 2, ss, ss); c.restore();
+      // 宝石飞行时拖出闪光尾迹；静止时偶尔迸出星光
+      if (S.ok && (cdG -= S.dt * (1 + Math.min(5, v / (120 * u)))) <= 0) {
+        cdG = .13 + Math.random() * .12; const a = Math.random() * 6.283, sp = (10 + Math.random() * 26) * u;
+        A.add({ x: g[0] + (Math.random() - .5) * 14 * u, y: g[1] + (Math.random() - .5) * 14 * u, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 8 * u, g: 18 * u, drag: 1.4, s: (.22 + Math.random() * .26) * u * 1.6, k: Math.random() < .6 ? 'spark' : 'dot', c: GEM[(Math.random() * GEM.length) | 0], max: .7 + Math.random() * .7, tw: .35, rot: Math.random() * 3, vr: (Math.random() - .5) * 3 });
+      }
+      // 金币星光：在身体周围随机闪烁
+      if ((cdC -= S.dt) <= 0) {
+        cdC = .28 + Math.random() * .35;
+        const [x, y] = S.map(M.body[0] + Math.random() * (M.body[2] - M.body[0]), M.body[1] + Math.random() * (M.body[3] - M.body[1]) * .9);
+        A.add({ x: x + (Math.random() - .5) * 40 * u, y, vy: -6 * u, s: (.25 + Math.random() * .3) * u * 1.4, k: 'spark', c: GOLD[(Math.random() * GOLD.length) | 0], max: .6 + Math.random() * .5, fin: .2, fout: .3, rot: Math.random() * 3 });
+      }
+    } });
+})();
+</script>
 </body>
 </html>

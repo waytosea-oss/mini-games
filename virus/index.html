@@ -35,8 +35,10 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .logo .l2{display:inline-block;margin-top:12px;font-size:28px;font-weight:900;letter-spacing:6px;padding:6px 18px 8px;border-radius:14px;background:linear-gradient(#ff6b81,#e2325a);box-shadow:0 4px 0 #8f1736,0 8px 16px rgba(0,0,0,.35);transform:rotate(-4deg);text-shadow:0 2px 0 rgba(0,0,0,.25)}
 .hero{position:relative;width:100%;flex:1;min-height:200px}
 .hero img{position:absolute;pointer-events:none}
-.hero .doc{left:50%;bottom:4%;height:min(40vh,320px);transform:translateX(-50%);animation:bob 2.4s ease-in-out infinite}
-.hero .v{width:min(22vw,100px);animation:float 3s ease-in-out infinite}
+.hero .doc{left:0;width:100%;bottom:3%;height:min(94%,46vh,390px);object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 8px 10px rgba(0,0,0,.3))}
+.hero .doc.still{animation:bob2 2.4s ease-in-out infinite}
+.hero .v{width:min(22vw,100px);animation:vwob 2.6s ease-in-out infinite;transform-origin:50% 70%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+@keyframes vwob{0%,100%{transform:translateY(0) rotate(-7deg) scale(1,1)}20%{transform:translateY(-6px) rotate(-2deg) scale(.93,1.08)}45%{transform:translateY(-16px) rotate(7deg) scale(1.04,.97)}65%{transform:translateY(-8px) rotate(3deg) scale(1.09,.92)}85%{transform:translateY(2px) rotate(-4deg) scale(.96,1.05)}}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
 .tbtns{display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:calc(env(safe-area-inset-bottom) + 6vh)}
@@ -173,7 +175,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
   <img class="v" src="assets/v_yellow.png" style="right:8%;top:2%;animation-delay:-2s;width:min(17vw,78px)" alt="">
   <img class="v" src="assets/v_blue.png" style="right:5%;top:44%;animation-delay:-.4s" alt="">
-  <img class="doc" id="tDoc" src="assets/doctor1.png" alt="">
+  <img class="doc" id="tDoc" src="assets/doctor/doctor_static.webp" width="284" height="484" alt="">
  </div>
  <div class="tbtns">
   <button class="btn big" id="bStart">开始治疗</button>
@@ -240,5 +242,47 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 <div id="loading"><img src="assets/logo.png" alt="药丸医生" style="width:min(82vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div style="font-size:15px;opacity:.8">加载中…</div><div class="lb"><i id="ldBar"></i></div></div>
 </div>
 <script src="game.js"></script>
+<script src="mascot.js"></script>
+<script>
+/* 封面小林医生：眨眼、抛接胶囊（AI 生成序列帧 · 24fps · 120 帧无缝循环）；胶囊光晕 + 气泡 + 医疗十字星光实时粒子。
+   换成其他皮肤时自动退回该皮肤的静态立绘。 */
+(function () {
+  const M = {"fw":284,"fh":484,"cols":6,"rows":4,"n":120,"fps":24,"sheets":["doctor_0","doctor_1","doctor_2","doctor_3","doctor_4"],"body":[15,104,252,478],"track":[42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,249,42,249,42,249,42,249,42,249,42,249,42,249,42,249,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,248,42,250,42,252,42,254,41,256,40,256,40,254,39,248,38,238,36,221,33,193,31,157,34,125,41,101,48,84,53,74,53,67,49,56,46,41,48,32,52,32,54,39,54,49,53,62,51,78,49,96,47,118,46,143,45,168,44,190,44,208,44,226,45,243,46,258,46,270,46,278,45,282,44,283,43,283,41,281,40,279,39,276,38,273,38,270,37,266,37,263,38,260,38,258,39,256,40,253,40,252,41,250,41,249,42,249,42,248,42,248,42,248,42,248,42,249,42,249,42,249,41,250,41,250,41,250,41,251,41,251,41,251,41,251,40,252,40,252,40,252,40,252,40,252,40,252,40,251,41,251,41,250,41,250,41,249,42,249,42,249,42,248,42,248,42,248]};
+  const doc = document.getElementById('tDoc'), BUB = ['#7fe9ff', '#a8f3ff', '#5fd0ff'], CR = ['#3ddc97', '#7ff0c0', '#ffffff'], SPK = ['#bff7ff', '#ffffff', '#7fe9ff'];
+  let cdB = 0, cdC = .5, cdS = .2, pv = null;
+  TitleMascot({ meta: M, base: 'assets/doctor/', host: doc, screen: document.getElementById('title'),
+    clipTop: () => document.querySelector('#title .logo'), clipBottom: () => document.querySelector('#title .tbtns'), maxParts: 60,
+    enabled: () => /doctor_static/.test(doc.src),
+    onToggle: (on) => doc.classList.toggle('still', !on),
+    back(A, S) { // 身后薄荷蓝光晕 + 地面柔影
+      const c = A.c, cx = S.ox + S.dw / 2 + S.dx, by = S.oy + S.dh;
+      c.globalAlpha = .35; c.drawImage(A.spr('glow', '#000000'), cx - S.dw * .32, by - S.dh * .035, S.dw * .64, S.dh * .07);
+      c.globalCompositeOperation = 'lighter'; const p = .8 + .2 * Math.sin(S.t * 2.1);
+      A.glow('#5fe8ff', cx, by - S.dh * .42 + S.bob, S.dw * 1.2, S.dh * .8, .3 * p);
+    },
+    front(A, S) {
+      const c = A.c, u = S.u, g = S.track(); if (!g) return;
+      const v = pv ? Math.hypot(g[0] - pv[0], g[1] - pv[1]) / Math.max(S.dt, .001) : 0; pv = g;
+      c.globalCompositeOperation = 'lighter';
+      A.glow('#6fdcff', g[0], g[1], 80 * u, 80 * u, .5 + .18 * Math.sin(S.t * 4.2));
+      // 胶囊飞起时拖出星光尾迹
+      if (S.ok && (cdS -= S.dt * (1 + Math.min(6, v / (100 * u)))) <= 0) {
+        cdS = .16 + Math.random() * .14; const a = Math.random() * 6.283, sp = (8 + Math.random() * 20) * u;
+        A.add({ x: g[0] + (Math.random() - .5) * 16 * u, y: g[1] + (Math.random() - .5) * 16 * u, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 10 * u, drag: 1.5, s: (.2 + Math.random() * .22) * u * 1.6, k: 'spark', c: SPK[(Math.random() * SPK.length) | 0], max: .6 + Math.random() * .5, tw: .3, rot: Math.random() * 3, vr: (Math.random() - .5) * 3 });
+      }
+      // 消毒气泡：从胶囊附近冒出、摇摆上升
+      if ((cdB -= S.dt) <= 0) {
+        cdB = .22 + Math.random() * .2;
+        A.add({ x: g[0] + (Math.random() - .5) * 30 * u, y: g[1] + (Math.random() - .3) * 20 * u, vx: (Math.random() - .5) * 6 * u, vy: -(18 + Math.random() * 18) * u, s: (.16 + Math.random() * .2) * u * 1.6, k: 'bubble', c: BUB[(Math.random() * BUB.length) | 0], add: false, a: .85, max: 1.3 + Math.random() * .8, fin: .2, fout: .4, wob: 12 * u });
+      }
+      // 医疗十字星光：在医生身边轻轻闪现
+      if ((cdC -= S.dt) <= 0) {
+        cdC = .45 + Math.random() * .45;
+        const [x, y] = S.map(M.body[0] + Math.random() * (M.body[2] - M.body[0]), M.body[1] + Math.random() * (M.body[3] - M.body[1]) * .7);
+        A.add({ x: x + (Math.random() < .5 ? -1 : 1) * (30 + Math.random() * 40) * u, y, vy: -12 * u, s: (.18 + Math.random() * .16) * u * 1.6, k: 'cross', c: CR[(Math.random() * CR.length) | 0], max: .9 + Math.random() * .5, fin: .25, fout: .4 });
+      }
+    } });
+})();
+</script>
 </body>
 </html>

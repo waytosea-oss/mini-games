@@ -609,7 +609,7 @@ function updHud(){
 }
 const SCREENS=['title','levels','shop','pause','win','lose','ending'];
 function showScreen(id){SCREENS.forEach(s=>$(s).classList.toggle('on',s===id));if(id&&id!=='pause')$('hud').classList.remove('on');document.querySelectorAll('.cval').forEach(e=>e.textContent=fmt(S.coins));}
-function goTitle(){state='menu';G=null;menuWorld=0;showScreen('title');$('tDoc').src='assets/'+SKINS[S.skin].img+'.png';Music.play('menu');}
+function goTitle(){state='menu';G=null;menuWorld=0;showScreen('title');$('tDoc').src=S.skin?'assets/'+SKINS[S.skin].img+'.png':'assets/doctor/doctor_static.webp';Music.play('menu');}
 function goLevels(w){state='menu';G=null;if(w==null)w=Math.min(4,Math.floor((Math.min(S.unlocked,30)-1)/6));menuWorld=w;renderLevels();showScreen('levels');Music.play('menu');}
 function renderLevels(){
  const w=menuWorld;$('wName').textContent=WORLDS[w].n;$('wSub').textContent=WORLDS[w].s;$('lvDoc').src='assets/'+SKINS[S.skin].img+'.png';$('lvBossN').textContent='本章BOSS · 第'+(w*6+6)+'关';
