@@ -14,7 +14,7 @@
   addEventListener('resize',paint);
   track.addEventListener('scroll',function(){requestAnimationFrame(paint)},{passive:true});paint();
   var paused=0,timer=setInterval(function(){
-    if(paused||document.hidden)return;var n=idx()+1;if(n>maxIdx())n=0;
+    if(paused||document.hidden||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;var n=idx()+1;if(n>maxIdx())n=0;
     track.scrollTo({left:n*(cards[0].offsetWidth+14),behavior:'smooth'});
   },5000);
   ['pointerdown','touchstart','wheel'].forEach(function(t){track.addEventListener(t,function(){paused=1;clearTimeout(track._r);track._r=setTimeout(function(){paused=0},8000)},{passive:true})});

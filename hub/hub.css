@@ -40,6 +40,15 @@ img{display:block}
   background:#222;transform:translateZ(0);transition:transform .5s var(--spring)}
 .story img.art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
 .story:active{transform:scale(.97)}
+/* 动态海报：静帧图 → 主角循环视频（淡入）→ 实时粒子 → 标题压暗层 → 文案 */
+.story .vid,.story .fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.story .vid{object-fit:cover;opacity:0;transition:opacity .45s ease;background:transparent}
+.story .vid.on{opacity:1}
+.story .vid::-webkit-media-controls,.story .vid::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+.story::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.30) 42%,rgba(0,0,0,0) 100%)}
+.story .cap,.story .foot{z-index:2}
+
 .story .cap{position:absolute;left:0;right:0;top:0;padding:20px 20px 0;color:#fff;text-shadow:0 1px 12px rgba(0,0,0,.35)}
 .eyebrow{font-size:13px;font-weight:700;letter-spacing:.04em;opacity:.85}
 .story h2{font-size:28px;line-height:1.14;font-weight:800;margin:4px 0 0;letter-spacing:-.02em}
