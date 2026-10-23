@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#05050f">
+<meta name="format-detection" content="telephone=no">
+<title>星际雷霆 STAR THUNDER</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="safe"></div>
+<div id="wrap">
+  <canvas id="game"></canvas>
+
+  <!-- in-game buttons -->
+  <div id="hud" class="hide">
+    <button id="btnPause" class="hbtn" aria-label="暂停"><i class="ico-pause"></i></button>
+    <button id="btnBomb" class="hbtn" aria-label="炸弹"><span class="bk">B</span><span id="bombN">2</span></button>
+    <div id="tut" class="hide">按住屏幕任意位置拖动<br>战机自动射击</div>
+  </div>
+
+  <!-- loading -->
+  <section id="scrLoad" class="scr show">
+    <div class="ldLogo">星际雷霆</div>
+    <div class="ldBar"><i id="ldFill"></i></div>
+    <div class="ldTxt" id="ldTxt">LOADING 0%</div>
+  </section>
+
+  <!-- title -->
+  <section id="scrTitle" class="scr">
+    <div class="tBg"></div>
+    <div class="tLogo">
+      <div class="tCn">星际雷霆</div>
+      <div class="tEn">STAR THUNDER</div>
+      <div class="tSub">— 银河防线保卫战 —</div>
+    </div>
+    <div class="tMenu">
+      <button class="btn big gold" id="btnStart">开始游戏</button>
+      <button class="btn big blue" id="btnHangar1">机　库</button>
+      <div class="tRow">
+        <button class="tog" id="togMusic1" data-k="music">♪ 音乐</button>
+        <button class="tog" id="togSfx1" data-k="sfx">🔊 音效</button>
+      </div>
+    </div>
+    <div class="tHi" id="tHi"></div>
+    <div class="tTap" id="tTap">TAP TO START</div>
+    <div class="tCopy">© 2026 原创作品 · 全部美术与音乐原创</div>
+  </section>
+
+  <!-- map -->
+  <section id="scrMap" class="scr">
+    <div class="topbar">
+      <button class="ibtn" id="mapBack">‹</button>
+      <div class="ttl">星域地图</div>
+      <div class="coins"><i class="coin"></i><span class="cv">0</span></div>
+    </div>
+    <div class="secWrap">
+      <button class="arr l" id="secPrev">‹</button>
+      <div class="secCard" id="secCard">
+        <div class="secBg"></div>
+        <div class="secHead"><div class="secNo"></div><div class="secName"></div><div class="secEn"></div></div>
+        <svg class="secPath" viewBox="0 0 300 420" preserveAspectRatio="none"><path d=""/></svg>
+        <div class="nodes"></div>
+        <div class="secStars"></div>
+      </div>
+      <button class="arr r" id="secNext">›</button>
+    </div>
+    <div class="dots" id="secDots"></div>
+    <div class="mapFoot">
+      <div class="shipChip" id="shipChip"></div>
+      <button class="btn blue mid" id="btnHangar2">机库 / 升级</button>
+    </div>
+  </section>
+
+  <!-- hangar -->
+  <section id="scrHangar" class="scr">
+    <div class="topbar">
+      <button class="ibtn" id="hgBack">‹</button>
+      <div class="ttl">机　库</div>
+      <div class="coins"><i class="coin"></i><span class="cv">0</span></div>
+    </div>
+    <div class="tabs" id="hgTabs"></div>
+    <div class="hgStage">
+      <div class="hgGrid"></div>
+      <img class="hgShip" id="hgShip" alt="">
+      <div class="hgGlow"></div>
+      <div class="hgTag" id="hgTag"></div>
+    </div>
+    <div class="hgInfo">
+      <div class="hgName"><span id="hgName"></span><em id="hgStyle"></em></div>
+      <div class="hgDesc" id="hgDesc"></div>
+      <div class="stats" id="hgStats"></div>
+      <div class="evos" id="hgEvos"></div>
+      <div class="hgAct">
+        <button class="btn gold mid" id="hgMain"></button>
+        <button class="btn green mid" id="hgSel"></button>
+      </div>
+    </div>
+    <div class="upTitle">全机通用强化</div>
+    <div class="ups" id="hgUps"></div>
+  </section>
+
+  <!-- pause -->
+  <section id="scrPause" class="scr ov">
+    <div class="panel">
+      <div class="pTitle">PAUSE</div>
+      <div class="pSub">暂停中</div>
+      <button class="btn gold mid" id="pResume">继续战斗</button>
+      <button class="btn blue mid" id="pRestart">重新开始</button>
+      <button class="btn red mid" id="pQuit">撤退回地图</button>
+      <div class="tRow">
+        <button class="tog" id="togMusic2" data-k="music">♪ 音乐</button>
+        <button class="tog" id="togSfx2" data-k="sfx">🔊 音效</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- result -->
+  <section id="scrResult" class="scr ov">
+    <div class="panel res">
+      <div class="rTitle" id="rTitle"></div>
+      <div class="rSub" id="rSub"></div>
+      <div class="rStars" id="rStars"><i></i><i></i><i></i></div>
+      <div class="rRows" id="rRows"></div>
+      <div class="rBtns" id="rBtns"></div>
+    </div>
+  </section>
+
+  <!-- ending -->
+  <section id="scrEnd" class="scr">
+    <div class="endBg"></div>
+    <div class="endTxt">
+      <div class="eT">银河已恢复和平</div>
+      <div class="eE">CONGRATULATIONS</div>
+      <p>虫巢母皇被击溃，五大星域重获光明。<br>王牌飞行员，你的名字将被铭刻在<br>银河防线的纪念碑上。</p>
+      <div class="eScore" id="eScore"></div>
+      <button class="btn gold mid" id="endBack">返回地图</button>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+</div>
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
