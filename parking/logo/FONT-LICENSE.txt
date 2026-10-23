@@ -1,0 +1,6 @@
+Logo fonts: Resource Han Rounded CN Heavy (源柔黑体, based on Adobe Source Han Sans) by Cyano Hao, and ZCOOL KuaiLe (站酷快乐体).
+License: SIL Open Font License 1.1 — free for commercial use; logo images rendered from them can be used freely.
+Logo sources: logo/optA.py, optB.py, optC.py (SVG composed from font glyph outlines), rendered by logo/render.py.
+Option A (live): 车漆糖果字 — glossy taxi-yellow letters, 车 has real wheels, "！" is a traffic light with a wheel dot.
+Option B: 马路字 — asphalt strokes with lane lines and red/white kerb outline.
+Option C: 车牌字 — blue licence plate hoisted by a tow hook.
