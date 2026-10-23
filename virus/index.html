@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b2a3a">
+<title>药丸医生：病毒大作战</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;background:#071822;overflow:hidden;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",sans-serif;color:#fff;touch-action:none}
+#app{position:absolute;left:50%;top:0;height:100%;width:100%;max-width:520px;transform:translateX(-50%);overflow:hidden;background:#0b2a3a}
+canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;z-index:10}
+.scr.on{display:flex}
+.dim{background:rgba(4,16,28,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);justify-content:center}
+.btn{border:0;outline:0;font-family:inherit;font-weight:900;color:#fff;font-size:20px;padding:14px 30px;border-radius:18px;cursor:pointer;position:relative;letter-spacing:2px;
+ background:linear-gradient(#5be38a,#1fae58);box-shadow:0 5px 0 #13753a,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5);text-shadow:0 2px 0 rgba(0,0,0,.25);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #13753a,0 4px 10px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
+.btn.blue{background:linear-gradient(#5cc8ff,#2585e0);box-shadow:0 5px 0 #17589a,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
+.btn.orange{background:linear-gradient(#ffcf4a,#ff8a1f);box-shadow:0 5px 0 #b65a0c,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.55)}
+.btn.red{background:linear-gradient(#ff7a8a,#e8344e);box-shadow:0 5px 0 #9c1d31,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
+.btn.gray{background:linear-gradient(#9aa9b8,#66778a);box-shadow:0 5px 0 #44515f,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.4)}
+.btn.sm{font-size:16px;padding:10px 18px;border-radius:14px}
+.ibtn{width:46px;height:46px;border-radius:14px;border:0;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25),0 4px 10px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.ibtn svg{width:26px;height:26px}
+.ibtn.off{opacity:.45}
+.ibtn.off::after{content:"";position:absolute;width:30px;height:3px;background:#ff5a6e;transform:rotate(-45deg);border-radius:2px}
+#title{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 7vh);background:radial-gradient(ellipse at 50% 35%,rgba(120,240,220,.18),rgba(0,0,0,0) 60%)}
+.logo{position:relative;text-align:center;line-height:1;margin-top:10px}
+.logo .l1{font-size:64px;font-weight:900;letter-spacing:4px;background:linear-gradient(#fff 10%,#bff7ff 45%,#4fd2ff 55%,#2d8cf0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #0d3d78) drop-shadow(0 0 2px #0d3d78) drop-shadow(0 8px 14px rgba(0,0,0,.4));transform:rotate(-4deg)}
+.logo .l2{display:inline-block;margin-top:12px;font-size:28px;font-weight:900;letter-spacing:6px;padding:6px 18px 8px;border-radius:14px;background:linear-gradient(#ff6b81,#e2325a);box-shadow:0 4px 0 #8f1736,0 8px 16px rgba(0,0,0,.35);transform:rotate(-4deg);text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.hero{position:relative;width:100%;flex:1;min-height:200px}
+.hero img{position:absolute;pointer-events:none}
+.hero .doc{left:50%;bottom:4%;height:min(40vh,320px);transform:translateX(-50%);animation:bob2 2.4s ease-in-out infinite}
+.hero .v{width:min(22vw,100px);animation:float 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
+.tbtns{display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:calc(env(safe-area-inset-bottom) + 6vh)}
+.tbtns .btn.big{font-size:26px;padding:16px 56px;border-radius:22px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.row{display:flex;gap:12px;align-items:center;justify-content:center}
+.topbar{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 10px) 12px 0;display:flex;align-items:center;justify-content:space-between;z-index:5}
+.coinbox{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);border-radius:20px;padding:4px 12px 4px 4px;font-weight:900;font-size:18px;box-shadow:inset 0 0 0 2px rgba(255,215,90,.4);transition:transform .08s}
+.coin{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6b0,#ffd23a 35%,#f0a000 75%,#b86d00);box-shadow:inset 0 0 0 2px #c98200,0 2px 3px rgba(0,0,0,.3);display:inline-flex;align-items:center;justify-content:center;color:#a35a00;font-size:15px;font-weight:900}
+#levels{background:linear-gradient(rgba(5,20,32,.55),rgba(5,20,32,.85));padding-top:calc(env(safe-area-inset-top) + 70px)}
+.wtitle{font-size:30px;font-weight:900;letter-spacing:3px;text-shadow:0 3px 0 rgba(0,0,0,.4);margin:6px 0 2px}
+.wsub{font-size:14px;opacity:.8;margin-bottom:12px}
+.wnav{display:flex;align-items:center;gap:14px;width:100%;justify-content:center}
+.arrow{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:26px;font-weight:900;cursor:pointer;line-height:1}
+.arrow:disabled{opacity:.25}
+.wcard{width:min(84vw,380px);border-radius:24px;padding:18px 16px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 2px rgba(255,255,255,.14),0 10px 30px rgba(0,0,0,.35);display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.lv{aspect-ratio:1;border-radius:22px;border:0;font-family:inherit;font-weight:900;font-size:30px;color:#fff;cursor:pointer;position:relative;
+ background:linear-gradient(#64d7ff,#2a8fe6);box-shadow:0 5px 0 #185da0,inset 0 3px 0 rgba(255,255,255,.45);text-shadow:0 2px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.lv.boss{background:linear-gradient(#c58bff,#7b3fe0);box-shadow:0 5px 0 #4a2190,inset 0 3px 0 rgba(255,255,255,.45)}
+.lv.lock{background:linear-gradient(#5a6b7c,#3d4b59);box-shadow:0 5px 0 #26313b;color:rgba(255,255,255,.4)}
+.lv .st{font-size:13px;letter-spacing:1px;margin-top:2px;color:#ffd84a;text-shadow:0 1px 0 #8a5a00}
+.lv .st i{font-style:normal;color:rgba(255,255,255,.3);text-shadow:none}
+.lv .bt{position:absolute;top:-8px;right:-6px;font-size:11px;background:#ff3d5e;border-radius:8px;padding:2px 6px;box-shadow:0 2px 0 #92112b;letter-spacing:0}
+.lvdeco{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;pointer-events:none}
+.lvdeco img{max-height:min(150px,100%);object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.45))}
+#lvDoc{height:150px;animation:bob2 2.4s ease-in-out infinite}
+.lvboss{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:900;opacity:.95}
+.lvboss img{height:120px;animation:bob2 1.8s ease-in-out infinite reverse}
+.lvboss span{background:rgba(255,61,94,.85);padding:2px 10px;border-radius:10px;margin-top:4px}
+.vs{font-size:34px;font-weight:900;font-style:italic;color:#ffd84a;text-shadow:0 3px 0 #a35a00,0 0 18px rgba(255,200,60,.6)}
+@keyframes bob2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.lbtns{margin-top:auto;padding-bottom:calc(env(safe-area-inset-bottom) + 24px);display:flex;gap:14px}
+.dots{display:flex;gap:8px;margin:16px 0 8px}
+.dots b{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.3)}
+.dots b.on{background:#fff;width:22px;border-radius:5px}
+#shop{background:linear-gradient(#0e3550,#081d2c);padding-top:calc(env(safe-area-inset-top) + 64px);overflow-y:auto;touch-action:pan-y;justify-content:flex-start;-webkit-overflow-scrolling:touch}
+.shoph{font-size:28px;font-weight:900;letter-spacing:4px;margin:4px 0 12px;text-shadow:0 3px 0 rgba(0,0,0,.4)}
+.ups{width:min(92vw,420px);display:flex;flex-direction:column;gap:10px}
+.up{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.05));box-shadow:inset 0 0 0 2px rgba(255,255,255,.12)}
+.up .ic{width:54px;height:54px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25)}
+.up .ic svg{width:40px;height:40px}
+.up .tx{flex:1;min-width:0}
+.up .nm{font-size:18px;font-weight:900}
+.up .nm small{font-size:12px;opacity:.75;margin-left:6px;font-weight:700}
+.up .ds{font-size:12px;opacity:.8;margin-top:2px}
+.up .bar{display:flex;gap:2px;margin-top:5px}
+.up .bar i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.15)}
+.up .bar i.f{background:linear-gradient(#ffe36b,#ffae00)}
+.up .buy{flex:none;min-width:84px;font-size:15px;padding:9px 10px;border-radius:14px;display:flex;align-items:center;gap:4px;justify-content:center;letter-spacing:0}
+.up .buy .coin{width:18px;height:18px;font-size:11px}
+.up .buy.no{filter:grayscale(.8) brightness(.8)}
+.skins{width:min(92vw,420px);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 16px}
+.skin{border-radius:18px;padding:8px 6px;text-align:center;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 2px rgba(255,255,255,.12);cursor:pointer}
+.skin.eq{box-shadow:inset 0 0 0 3px #5be38a,0 0 16px rgba(91,227,138,.4)}
+.skin img{height:92px;display:block;margin:0 auto 4px}
+.skin .sn{font-weight:900;font-size:14px}
+.skin .sd{font-size:11px;opacity:.8;min-height:28px}
+.skin .sb{margin-top:4px;font-size:13px;font-weight:900;padding:5px 0;border-radius:10px;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;gap:3px}
+.skin .sb .coin{width:16px;height:16px;font-size:10px}
+.sech{width:min(92vw,420px);font-weight:900;font-size:16px;opacity:.85;margin:16px 0 4px}
+#hud{position:absolute;inset:0;pointer-events:none;z-index:5;display:none}
+#hud.on{display:block}
+#hud .tp{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 8px) 10px 0;display:flex;align-items:center;gap:10px}
+#hud .ibtn{pointer-events:auto;width:40px;height:40px}
+#hud .mid{flex:1;display:flex;flex-direction:column;align-items:center}
+#hud .lvl{font-weight:900;font-size:15px;text-shadow:0 2px 0 rgba(0,0,0,.4);letter-spacing:1px}
+#hud .prog{width:100%;max-width:220px;height:10px;border-radius:5px;background:rgba(0,0,0,.4);margin-top:4px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+#hud .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5be38a,#c8ff5a);border-radius:5px;transition:width .2s}
+#hud .hearts{position:absolute;left:12px;top:calc(env(safe-area-inset-top) + 56px);display:flex;gap:4px}
+#hud .hearts svg{width:24px;height:24px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+#hud .bossbar{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 56px);width:62%;display:none;text-align:center}
+#hud .bossbar b{font-size:13px;letter-spacing:2px;text-shadow:0 2px 0 #000}
+#hud .bossbar div{height:12px;border-radius:6px;background:rgba(0,0,0,.5);overflow:hidden;box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);margin-top:2px}
+#hud .bossbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff3d6e,#c55bff);transition:width .15s}
+#colors{position:absolute;left:0;right:0;bottom:0;padding:0 0 calc(env(safe-area-inset-bottom) + 12px);display:flex;justify-content:center;gap:22px;pointer-events:none}
+.cb{pointer-events:auto;width:62px;height:62px;border-radius:50%;border:0;padding:0;cursor:pointer;position:relative;background:rgba(0,0,0,.4);box-shadow:inset 0 0 0 3px rgba(255,255,255,.25);transition:transform .12s}
+.cb canvas{position:absolute;left:7px;top:7px;width:48px;height:48px}
+.cb.on{transform:scale(1.14) translateY(-4px);box-shadow:inset 0 0 0 4px #fff,0 0 18px var(--g),0 0 4px var(--g)}
+.cb .k{position:absolute;bottom:-2px;right:-2px;font-size:10px;font-weight:900;background:#000a;border-radius:6px;padding:0 4px;opacity:.6}
+#banner{position:absolute;left:0;right:0;top:34%;text-align:center;z-index:6;pointer-events:none;opacity:0}
+#banner .b1{font-size:46px;font-weight:900;letter-spacing:4px;text-shadow:0 4px 0 rgba(0,0,0,.35),0 0 20px rgba(0,0,0,.4)}
+#banner .b2{font-size:18px;font-weight:800;opacity:.9;margin-top:6px;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+#banner.show{animation:ban 2.2s ease forwards}
+#banner.boss .b1{color:#ff5470;animation:shake .15s linear infinite}
+@keyframes ban{0%{opacity:0;transform:scale(1.6)}12%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.9) translateY(-30px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+.panel{width:min(86vw,360px);border-radius:28px;padding:26px 20px 22px;text-align:center;background:linear-gradient(#1b5a7e,#0f3550);box-shadow:inset 0 0 0 3px rgba(255,255,255,.2),0 20px 50px rgba(0,0,0,.5);position:relative}
+.panel h2{margin:0 0 6px;font-size:34px;font-weight:900;letter-spacing:4px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.panel .sub{opacity:.85;font-size:15px;margin-bottom:14px;line-height:1.5}
+.panel .col{display:flex;flex-direction:column;gap:14px;align-items:stretch;margin-top:10px}
+.stars{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin:4px 0 10px;height:80px}
+.stars svg{width:62px;height:62px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.3));transform:scale(0)}
+.stars svg.mid{width:78px;height:78px;margin-bottom:10px}
+.stars svg.pop{animation:starpop .45s cubic-bezier(.3,1.8,.5,1) forwards}
+@keyframes starpop{to{transform:scale(1)}}
+.earn{display:flex;align-items:center;justify-content:center;gap:8px;font-size:26px;font-weight:900;margin:4px 0 6px}
+.togs{display:flex;gap:14px;justify-content:center;margin-top:16px}
+.ribbon{position:absolute;left:50%;top:-24px;transform:translateX(-50%);padding:8px 26px;border-radius:14px;font-weight:900;font-size:20px;letter-spacing:3px;white-space:nowrap;background:linear-gradient(#ffcf4a,#ff8a1f);box-shadow:0 4px 0 #b65a0c,0 8px 16px rgba(0,0,0,.3)}
+#toast{position:absolute;left:50%;top:22%;transform:translateX(-50%);background:rgba(0,0,0,.78);padding:10px 18px;border-radius:14px;font-weight:800;z-index:30;display:none;white-space:nowrap}
+#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:50;background:#0b2a3a;font-weight:900;font-size:18px;gap:14px}
+#loading .lb{width:200px;height:10px;border-radius:5px;background:rgba(255,255,255,.15);overflow:hidden}
+#loading .lb i{display:block;height:100%;width:0;background:#5be38a;transition:width .2s}
+.tip{font-size:13px;opacity:.8;margin-top:4px;padding:6px 14px;border-radius:12px;background:rgba(0,0,0,.25)}
+.help{display:flex;gap:10px;justify-content:center;margin:2px 0 10px;flex-wrap:wrap}
+.help span{font-size:12px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px 9px;opacity:.9}
+</style>
+</head>
+<body>
+<div id="app">
+<canvas id="c"></canvas>
+<div id="hud">
+ <div class="tp">
+  <button class="ibtn" id="bPause" aria-label="暂停"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="#fff"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="#fff"/></svg></button>
+  <div class="mid"><div class="lvl" id="hLvl">第 1 关</div><div class="prog"><i id="hProg"></i></div></div>
+  <div class="coinbox" id="hCoinBox"><span class="coin">¥</span><span id="hCoins">0</span></div>
+ </div>
+ <div class="hearts" id="hHearts"></div>
+ <div class="bossbar" id="bossbar"><b id="bossName">病毒大王</b><div><i id="bossHp"></i></div></div>
+ <div id="colors"></div>
+</div>
+<div id="banner"><div class="b1" id="ban1"></div><div class="b2" id="ban2"></div></div>
+
+<div class="scr on" id="title">
+ <div class="logo"><div class="l1">药丸医生</div><div class="l2">病毒大作战</div></div>
+ <div class="hero">
+  <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
+  <img class="v" src="assets/v_yellow.png" style="right:8%;top:2%;animation-delay:-2s;width:min(17vw,78px)" alt="">
+  <img class="v" src="assets/v_blue.png" style="right:5%;top:44%;animation-delay:-.4s" alt="">
+  <img class="doc" id="tDoc" src="assets/doctor1.png" alt="">
+ </div>
+ <div class="tbtns">
+  <button class="btn big" id="bStart">开始治疗</button>
+  <div class="row"><button class="btn orange sm" id="bShop1">升级商店</button><button class="ibtn" id="bMus1"></button><button class="ibtn" id="bSfx1"></button></div>
+ </div>
+</div>
+
+<div class="scr" id="levels">
+ <div class="topbar"><button class="ibtn" id="bBack1"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="coinbox"><span class="coin">¥</span><span class="cval">0</span></div></div>
+ <div class="wnav"><button class="arrow" id="wPrev">‹</button><div style="text-align:center;min-width:200px"><div class="wtitle" id="wName"></div><div class="wsub" id="wSub"></div></div><button class="arrow" id="wNext">›</button></div>
+ <div class="wcard" id="wGrid"></div>
+ <div class="dots" id="wDots"></div>
+ <div class="help"><span>👆 左右滑动移动医生</span><span>🎨 点底部按钮换药丸颜色</span></div>
+ <div class="tip">同色药丸伤害 ×3，病毒碰到医生会扣血！</div>
+ <div class="lvdeco"><img id="lvDoc" src="assets/doctor1.png" alt=""><div class="vs">VS</div><div class="lvboss"><img src="assets/boss.png" alt=""><span id="lvBossN">病毒大王</span></div></div>
+ <div class="lbtns"><button class="btn orange" id="bShop2">升级商店</button></div>
+</div>
+
+<div class="scr" id="shop">
+ <div class="topbar" style="position:fixed;max-width:520px;left:50%;transform:translateX(-50%);background:linear-gradient(#0e3550 60%,rgba(14,53,80,0));padding-bottom:12px"><button class="ibtn" id="bBack2"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="coinbox"><span class="coin">¥</span><span class="cval">0</span></div></div>
+ <div class="shoph">升级商店</div>
+ <div class="ups" id="ups"></div>
+ <div class="sech">医生形象</div>
+ <div class="skins" id="skins"></div>
+ <div style="padding-bottom:calc(env(safe-area-inset-bottom) + 24px)"><button class="btn" id="bShopGo">开始下一关</button></div>
+</div>
+
+<div class="scr dim" id="pause">
+ <div class="panel"><h2>暂停</h2><div class="sub" id="pSub">第 1 关</div>
+  <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button></div>
+  <div class="togs"><button class="ibtn" id="bMus2"></button><button class="ibtn" id="bSfx2"></button></div>
+ </div>
+</div>
+
+<div class="scr dim" id="win">
+ <div class="panel"><div class="ribbon" id="wRib">治疗成功</div>
+  <div class="stars" id="wStars" style="margin-top:12px"></div>
+  <div class="sub" id="wSubT">第 1 关 完成！</div>
+  <div class="earn"><span class="coin" style="width:32px;height:32px;font-size:18px">¥</span>+<span id="wEarn">0</span></div>
+  <div class="col"><button class="btn" id="bNext">下一关</button><div class="row"><button class="btn orange sm" id="bWinShop" style="flex:1">升级</button><button class="btn gray sm" id="bWinMenu" style="flex:1">选关</button></div></div>
+ </div>
+</div>
+
+<div class="scr dim" id="lose">
+ <div class="panel"><div class="ribbon" style="background:linear-gradient(#ff7a8a,#e8344e);box-shadow:0 4px 0 #9c1d31">感染失败</div>
+  <div style="height:14px"></div>
+  <img src="assets/v_red.png" style="width:110px;animation:float 2s ease-in-out infinite" alt="">
+  <div class="sub" id="lSub">病毒占领了培养皿……</div>
+  <div class="col"><button class="btn orange" id="bRevive"></button><button class="btn" id="bRetry">再试一次</button><div class="row"><button class="btn blue sm" id="bLoseShop" style="flex:1">升级</button><button class="btn gray sm" id="bLoseMenu" style="flex:1">选关</button></div></div>
+ </div>
+</div>
+
+<div class="scr dim" id="ending">
+ <div class="panel"><div class="ribbon">全部治愈！</div><div style="height:12px"></div>
+  <img src="assets/doctor1.png" id="endDoc" style="height:150px" alt="">
+  <h2 style="font-size:26px;margin-top:8px">恭喜你，神医！</h2>
+  <div class="sub">病毒大王被彻底击败，世界恢复了健康。<br>试试把每一关都拿到三颗星吧！</div>
+  <div class="col"><button class="btn" id="bEndOk">返回选关</button></div>
+ </div>
+</div>
+
+<div id="toast"></div>
+<div id="loading"><div>药丸医生 · 加载中</div><div class="lb"><i id="ldBar"></i></div></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
