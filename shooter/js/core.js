@@ -63,7 +63,14 @@ function recolor(img, o) {
   const c = mkCanvas(img.width, img.height), x = c.getContext('2d');
   x.drawImage(img, 0, 0);
   if (!o || (!o.hue && !o.tint && !o.bri)) return c;
-  const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+  let d;
+  try { d = x.getImageData(0, 0, c.width, c.height); } catch (e) {
+    // file:// fallback (tainted canvas): composite tint instead of per-pixel hue shift
+    const tc = o.tint || [1, 1, 1], col = `rgb(${Math.min(255, tc[0] * 150) | 0},${Math.min(255, tc[1] * 150) | 0},${Math.min(255, tc[2] * 150) | 0})`;
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.38; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height);
+    return c;
+  }
+  const p = d.data;
   const a = (o.hue || 0) * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
   const m = [0.213 + co * 0.787 - si * 0.213, 0.715 - co * 0.715 - si * 0.715, 0.072 - co * 0.072 + si * 0.928,
     0.213 - co * 0.213 + si * 0.143, 0.715 + co * 0.285 + si * 0.140, 0.072 - co * 0.072 - si * 0.283,
