@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2b3fb8">
+<title>火眼金睛 · 经典找茬</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bgm"></div>
+
+<!-- 加载 -->
+<div id="load" class="scr on">
+  <img class="logo" src="assets/logo.webp" alt="火眼金睛" style="width:min(80vw,340px);animation:none">
+  <div class="bar"><i id="lbar"></i></div>
+  <p id="ltxt">正在擦亮放大镜…</p>
+</div>
+
+<!-- 标题 -->
+<div id="menu" class="scr">
+  <div class="mosaic" id="mosaic"></div>
+  <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐">♫</button><button class="tg" id="mSfx" aria-label="音效">🔊</button></div>
+  <div style="flex:.55"></div>
+  <img class="logo" id="mLogo" src="assets/logo.webp" alt="火眼金睛">
+  <div class="tagline">30 个精美场景 · 考验你的眼力</div>
+  <div style="flex:.35"></div>
+  <button class="btn" id="bPlay">开始游戏</button>
+  <button class="btn blue" id="bLevels">选择关卡</button>
+  <div class="stat" id="mStat"></div>
+  <div style="flex:.6"></div>
+  <div class="foot">点一点上下两张图的不同之处 · 双指可放大</div>
+</div>
+
+<!-- 选关 -->
+<div id="levels" class="scr">
+  <button class="tg back" id="lvBack" aria-label="返回">‹</button>
+  <h2>选择关卡</h2>
+  <div class="tot" id="lvTot"></div>
+  <div class="lvwrap" id="lvList"></div>
+</div>
+
+<!-- 游戏 -->
+<div id="game" class="scr">
+  <div class="hud" id="hud">
+    <button class="tg" id="gPause" aria-label="暂停">❚❚</button>
+    <div class="hmid">
+      <div class="lvname" id="gName">第1关</div>
+      <div class="timer" id="gTimer">5:00</div>
+    </div>
+    <div class="hearts" id="gHearts"></div>
+  </div>
+  <div class="board" id="board">
+    <div class="pane" id="paneA"><div class="stage" id="stA"></div></div>
+    <div class="strip" id="strip"><div class="qs" id="qs"></div></div>
+    <div class="pane" id="paneB"><div class="stage" id="stB"></div></div>
+  </div>
+  <div class="tools" id="tools">
+    <button class="tool" id="tZoom"><span class="ico">🔍</span><span class="lb">放大</span></button>
+    <div class="prog"><b id="gFound">0</b>/5<small>已找到</small></div>
+    <button class="tool hint" id="tHint"><span class="ico">💡</span><span class="lb">提示</span><i id="hintN">3</i></button>
+  </div>
+  <div class="tut" id="tut"><div class="tutbox"><b>找出 5 处不同！</b><br>上下两张图有 5 个地方不一样，<br>点击<em>任意一张图</em>上的不同之处。<br><span>双指捏合可同步放大两张图</span></div><div class="hand" id="hand">👆</div></div>
+</div>
+
+<!-- 暂停 -->
+<div id="pause" class="scr dim">
+  <div class="panel"><div class="ph">暂停</div>
+    <div class="row" style="margin:8px 0 4px"><button class="tg big" id="pMusic">♫</button><button class="tg big" id="pSfx">🔊</button></div>
+    <button class="btn green" id="pResume">继续游戏</button>
+    <button class="btn small" id="pRestart">重新开始</button>
+    <button class="btn small blue" id="pLevels">选择关卡</button>
+  </div>
+</div>
+
+<!-- 胜利 -->
+<div id="win" class="scr dim">
+  <div class="panel wide"><div class="ph gold">火眼金睛！</div>
+    <div class="stars" id="wStars"><span></span><span></span><span></span></div>
+    <div class="wimgs" id="wImgs"></div>
+    <div class="info" id="wInfo"></div>
+    <div class="reward" id="wReward"></div>
+    <div class="row">
+      <button class="btn small blue" id="wLevels">关卡</button>
+      <button class="btn small" id="wRetry">重玩</button>
+      <button class="btn green" id="wNext" >下一关</button>
+    </div>
+  </div>
+</div>
+
+<!-- 失败 -->
+<div id="fail" class="scr dim">
+  <div class="panel"><div class="ph gray" id="fTitle">时间到！</div>
+    <div class="failico" id="fIco">⏰</div>
+    <div class="info" id="fInfo"></div>
+    <button class="btn green" id="fRetry">再试一次</button>
+    <button class="btn small blue" id="fLevels">选择关卡</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="fx"></div>
+<script src="levels.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
