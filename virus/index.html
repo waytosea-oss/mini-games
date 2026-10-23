@@ -26,13 +26,16 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .ibtn svg{width:26px;height:26px}
 .ibtn.off{opacity:.45}
 .ibtn.off::after{content:"";position:absolute;width:30px;height:3px;background:#ff5a6e;transform:rotate(-45deg);border-radius:2px}
-#title{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 7vh);background:radial-gradient(ellipse at 50% 35%,rgba(120,240,220,.18),rgba(0,0,0,0) 60%)}
-.logo{position:relative;text-align:center;line-height:1;margin-top:10px}
+#title{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 4vh);background:radial-gradient(ellipse at 50% 35%,rgba(120,240,220,.18),rgba(0,0,0,0) 60%)}
+.logo{position:relative;text-align:center;line-height:1;margin-top:6px}
+.logo img{width:min(96vw,440px);display:block;margin:0 auto;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));animation:logoIn .8s cubic-bezier(.3,1.5,.5,1) both,logoBob 3.4s ease-in-out .8s infinite;transform-origin:50% 60%}
+@keyframes logoIn{0%{transform:scale(.3) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes logoBob{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-6px) rotate(.6deg)}}
 .logo .l1{font-size:64px;font-weight:900;letter-spacing:4px;background:linear-gradient(#fff 10%,#bff7ff 45%,#4fd2ff 55%,#2d8cf0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #0d3d78) drop-shadow(0 0 2px #0d3d78) drop-shadow(0 8px 14px rgba(0,0,0,.4));transform:rotate(-4deg)}
 .logo .l2{display:inline-block;margin-top:12px;font-size:28px;font-weight:900;letter-spacing:6px;padding:6px 18px 8px;border-radius:14px;background:linear-gradient(#ff6b81,#e2325a);box-shadow:0 4px 0 #8f1736,0 8px 16px rgba(0,0,0,.35);transform:rotate(-4deg);text-shadow:0 2px 0 rgba(0,0,0,.25)}
 .hero{position:relative;width:100%;flex:1;min-height:200px}
 .hero img{position:absolute;pointer-events:none}
-.hero .doc{left:50%;bottom:4%;height:min(40vh,320px);transform:translateX(-50%);animation:bob2 2.4s ease-in-out infinite}
+.hero .doc{left:50%;bottom:4%;height:min(40vh,320px);transform:translateX(-50%);animation:bob 2.4s ease-in-out infinite}
 .hero .v{width:min(22vw,100px);animation:float 3s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
@@ -157,7 +160,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 <div id="banner"><div class="b1" id="ban1"></div><div class="b2" id="ban2"></div></div>
 
 <div class="scr on" id="title">
- <div class="logo"><div class="l1">药丸医生</div><div class="l2">病毒大作战</div></div>
+ <div class="logo"><img id="tLogo" src="assets/logo.png" alt="药丸医生 · 病毒大作战"></div>
  <div class="hero">
   <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
   <img class="v" src="assets/v_yellow.png" style="right:8%;top:2%;animation-delay:-2s;width:min(17vw,78px)" alt="">
@@ -216,8 +219,9 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 </div>
 
 <div class="scr dim" id="ending">
- <div class="panel"><div class="ribbon">全部治愈！</div><div style="height:12px"></div>
-  <img src="assets/doctor1.png" id="endDoc" style="height:150px" alt="">
+ <div class="panel"><div class="ribbon">全部治愈！</div><div style="height:14px"></div>
+  <img src="assets/logo.png" alt="药丸医生" style="width:min(68vw,260px);display:block;margin:0 auto 4px">
+  <img src="assets/doctor1.png" id="endDoc" style="height:120px" alt="">
   <h2 style="font-size:26px;margin-top:8px">恭喜你，神医！</h2>
   <div class="sub">病毒大王被彻底击败，世界恢复了健康。<br>试试把每一关都拿到三颗星吧！</div>
   <div class="col"><button class="btn" id="bEndOk">返回选关</button></div>
@@ -225,7 +229,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 </div>
 
 <div id="toast"></div>
-<div id="loading"><div>药丸医生 · 加载中</div><div class="lb"><i id="ldBar"></i></div></div>
+<div id="loading"><img src="assets/logo.png" alt="药丸医生" style="width:min(82vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div style="font-size:15px;opacity:.8">加载中…</div><div class="lb"><i id="ldBar"></i></div></div>
 </div>
 <script src="game.js"></script>
 </body>
