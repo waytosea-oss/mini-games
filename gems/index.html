@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#120a1c">
+<title>宝石大盗 · 撬个宝石</title>
+<link rel="preload" href="assets/logo.webp" as="image">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",sans-serif;color:#fff;touch-action:none;overscroll-behavior:none}
+#cv{position:fixed;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+#safe{position:fixed;left:0;top:0;width:0;height:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);visibility:hidden}
+.scr{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+.scr.on{display:flex;animation:fadein .28s ease-out}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.dim{background:radial-gradient(ellipse at 50% 40%,rgba(40,14,60,.6),rgba(8,3,14,.88))}
+#load{background:#120a1c;z-index:30}
+#load .bar{width:62%;max-width:300px;height:14px;border-radius:9px;background:#2c1a3e;box-shadow:inset 0 2px 4px #0008;overflow:hidden;margin-top:18px;border:1.5px solid #6a4a20}
+#load .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff4f7b,#ffd34a,#4fe0ff);border-radius:9px;transition:width .2s}
+#load p{margin-top:12px;color:#e9c98c;font-size:14px;letter-spacing:2px}
+#load img{width:min(80vw,340px)}
+/* title */
+#menu{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 8vh)}
+.logo{display:block;margin-top:44px;width:min(98vw,440px);height:auto;transform-origin:50% 60%;animation:breathe 3.2s ease-in-out infinite;filter:drop-shadow(0 12px 16px rgba(0,0,0,.6));-webkit-user-drag:none;pointer-events:none}
+@keyframes breathe{0%,100%{transform:scale(1) rotate(-.6deg)}50%{transform:scale(1.025) rotate(.6deg)}}
+.sub{margin-top:2px;font-size:15px;font-weight:800;color:#ffe9b0;letter-spacing:5px;text-shadow:0 2px 4px #000c;background:linear-gradient(90deg,rgba(90,20,90,0),rgba(90,20,90,.75) 20%,rgba(90,20,90,.75) 80%,rgba(90,20,90,0));padding:6px 34px}
+.hero{position:relative;width:min(56vw,230px);height:auto;margin-top:auto;animation:bob 2.2s ease-in-out infinite;filter:drop-shadow(0 10px 10px rgba(0,0,0,.6));pointer-events:none}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.menuBtns{display:flex;flex-direction:column;align-items:center;margin:4px 0 calc(env(safe-area-inset-bottom) + 3vh)}
+.btn{position:relative;margin-top:14px;min-width:220px;padding:14px 26px;border:none;border-radius:40px;font-family:inherit;font-weight:900;font-size:22px;line-height:1;color:#5a2300;letter-spacing:3px;cursor:pointer;
+ background:linear-gradient(180deg,#fff2a8 0%,#ffd23f 45%,#ffab1a 100%);box-shadow:0 6px 0 #b25a00,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #fffbe0;text-shadow:0 1px 0 #fff6;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #b25a00,0 4px 8px rgba(0,0,0,.5),inset 0 2px 0 #fffbe0}
+.btn.purple{color:#fff;background:linear-gradient(180deg,#d59bff,#9b3fe0 50%,#6a1fb0);box-shadow:0 6px 0 #3e0f6e,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #f0d8ff;text-shadow:0 2px 0 #3e0f6e}
+.btn.green{color:#fff;background:linear-gradient(180deg,#9df07a,#3fbf2c 50%,#22941a);box-shadow:0 6px 0 #145f10,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #d8ffc8;text-shadow:0 2px 0 #145f10}
+.btn.red{color:#fff;background:linear-gradient(180deg,#ff9a8a,#f2483a 50%,#c22a20);box-shadow:0 6px 0 #7a140e,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #ffd6cf;text-shadow:0 2px 0 #7a140e}
+.btn.small{min-width:0;padding:11px 18px;font-size:17px}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+.toggles{position:absolute;top:calc(env(safe-area-inset-top) + 14px);right:14px;display:flex;gap:10px;z-index:2}
+.tg{width:44px;height:44px;border-radius:50%;border:2px solid #ffe08a;background:radial-gradient(circle at 35% 30%,#a066ff,#5a1f9e 70%);box-shadow:0 4px 0 #2c0d52,0 6px 10px #0008;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;position:relative}
+.tg.off::after{content:"";position:absolute;width:30px;height:4px;background:#ff3b4b;border-radius:2px;transform:rotate(-45deg);box-shadow:0 0 0 1.5px #fff}
+.tg svg{width:22px;height:22px}
+.stat{margin-top:12px;font-size:13px;color:#f3d9ff;text-shadow:0 1px 3px #000}
+/* panel */
+.panel{position:relative;width:100%;max-width:360px;padding:34px 20px 24px;border-radius:26px;text-align:center;
+ background:linear-gradient(180deg,#4a2470 0%,#2a1046 100%);border:3px solid #e8b44a;box-shadow:0 0 0 4px #1a0830,0 20px 40px rgba(0,0,0,.6),inset 0 2px 0 #8a5ac0}
+.panel .ph{position:absolute;left:50%;top:-26px;transform:translateX(-50%);padding:9px 30px;border-radius:16px;font-size:24px;font-weight:900;letter-spacing:4px;white-space:nowrap;
+ background:linear-gradient(#ff6b8a,#d81e4a);border:3px solid #ffe08a;box-shadow:0 5px 0 #6a0a24,0 8px 14px #0008;text-shadow:0 2px 0 #6a0a24}
+.panel .ph.gold{background:linear-gradient(#ffe27a,#ffa41f);color:#6a2a00;text-shadow:0 1px 0 #fff8}
+.panel .ph.gray{background:linear-gradient(#9aa3ad,#5d6670);text-shadow:0 2px 0 #333}
+.stars{display:flex;justify-content:center;gap:6px;margin:8px 0 6px;height:74px;align-items:flex-end}
+.stars span{width:64px;height:64px;display:block;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6l13 28 30 4-22 21 6 30-27-15-27 15 6-30L7 38l30-4z' fill='%23281040' stroke='%23120620' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.stars span.on{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff6b0'/%3E%3Cstop offset='.5' stop-color='%23ffd12e'/%3E%3Cstop offset='1' stop-color='%23ff9800'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50 6l13 28 30 4-22 21 6 30-27-15-27 15 6-30L7 38l30-4z' fill='url(%23g)' stroke='%23a24a00' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M38 30c4-6 8-10 12-14' stroke='%23fff' stroke-width='5' stroke-linecap='round' opacity='.8'/%3E%3C/svg%3E");animation:starpop .45s cubic-bezier(.3,1.8,.5,1) both}
+.stars span:nth-child(2){width:78px;height:78px}
+@keyframes starpop{0%{transform:scale(0) rotate(-60deg)}100%{transform:scale(1) rotate(0)}}
+.info{margin:6px 0 2px;font-size:15px;color:#f3e2ff;line-height:1.7}
+.info b{color:#ffd34a}
+.reward{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:6px 14px;border-radius:14px;background:rgba(0,0,0,.3);font-size:14px;color:#fff3c0}
+.reward img{width:30px;height:30px;object-fit:contain}
+.pimg{width:110px;margin:4px auto 0;display:block;filter:drop-shadow(0 6px 6px #0008)}
+/* level select */
+#levels{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 18px);background:radial-gradient(ellipse at 50% 30%,rgba(50,16,70,.6),rgba(8,3,14,.92))}
+#levels h2{font-size:30px;font-weight:900;color:#ffd75a;text-shadow:0 3px 0 #5a1a6a,0 6px 12px #000;letter-spacing:4px;margin:6px 0 4px}
+#levels .tot{font-size:14px;color:#f0d8ff;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px 10px;width:100%;max-width:380px;overflow-y:auto;padding:6px 4px 20px;flex:1;align-content:start;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.lv{position:relative;aspect-ratio:1/1.12;border-radius:16px;border:none;font-family:inherit;cursor:pointer;
+ background:linear-gradient(160deg,#e6a8ff,#9a40e0 55%,#6a1fb0);box-shadow:0 5px 0 #3a0d66,0 8px 12px #0007,inset 0 2px 0 #f6e0ff;color:#fff;font-size:22px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:10px;text-shadow:0 2px 0 #3a0d66}
+.lv::before{content:"";position:absolute;left:12%;top:8%;width:30%;height:16%;border-radius:50%;background:rgba(255,255,255,.45);transform:rotate(-20deg)}
+.lv .s{position:absolute;bottom:5px;font-size:11px;letter-spacing:-1px;color:#ffd34a;text-shadow:0 1px 0 #3a0d66}
+.lv.lock{background:linear-gradient(#5a4a6e,#3a2c4c);box-shadow:0 5px 0 #1e1530,0 8px 12px #0007;color:#8a7a9c;text-shadow:none}
+.lv.lock::before{display:none}
+.lv.cur{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 5px 0 #3a0d66,0 0 0 3px #ffe27a,0 0 18px #ffd34a}50%{box-shadow:0 5px 0 #3a0d66,0 0 0 3px #ffe27a,0 0 4px #ffd34a}}
+.help{margin-top:14px;font-size:13.5px;color:#e8d6ff;line-height:1.75;text-align:left;background:rgba(0,0,0,.22);padding:10px 14px;border-radius:14px}
+.help b{color:#ffd34a}
+#toast{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.8);z-index:40;padding:12px 22px;border-radius:22px;background:rgba(30,8,44,.9);border:2px solid #ffd34a;color:#fff6d0;font-weight:800;font-size:17px;pointer-events:none;opacity:0;transition:all .25s;white-space:nowrap;box-shadow:0 8px 20px #000a}
+#toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="safe"></div>
+
+<div id="load" class="scr on">
+  <img src="assets/logo.webp" alt="宝石大盗">
+  <div class="bar"><i id="loadBar"></i></div>
+  <p id="loadTxt">宝库大门开启中…</p>
+</div>
+
+<div id="menu" class="scr">
+  <div class="toggles"><button class="tg" id="tMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button><button class="tg" id="tSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+  <img class="logo" id="mLogo" src="assets/logo.webp" alt="宝石大盗">
+  <div class="sub">妙 手 神 偷 · 30 座 宝 库</div>
+  <img class="hero" src="assets/mascot.webp" alt="">
+  <div class="menuBtns">
+    <button class="btn" id="bPlay">开始行动</button>
+    <button class="btn purple small" id="bLevels" style="min-width:180px">选择关卡</button>
+    <div class="stat" id="mStat"></div>
+  </div>
+</div>
+
+<div id="levels" class="scr">
+  <div class="toggles"><button class="tg" id="lvBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <h2>宝库地图</h2>
+  <div class="tot" id="lvTot"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="pause" class="scr dim">
+  <div class="panel">
+    <div class="ph gold">暂停</div>
+    <div class="row" style="margin:4px 0 6px">
+      <button class="tg" id="pMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button>
+      <button class="tg" id="pSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    </div>
+    <button class="btn green" id="pResume">继续行动</button><br>
+    <div class="row"><button class="btn small" id="pRestart">重新开始</button><button class="btn small red" id="pQuit">返回地图</button></div>
+    <div class="help">① 点<b>没被挡住</b>的宝石，把它撬出来<br>② 飞进<b>同色宝箱</b>，凑满 3 颗就带走<br>③ 不同色的先进<b>丝绒托盘</b>，塞满就失手<br>④ 板子上的宝石撬光，板子会掉落</div>
+  </div>
+</div>
+
+<div id="win" class="scr dim">
+  <div class="panel">
+    <div class="ph gold" id="wTitle">满载而归！</div>
+    <div class="stars" id="wStars"><span></span><span></span><span></span></div>
+    <div class="info" id="wInfo"></div>
+    <div id="wReward"></div>
+    <div class="row" style="margin-top:6px"><button class="btn small" id="wRetry">再来一次</button><button class="btn small purple" id="wMenu">地图</button></div>
+    <button class="btn green" id="wNext">下一关</button>
+  </div>
+</div>
+
+<div id="fail" class="scr dim">
+  <div class="panel">
+    <div class="ph gray" id="fTitle">托盘塞满啦！</div>
+    <img class="pimg" src="assets/mascot.webp" style="transform:rotate(-10deg);filter:grayscale(.35) drop-shadow(0 6px 6px #0008)" alt="">
+    <div class="info" id="fInfo"></div>
+    <button class="btn green" id="fRevive" style="display:none">使用道具继续</button>
+    <div class="row"><button class="btn small" id="fRetry">再来一次</button><button class="btn small red" id="fMenu">返回地图</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="audio.js"></script>
+<script src="gen.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
