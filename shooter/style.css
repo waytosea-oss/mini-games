@@ -37,7 +37,7 @@ button { font-family: inherit; color: inherit; border: 0; background: none; curs
 
 /* ---------- loading ---------- */
 #scrLoad { justify-content: center; background: radial-gradient(ellipse at 50% 40%, #1a1440, #05050f 70%); }
-.ldLogo { font-size: calc(var(--u)*40); font-weight: 900; letter-spacing: calc(var(--u)*6); background: linear-gradient(#fff, #ffd23f 50%, #ff7a1c); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: calc(var(--u)*30); }
+.ldLogo { width: calc(var(--u)*300); height: auto; margin-bottom: calc(var(--u)*30); filter: drop-shadow(0 0 calc(var(--u)*10) rgba(60,140,255,.35)); }
 .ldBar { width: calc(var(--u)*220); height: calc(var(--u)*12); border: calc(var(--u)*2) solid #6fe3ff; padding: calc(var(--u)*2); }
 .ldBar i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, #6fe3ff 0 calc(var(--u)*8), #2a8fff calc(var(--u)*8) calc(var(--u)*10)); transition: width .15s; }
 .ldTxt { font-family: 'PS2P', monospace; font-size: calc(var(--u)*9); margin-top: calc(var(--u)*12); color: #8fb8ff; }
@@ -46,13 +46,15 @@ button { font-family: inherit; color: inherit; border: 0; background: none; curs
 #scrTitle { justify-content: flex-start; }
 .tBg { position: absolute; inset: 0; background: url(assets/title.jpg) center / cover no-repeat; image-rendering: pixelated; }
 .tBg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(5,5,20,.55), rgba(5,5,20,0) 30%, rgba(5,5,20,0) 50%, rgba(5,5,20,.85) 85%); }
-.tLogo { position: relative; margin-top: calc(var(--u)*70 + env(safe-area-inset-top, 0px)); text-align: center; animation: logoIn .9s cubic-bezier(.2,1.4,.4,1) both; }
+.tLogo { position: relative; margin-top: calc(var(--u)*46 + env(safe-area-inset-top, 0px)); text-align: center; animation: logoIn .9s cubic-bezier(.2,1.4,.4,1) both; }
 @keyframes logoIn { from { transform: scale(2.2); opacity: 0; } to { transform: none; opacity: 1; } }
-.tCn { font-size: calc(var(--u)*62); font-weight: 900; letter-spacing: calc(var(--u)*4); line-height: 1.05;
-  background: linear-gradient(#ffffff 10%, #fff2a0 40%, #ffb020 60%, #ff5a1c 90%); -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 calc(var(--u)*3) 0 #5a1000) drop-shadow(0 0 calc(var(--u)*3) #2a0a40) drop-shadow(0 0 calc(var(--u)*14) rgba(255,120,40,.6)); font-style: italic; }
+.tCn { position: relative; margin: 0 auto; width: calc(var(--u)*344); line-height: 0; }
+.tCn img { width: 100%; height: auto; display: block; -webkit-user-select: none; user-select: none; pointer-events: none; }
+.tShine { position: absolute; inset: 0; -webkit-mask: url(assets/logo.png) center / 100% 100% no-repeat; mask: url(assets/logo.png) center / 100% 100% no-repeat; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat; animation: shine 3.6s ease-in-out 1s infinite; pointer-events: none; }
+@keyframes shine { 0%, 55% { background-position: 150% 0; } 85%, 100% { background-position: -150% 0; } }
+/* .tEn removed: English lockup is part of the logo */
 .tEn { font-family: 'PS2P', monospace; font-size: calc(var(--u)*17); color: #9ff3ff; letter-spacing: calc(var(--u)*3); margin-top: calc(var(--u)*8); text-shadow: 0 calc(var(--u)*2) 0 #0a2a6a, 0 0 calc(var(--u)*10) #2a8fff; }
-.tSub { font-size: calc(var(--u)*13); color: #ffd9a0; margin-top: calc(var(--u)*10); letter-spacing: calc(var(--u)*3); text-shadow: 0 1px 2px #000; }
+.tSub { font-size: calc(var(--u)*13); color: #ffd9a0; margin-top: calc(var(--u)*2); letter-spacing: calc(var(--u)*3); text-shadow: 0 1px 2px #000; }
 .tMenu { position: absolute; bottom: calc(var(--u)*80 + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; display: none; flex-direction: column; align-items: center; animation: fadeUp .4s ease-out both; }
 .tMenu.on { display: flex; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(calc(var(--u)*20)); } to { opacity: 1; transform: none; } }
