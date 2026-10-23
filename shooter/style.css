@@ -203,3 +203,13 @@ button { font-family: inherit; color: inherit; border: 0; background: none; curs
 .up { padding: calc(var(--u)*6) calc(var(--u)*10); }
 .hgDesc { margin: calc(var(--u)*4) 0 calc(var(--u)*6); }
 .sg { font-family: var(--cjk); font-size: 1.5em; vertical-align: -0.1em; }
+
+/* ---------- back to hub (Tilo 游戏屋) ---------- */
+.hubPill { position: absolute; z-index: 12; left: calc(var(--u)*10); top: calc(var(--u)*9 + env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: calc(var(--u)*3);
+  height: calc(var(--u)*30); padding: 0 calc(var(--u)*13) 0 calc(var(--u)*10); border-radius: calc(var(--u)*15); font-size: calc(var(--u)*13); font-weight: 700; letter-spacing: calc(var(--u)*1); color: #cff6ff;
+  background: linear-gradient(rgba(22,40,92,.86), rgba(8,14,40,.86)); border: calc(var(--u)*1.5) solid rgba(111,227,255,.65);
+  box-shadow: 0 0 calc(var(--u)*10) rgba(42,143,255,.45), 0 calc(var(--u)*3) calc(var(--u)*8) rgba(0,0,0,.5); text-shadow: 0 0 calc(var(--u)*6) rgba(111,227,255,.6); transition: transform .08s, filter .08s; }
+.hubPill b { font-size: calc(var(--u)*20); line-height: 1; margin-top: calc(var(--u)*-2); font-weight: 900; }
+.hubPill:active { transform: scale(.94); filter: brightness(1.3); }
+.btn.hubb { background: linear-gradient(#3a4f8a, #1c2a5a 50%, #121c44 51%, #1a2752); box-shadow: inset 0 0 0 calc(var(--u)*2) rgba(111,227,255,.45); color: #cff6ff; }
+.rBtns .btn.hubb { height: calc(var(--u)*38); font-size: calc(var(--u)*14); margin-top: calc(var(--u)*8); }

@@ -58,6 +58,7 @@ const UI = {
       row.appendChild(mk('星域地图', 'blue', () => { overlay('scrResult', false); openMap(); }));
       row.appendChild(mk('机库', 'green', () => { overlay('scrResult', false); openHangar('map'); }));
       B.appendChild(row);
+      B.appendChild(mk('返回游戏屋', 'hubb', goHub));
       overlay('scrResult', true);
     }, r.win ? 300 : 500);
   },
@@ -173,6 +174,14 @@ function pause(on_) {
   if (on_) { Sound.laser(false); KEYS.clear(); drag = null; }
 }
 
+// ---------- back to hub ----------
+function goHub(ev) {
+  if (ev && ev.stopPropagation) ev.stopPropagation();
+  try { writeSave(); } catch (e) {}
+  try { Sound.laser(false); } catch (e) {}
+  location.href = '../';
+}
+
 // ---------- wiring ----------
 on('#btnStart', () => openMap());
 on('#btnHangar1', () => openHangar('title'));
@@ -187,6 +196,9 @@ $$('.tog').forEach(b => on(b, () => { SAVE[b.dataset.k] = !SAVE[b.dataset.k]; wr
 on('#btnPause', () => pause(true));
 on('#pResume', () => pause(false));
 on('#pRestart', () => { overlay('scrPause', false); startLevel(LV.n); });
+on('#btnHub', goHub, 'back');
+on('#pHub', goHub, 'back');
+on('#endHub', goHub, 'back');
 on('#pQuit', () => { overlay('scrPause', false); Sound.laser(false); openMap(LV.s); });
 $('#btnBomb').addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); Sound.unlock(); if (G && G.bombs <= 0) Sound.sfx.deny(); else bomb(); });
 $('#btnPause').addEventListener('pointerdown', (e) => e.stopPropagation());

@@ -790,6 +790,16 @@ $('fClear').onclick = () => { SND.tap(); if (save.props.clear <= 0 && save.coins
 $('fTemp').onclick = () => { SND.tap(); hide('fail'); G.mode = 'play'; G.over = false; G.failOpen = true; tapLocked(LG.TEMP_ROW); };
 $('fRetry').onclick = () => { SND.tap(); hide('fail'); restartStage(); };
 $('fMenu').onclick = () => { SND.tap(); hide('fail'); restartStage(); G.flyers = []; G.hid.fill(0); menu(); };
+// 返回 Tilo 游戏屋：先存档再离开（与「返回首页」保存方式一致）
+function goHub(e) {
+  if (e) e.stopPropagation();
+  try {
+    if (G.mode === 'fail') { G.s = clone(save.cp || freshState()); save.st = G.s; }
+    else if (G.s && (G.mode === 'paused' || G.mode === 'play')) save.st = G.s;
+  } catch (_) { }
+  persist(); try { SND.tap(); } catch (_) { } location.href = '../';
+}
+for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 function openRank() {
   if (G.mode !== 'play') return; G.mode = 'rank'; recordRun(); persist();
   const tb = $('rankTbl'); tb.innerHTML = '';

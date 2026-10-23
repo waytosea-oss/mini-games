@@ -794,6 +794,9 @@ $('wRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('wMenu').onclick = () => { SND.play('click'); G.panels = null; G.state = 'menu'; levels(); };
 $('fRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('fMenu').onclick = () => { SND.play('click'); G.panels = null; G.state = 'menu'; levels(); };
+// 返回 Tilo 游戏屋：先存档再离开
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 
 /* ---------- 音频解锁 ---------- */
 let unlocked = false;

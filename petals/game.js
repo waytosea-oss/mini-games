@@ -656,6 +656,9 @@ $('pQuit').onclick = () => { SND.play('click'); G.s = null; hideTut(); showLevel
 $('bPlay').onclick = () => { SND.unlock(); SND.play('click'); if (save.music) SND.startMusic(); startLevel(Math.min(save.max, LEVELS.length) - 1); };
 $('bLevels').onclick = () => { SND.unlock(); SND.play('click'); if (save.music) SND.startMusic(); showLevels(); };
 $('lvBack').onclick = () => { SND.play('click'); showScr('menu'); };
+// 返回 Tilo 游戏屋：先存档再离开
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 function syncTg() { for (const id of ['mMusic', 'pMusic']) $(id).classList.toggle('off', !save.music); for (const id of ['mSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx); }
 function tgMusic() { SND.unlock(); save.music = !save.music; SND.setMusic(save.music); if (save.music) SND.startMusic(); persist(); syncTg(); }
 function tgSfx() { SND.unlock(); save.sfx = !save.sfx; SND.setSfx(save.sfx); persist(); syncTg(); SND.play('click'); }

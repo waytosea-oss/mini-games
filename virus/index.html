@@ -26,7 +26,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .ibtn svg{width:26px;height:26px}
 .ibtn.off{opacity:.45}
 .ibtn.off::after{content:"";position:absolute;width:30px;height:3px;background:#ff5a6e;transform:rotate(-45deg);border-radius:2px}
-#title{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 4vh);background:radial-gradient(ellipse at 50% 35%,rgba(120,240,220,.18),rgba(0,0,0,0) 60%)}
+#title{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + max(4vh,48px));background:radial-gradient(ellipse at 50% 35%,rgba(120,240,220,.18),rgba(0,0,0,0) 60%)}
 .logo{position:relative;text-align:center;line-height:1;margin-top:6px}
 .logo img{width:min(96vw,440px);display:block;margin:0 auto;filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));animation:logoIn .8s cubic-bezier(.3,1.5,.5,1) both,logoBob 3.4s ease-in-out .8s infinite;transform-origin:50% 60%}
 @keyframes logoIn{0%{transform:scale(.3) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
@@ -142,6 +142,13 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .tip{font-size:13px;opacity:.8;margin-top:4px;padding:6px 14px;border-radius:12px;background:rgba(0,0,0,.25)}
 .help{display:flex;gap:10px;justify-content:center;margin:2px 0 10px;flex-wrap:wrap}
 .help span{font-size:12px;background:rgba(0,0,0,.3);border-radius:10px;padding:4px 9px;opacity:.9}
+/* back to hub (Tilo 游戏屋) */
+.hubPill{position:absolute;z-index:6;left:12px;top:calc(env(safe-area-inset-top) + 10px);height:32px;padding:0 14px 0 10px;border:0;border-radius:16px;display:flex;align-items:center;gap:3px;font-family:inherit;font-size:14px;font-weight:900;letter-spacing:1px;color:#fff;cursor:pointer;
+ background:linear-gradient(rgba(255,255,255,.26),rgba(255,255,255,.12));box-shadow:inset 0 0 0 2px rgba(255,255,255,.3),0 4px 10px rgba(0,0,0,.28);text-shadow:0 1px 0 rgba(0,0,0,.3);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform .08s}
+.hubPill b{font-size:22px;line-height:1;margin-top:-3px}
+.hubPill:active{transform:scale(.94)}
+.btn.hub{background:linear-gradient(#4fd8cf,#1f9aa6);box-shadow:0 5px 0 #11646d,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
+.btn.hub:active{box-shadow:0 2px 0 #11646d,0 4px 10px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
 </style>
 </head>
 <body>
@@ -160,6 +167,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 <div id="banner"><div class="b1" id="ban1"></div><div class="b2" id="ban2"></div></div>
 
 <div class="scr on" id="title">
+ <button class="hubPill" id="bHub0" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
  <div class="logo"><img id="tLogo" src="assets/logo.png" alt="药丸医生 · 病毒大作战"></div>
  <div class="hero">
   <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
@@ -195,7 +203,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 
 <div class="scr dim" id="pause">
  <div class="panel"><h2>暂停</h2><div class="sub" id="pSub">第 1 关</div>
-  <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button></div>
+  <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button><button class="btn hub" id="bHubP">返回游戏屋</button></div>
   <div class="togs"><button class="ibtn" id="bMus2"></button><button class="ibtn" id="bSfx2"></button></div>
  </div>
 </div>
@@ -205,7 +213,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <div class="stars" id="wStars" style="margin-top:12px"></div>
   <div class="sub" id="wSubT">第 1 关 完成！</div>
   <div class="earn"><span class="coin" style="width:32px;height:32px;font-size:18px">¥</span>+<span id="wEarn">0</span></div>
-  <div class="col"><button class="btn" id="bNext">下一关</button><div class="row"><button class="btn orange sm" id="bWinShop" style="flex:1">升级</button><button class="btn gray sm" id="bWinMenu" style="flex:1">选关</button></div></div>
+  <div class="col"><button class="btn" id="bNext">下一关</button><div class="row"><button class="btn orange sm" id="bWinShop" style="flex:1">升级</button><button class="btn gray sm" id="bWinMenu" style="flex:1">选关</button></div><button class="btn hub sm" id="bHubW">返回游戏屋</button></div>
  </div>
 </div>
 
@@ -214,7 +222,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <div style="height:14px"></div>
   <img src="assets/v_red.png" style="width:110px;animation:float 2s ease-in-out infinite" alt="">
   <div class="sub" id="lSub">病毒占领了培养皿……</div>
-  <div class="col"><button class="btn orange" id="bRevive"></button><button class="btn" id="bRetry">再试一次</button><div class="row"><button class="btn blue sm" id="bLoseShop" style="flex:1">升级</button><button class="btn gray sm" id="bLoseMenu" style="flex:1">选关</button></div></div>
+  <div class="col"><button class="btn orange" id="bRevive"></button><button class="btn" id="bRetry">再试一次</button><div class="row"><button class="btn blue sm" id="bLoseShop" style="flex:1">升级</button><button class="btn gray sm" id="bLoseMenu" style="flex:1">选关</button></div><button class="btn hub sm" id="bHubL">返回游戏屋</button></div>
  </div>
 </div>
 
@@ -224,7 +232,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <img src="assets/doctor1.png" id="endDoc" style="height:120px" alt="">
   <h2 style="font-size:26px;margin-top:8px">恭喜你，神医！</h2>
   <div class="sub">病毒大王被彻底击败，世界恢复了健康。<br>试试把每一关都拿到三颗星吧！</div>
-  <div class="col"><button class="btn" id="bEndOk">返回选关</button></div>
+  <div class="col"><button class="btn" id="bEndOk">返回选关</button><button class="btn hub sm" id="bHubE">返回游戏屋</button></div>
  </div>
 </div>
 

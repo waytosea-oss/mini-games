@@ -549,6 +549,9 @@ $('wMenu').onclick = () => { SND.play('click'); openLevels(); };
 $('wNext').onclick = () => { SND.play('click'); startLevel(G.level + 1); };
 $('fRetry').onclick = () => { SND.play('click'); SND.duck(false); startLevel(G.level); };
 $('fMenu').onclick = () => { SND.play('click'); SND.duck(false); openLevels(); };
+// 返回 Tilo 游戏屋：先存档再离开
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 
 /* ---------- 渲染 ---------- */
 let smokeImg, glowImg, coinImg;

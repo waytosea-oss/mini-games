@@ -76,6 +76,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 #toast.on{opacity:1}
 .help{margin-top:16px;font-size:13px;color:#e8c9a4;line-height:1.8;text-align:center;opacity:.9}
 .tip{margin-top:10px;font-size:13px;color:#d9b38c}
+/* back to hub (Tilo 游戏屋) */
+.hubPill{position:absolute;z-index:3;left:14px;top:calc(env(safe-area-inset-top) + 18px);height:36px;padding:0 16px 0 11px;border:none;border-radius:18px;display:flex;align-items:center;gap:3px;font-family:inherit;font-size:15px;font-weight:900;letter-spacing:1px;color:#6a3100;cursor:pointer;
+ background:linear-gradient(#fff3d0,#f0c27a);box-shadow:0 4px 0 #8a5216,0 6px 10px #0007,inset 0 1.5px 0 #fffbe8;text-shadow:0 1px 0 #fff8;transition:transform .08s}
+.hubPill b{font-size:24px;line-height:1;margin-top:-3px}
+.hubPill:active{transform:translateY(3px);box-shadow:0 1px 0 #8a5216,0 3px 6px #0007}
+.btn.hub{background:linear-gradient(#fff3d0,#f0c27a);color:#6a3100;box-shadow:0 6px 0 #8a5216,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #fffbe8}
+.btn.hub:active{box-shadow:0 2px 0 #8a5216,0 4px 8px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -89,6 +96,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
 </div>
 
 <div id="menu" class="scr">
+  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
   <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button><button class="tg" id="mSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M4 9h4l5-4v14l-5-4H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#6a3100" stroke-width="2" stroke-linecap="round"/></svg></button></div>
   <div style="flex:.5"></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="夜市撸串王">
@@ -117,6 +125,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
     </div>
     <button class="btn green" id="pResume">继续营业</button><br>
     <div class="row"><button class="btn small" id="pRestart">重新开始</button><button class="btn small red" id="pQuit">返回选关</button></div>
+    <button class="btn small hub" id="pHub">返回游戏屋</button>
     <div class="help">点击烤架上<b>最上面</b>的串，放进下方托盘<br>托盘里凑齐 <b>3 个相同</b> 就能卖出<br>托盘 7 格塞满或时间用完就失败啦<br>藏在串堆里的<b>小羊</b>凑齐 3 只有惊喜！</div>
   </div>
 </div>
@@ -129,7 +138,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
     <div class="info" id="wInfo"></div>
     <div id="wReward"></div>
     <div class="row" style="margin-top:6px"><button class="btn small" id="wRetry">再来一次</button><button class="btn small" id="wMenu" style="background:linear-gradient(#ffe6c0,#e8b070)">选关</button></div>
-    <button class="btn green" id="wNext">下一关</button>
+    <button class="btn green" id="wNext">下一关</button><br>
+    <button class="btn small hub" id="wHub">返回游戏屋</button>
   </div>
 </div>
 
@@ -140,6 +150,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:
     <div class="info" id="fInfo"></div>
     <button class="btn green" id="fRevive" style="display:none">使用道具继续</button>
     <div class="row"><button class="btn small" id="fRetry">再来一次</button><button class="btn small red" id="fMenu">返回选关</button></div>
+    <button class="btn small hub" id="fHub">返回游戏屋</button>
   </div>
 </div>
 

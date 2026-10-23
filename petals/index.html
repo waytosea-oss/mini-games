@@ -138,6 +138,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
 .thumb{width:150px;height:150px;margin:4px auto 0;display:block;border-radius:16px;border:5px solid #fff;box-shadow:0 0 0 3px #ffb3d0,0 8px 16px #0003;image-rendering:auto;background:#fff}
 #hand{position:fixed;z-index:7;width:56px;height:56px;pointer-events:none;display:none;animation:tapme 1s ease-in-out infinite;filter:drop-shadow(0 4px 4px #0005)}
 @keyframes tapme{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4px,10px) scale(.92)}}
+/* back to hub (Tilo 游戏屋) */
+.hubPill{position:absolute;z-index:3;left:12px;top:calc(env(safe-area-inset-top) + 15px);height:38px;padding:0 16px 0 11px;border:3px solid #fff;border-radius:19px;display:flex;align-items:center;gap:3px;font-family:inherit;font-size:15px;font-weight:900;letter-spacing:1px;color:#fff;cursor:pointer;
+ background:linear-gradient(#8fe0a8,#3fb36a);box-shadow:0 4px 0 #1f7a45,0 6px 10px #0004;text-shadow:0 1px 0 #1f7a45;transition:transform .08s}
+.hubPill b{font-size:24px;line-height:1;margin-top:-3px}
+.hubPill:active{transform:translateY(3px);box-shadow:0 1px 0 #1f7a45}
+.btn.hub{color:#b02a63;background:linear-gradient(180deg,#ffffff,#ffe4ef);box-shadow:0 6px 0 #e7a6c3,0 10px 18px rgba(120,30,70,.2),inset 0 0 0 2px #ffc2da;text-shadow:none}
+.btn.hub:active{box-shadow:0 2px 0 #e7a6c3,inset 0 0 0 2px #ffc2da}
 </style>
 </head>
 <body>
@@ -150,6 +157,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
 </div>
 
 <div id="menu" class="scr">
+  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
   <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button><button class="tg" id="mSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#fff" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>
   <div style="flex:.5;min-height:calc(env(safe-area-inset-top) + 52px)"></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="花瓣消消">
@@ -197,6 +205,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     </div>
     <button class="btn green" id="pResume">继续采花</button>
     <div class="row"><button class="btn small gold" id="pRestart">重新开始</button><button class="btn small" id="pQuit">返回选关</button></div>
+    <button class="btn small hub" id="pHub">返回游戏屋</button>
     <div class="help">点击最前排的花篮，送上<b>传送带</b><br>花篮会自动收集画面<b>最底层</b>的同色花瓣<br><b>三个同色</b>花篮会合并成大花篮<br>传送带篮位满了又收不到花瓣就失败</div>
   </div>
 </div>
@@ -209,7 +218,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     <div class="info" id="wInfo"></div>
     <div id="wReward"></div>
     <div class="row" style="margin-top:4px"><button class="btn small gold" id="wRetry">再来一次</button><button class="btn small green" id="wMenu">收藏馆</button></div>
-    <button class="btn" id="wNext">下一关</button>
+    <button class="btn" id="wNext">下一关</button><br>
+    <button class="btn small hub" id="wHub">返回游戏屋</button>
   </div>
 </div>
 
@@ -220,6 +230,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     <div class="info" id="fInfo"></div>
     <button class="btn green" id="fRevive" style="display:none"></button>
     <div class="row"><button class="btn small gold" id="fRetry">再来一次</button><button class="btn small" id="fMenu">返回选关</button></div>
+    <button class="btn small hub" id="fHub">返回游戏屋</button>
   </div>
 </div>
 

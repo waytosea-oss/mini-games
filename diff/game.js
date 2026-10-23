@@ -369,6 +369,9 @@ function failLevel(why) {
 }
 tap($('fRetry'), () => { $('fail').classList.remove('on'); startLevel(G.i); });
 tap($('fLevels'), () => { $('fail').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
+// 返回 Tilo 游戏屋：先存档再离开
+function goHub() { save(); location.href = '../'; }
+['mHub', 'pHub', 'wHub', 'fHub'].forEach(i => tap($(i), goHub));
 /* ---------- 特效 ---------- */
 const FX = []; const fxEl = $('fx');
 function burst(x, y, n, cols) {

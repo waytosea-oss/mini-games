@@ -683,6 +683,9 @@ on('bRevive',()=>revive());
 on('bLoseShop',()=>{sfx('click');goShop(G.L);});
 on('bLoseMenu',()=>{sfx('click');goLevels();});
 on('bEndOk',()=>{sfx('click');goLevels(4);});
+// back to hub (Tilo 游戏屋): save, then leave
+function goHub(e){if(e)e.stopPropagation();save();try{sfx('click');}catch(_){}location.href='../';}
+['bHub0','bHubP','bHubW','bHubL','bHubE'].forEach(id=>on(id,goHub));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='play'&&!paused)togglePause();if(AU.ctx)AU.ctx.suspend();}else if(AU.ctx)AU.ctx.resume();});
 // swipe between worlds on level select
 (()=>{let sx=null;const el=$('levels');el.addEventListener('pointerdown',e=>{sx=e.clientX;});el.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>60){if(d<0&&menuWorld<4)menuWorld++;else if(d>0&&menuWorld>0)menuWorld--;else return;renderLevels();sfx('click');}});})();
