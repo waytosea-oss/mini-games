@@ -25,7 +25,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c3f2c;font-family:
 .sub{margin-top:-4px;font-size:15px;font-weight:800;color:#5a2a00;letter-spacing:5px;background:linear-gradient(#fff3c4,#f2c867 60%,#d89a2c);padding:6px 20px;border-radius:6px;border:2px solid #7a4a10;box-shadow:0 4px 0 #6a3a08,0 6px 10px #0006;position:relative}
 .sub::before,.sub::after{content:"";position:absolute;top:50%;width:14px;height:14px;transform:translateY(-50%) rotate(45deg);background:#c9302c;border:2px solid #7a4a10}
 .sub::before{left:-9px}.sub::after{right:-9px}
-.road{display:flex;align-items:center;gap:3px;margin-top:22px;padding:10px 12px 14px;border-radius:14px;background:rgba(0,28,16,.45);box-shadow:inset 0 0 0 1.5px rgba(233,196,106,.45)}
+.hero{display:block;flex:none;height:min(29vh,250px);aspect-ratio:374/458;margin-top:10px;visibility:hidden;pointer-events:none}
+@media (max-height:740px){#menu{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 60px)}#menu .logo{width:min(80vw,300px,40vh)}#menu .hero{height:26vh;margin-top:6px}#menu .roadT{margin-top:6px}#menu .menuBtns{margin-top:min(3vh,24px)}}
+.road{display:flex;align-items:center;gap:3px;margin-top:8px;padding:10px 12px 14px;border-radius:14px;background:rgba(0,28,16,.45);box-shadow:inset 0 0 0 1.5px rgba(233,196,106,.45)}
 .road .mt{width:36px;height:47px;border-radius:6px;background-color:#fbf5e4;background-image:url(assets/faces.webp);background-size:360px 192px;box-shadow:0 0 0 1.5px #0a2e1c,0 5px 0 0 #17a85c,0 5px 0 1.5px #0a2e1c,0 9px 8px rgba(0,0,0,.4),inset 0 -3px 0 #e6d6ac;animation:mtb 2.4s ease-in-out infinite}
 .road .ar{color:#f3d27a;font-size:13px;font-weight:900;opacity:.85}
 .road .mt.end{box-shadow:0 0 0 1.5px #0a2e1c,0 5px 0 0 #17a85c,0 5px 0 1.5px #0a2e1c,0 0 18px 6px rgba(255,220,120,.75),inset 0 -3px 0 #e6d6ac}
@@ -96,8 +98,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c3f2c;font-family:
   <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
   <div class="toggles"><button class="tg" id="tMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button><button class="tg" id="tSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="一合到底">
-  <div class="sub">十 张 一 合 · 合 到 白 板</div>
-  <div class="road"><i class="mt" style="background-position:0px 0px;animation-delay:0.0s"></i><span class="ar">›</span><i class="mt" style="background-position:-324px 0px;animation-delay:0.15s"></i><span class="ar">›</span><i class="mt" style="background-position:-288px -48px;animation-delay:0.3s"></i><span class="ar">›</span><i class="mt" style="background-position:-252px -96px;animation-delay:0.44999999999999996s"></i><span class="ar">›</span><i class="mt" style="background-position:-36px -144px;animation-delay:0.6s"></i><span class="ar">›</span><i class="mt end" style="background-position:-108px -144px;animation-delay:0.75s"></i></div>
+  <div class="sub" id="mSub">十 张 一 合 · 合 到 白 板</div>
+  <div class="hero" id="mHero" aria-hidden="true"></div>
+  <div class="road" id="mRoad"><i class="mt" style="background-position:0px 0px;animation-delay:0.0s"></i><span class="ar">›</span><i class="mt" style="background-position:-324px 0px;animation-delay:0.15s"></i><span class="ar">›</span><i class="mt" style="background-position:-288px -48px;animation-delay:0.3s"></i><span class="ar">›</span><i class="mt" style="background-position:-252px -96px;animation-delay:0.44999999999999996s"></i><span class="ar">›</span><i class="mt" style="background-position:-36px -144px;animation-delay:0.6s"></i><span class="ar">›</span><i class="mt end" style="background-position:-108px -144px;animation-delay:0.75s"></i></div>
   <div class="roadT">一筒 … 九万 … 東南西北 … 中發白</div>
   <div class="menuBtns">
     <button class="btn gold" id="bPlay">开始游戏</button>
@@ -164,5 +167,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c3f2c;font-family:
 <script src="audio.js"></script>
 <script src="logic.js"></script>
 <script src="game.js"></script>
+<script src="hero.js"></script>
 </body>
 </html>
