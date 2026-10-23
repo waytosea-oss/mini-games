@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a0f0a">
+<title>夜市撸串王 · 抓串串</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#140a06;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",sans-serif;color:#fff;touch-action:none;overscroll-behavior:none}
+#cv{position:fixed;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+#safe{position:fixed;left:0;top:0;width:0;height:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);visibility:hidden}
+.scr{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+.scr.on{display:flex;animation:fadein .28s ease-out}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.dim{background:radial-gradient(ellipse at 50% 40%,rgba(30,12,4,.55),rgba(8,3,1,.86))}
+/* loading */
+#load{background:#140a06;z-index:30}
+#load .bar{width:62%;max-width:300px;height:14px;border-radius:9px;background:#3a2414;box-shadow:inset 0 2px 4px #0008;overflow:hidden;margin-top:18px}
+#load .bar i{display:block;height:100%;width:0;background:linear-gradient(#ffd36a,#ff8a1f);border-radius:9px;transition:width .2s}
+#load p{margin-top:12px;color:#d9b38c;font-size:14px;letter-spacing:2px}
+/* title */
+.title{font-size:54px;font-weight:900;letter-spacing:2px;line-height:1.05;text-align:center;color:#fff3c4;
+ background:linear-gradient(180deg,#fff7d6 0%,#ffd75a 45%,#ff9a1f 70%,#ff6a00 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 3px 0 #7a2600) drop-shadow(0 -1px 0 #7a2600) drop-shadow(2px 0 0 #7a2600) drop-shadow(-2px 0 0 #7a2600) drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+.sub{margin-top:10px;font-size:17px;font-weight:700;color:#ffe9c7;letter-spacing:6px;text-shadow:0 2px 4px #000c;background:rgba(120,30,10,.55);padding:5px 16px;border-radius:20px;border:1.5px solid rgba(255,200,120,.5)}
+.lambhero{width:120px;height:auto;margin:6px 0 0;animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 8px 8px rgba(0,0,0,.55))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+.btn{position:relative;margin-top:14px;min-width:220px;padding:14px 26px;border:none;border-radius:40px;font-family:inherit;font-weight:900;font-size:22px;line-height:1;color:#5a2300;letter-spacing:3px;cursor:pointer;
+ background:linear-gradient(180deg,#fff2a8 0%,#ffd23f 45%,#ffab1a 100%);box-shadow:0 6px 0 #b25a00,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #fffbe0;text-shadow:0 1px 0 #fff6;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #b25a00,0 4px 8px rgba(0,0,0,.5),inset 0 2px 0 #fffbe0}
+.btn.green{color:#fff;background:linear-gradient(180deg,#9df07a,#3fbf2c 50%,#22941a);box-shadow:0 6px 0 #145f10,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #d8ffc8;text-shadow:0 2px 0 #145f10}
+.btn.red{color:#fff;background:linear-gradient(180deg,#ff9a8a,#f2483a 50%,#c22a20);box-shadow:0 6px 0 #7a140e,0 10px 18px rgba(0,0,0,.5),inset 0 2px 0 #ffd6cf;text-shadow:0 2px 0 #7a140e}
+.btn.small{min-width:0;padding:11px 18px;font-size:17px}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+.toggles{position:absolute;top:calc(env(safe-area-inset-top) + 14px);right:14px;display:flex;gap:10px}
+.tg{width:44px;height:44px;border-radius:50%;border:none;font-size:21px;background:linear-gradient(#fff3d0,#f0c27a);box-shadow:0 4px 0 #8a5216,0 6px 10px #0007;display:flex;align-items:center;justify-content:center;color:#6a3100;font-weight:900;cursor:pointer;position:relative}
+.tg.off::after{content:"";position:absolute;width:30px;height:4px;background:#d22;border-radius:2px;transform:rotate(-45deg);box-shadow:0 0 0 1.5px #fff}
+.tg svg{width:24px;height:24px}
+.stat{margin-top:12px;font-size:14px;color:#ffdcae;text-shadow:0 1px 3px #000}
+/* panel */
+.panel{position:relative;width:100%;max-width:360px;padding:30px 20px 24px;border-radius:26px;text-align:center;
+ background:linear-gradient(180deg,#7b4421 0%,#5a2e14 100%);border:3px solid #c98a4a;box-shadow:0 0 0 4px #3a1b09,0 20px 40px rgba(0,0,0,.6),inset 0 2px 0 #b47a45}
+.panel .ph{position:absolute;left:50%;top:-24px;transform:translateX(-50%);padding:9px 30px;border-radius:16px;font-size:24px;font-weight:900;letter-spacing:4px;white-space:nowrap;
+ background:linear-gradient(#ff7b52,#e1372a);border:3px solid #ffd6a0;box-shadow:0 5px 0 #7a1a10,0 8px 14px #0008;text-shadow:0 2px 0 #7a1a10}
+.panel .ph.gold{background:linear-gradient(#ffd75a,#ff9a1f);color:#6a2a00;text-shadow:0 1px 0 #fff8}
+.panel .ph.gray{background:linear-gradient(#9aa3ad,#5d6670);text-shadow:0 2px 0 #333}
+.stars{display:flex;justify-content:center;gap:6px;margin:8px 0 6px;height:74px;align-items:flex-end}
+.stars span{width:64px;height:64px;display:block;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6l13 28 30 4-22 21 6 30-27-15-27 15 6-30L7 38l30-4z' fill='%23402010' stroke='%23200c04' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.9}
+.stars span.on{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff6b0'/%3E%3Cstop offset='.5' stop-color='%23ffd12e'/%3E%3Cstop offset='1' stop-color='%23ff9800'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50 6l13 28 30 4-22 21 6 30-27-15-27 15 6-30L7 38l30-4z' fill='url(%23g)' stroke='%23a24a00' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M38 30c4-6 8-10 12-14' stroke='%23fff' stroke-width='5' stroke-linecap='round' opacity='.8'/%3E%3C/svg%3E");animation:starpop .45s cubic-bezier(.3,1.8,.5,1) both}
+.stars span:nth-child(2){width:78px;height:78px}
+@keyframes starpop{0%{transform:scale(0) rotate(-60deg)}100%{transform:scale(1) rotate(0)}}
+.big{font-size:30px;font-weight:900;color:#ffe08a;text-shadow:0 3px 0 #5a2000}
+.info{margin:6px 0 2px;font-size:15px;color:#ffe6c8;line-height:1.7}
+.info b{color:#ffd34a}
+.reward{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:6px 14px;border-radius:14px;background:rgba(0,0,0,.25);font-size:14px;color:#fff3c0}
+.reward img{width:26px;height:26px}
+/* level select */
+#levels{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 18px);background:radial-gradient(ellipse at 50% 30%,rgba(60,20,6,.55),rgba(10,4,2,.9))}
+#levels h2{font-size:30px;font-weight:900;color:#ffd75a;text-shadow:0 3px 0 #7a2600,0 6px 12px #000;letter-spacing:4px;margin:6px 0 4px}
+#levels .tot{font-size:14px;color:#ffdcae;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px 10px;width:100%;max-width:380px;overflow-y:auto;padding:6px 4px 20px;flex:1;align-content:start;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.lv{position:relative;aspect-ratio:1/1.12;border-radius:16px;border:none;font-family:inherit;cursor:pointer;
+ background:linear-gradient(180deg,#ffcf6a,#f09a2a);box-shadow:0 5px 0 #9a4a0c,0 8px 12px #0007,inset 0 2px 0 #fff2c0;color:#6a2a00;font-size:22px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:10px}
+.lv:active{transform:translateY(3px);box-shadow:0 2px 0 #9a4a0c}
+.lv.lock{background:linear-gradient(180deg,#6d5b4c,#4a3b2f);box-shadow:0 5px 0 #2a1f17,0 8px 12px #0007;color:#a8957f}
+.lv.cur{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+.lv .s{position:absolute;bottom:6px;left:0;right:0;font-size:11px;letter-spacing:-1px;color:#7a4a20}
+.lv .s i{font-style:normal;color:#fff3a0;text-shadow:0 0 2px #a24a00,0 1px 0 #a24a00}
+.back{position:absolute;left:14px;top:calc(env(safe-area-inset-top) + 14px)}
+#toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:40;padding:12px 20px;border-radius:16px;background:rgba(20,8,2,.88);border:1.5px solid #ffb35a;font-size:16px;font-weight:700;color:#ffe9c0;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap}
+#toast.on{opacity:1}
+.help{margin-top:16px;font-size:13px;color:#e8c9a4;line-height:1.8;text-align:center;opacity:.9}
+.tip{margin-top:10px;font-size:13px;color:#d9b38c}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="safe"></div>
+
+<div id="load" class="scr on">
+  <div class="title" style="font-size:44px">夜市撸串王</div>
+  <div class="bar"><i id="lbar"></i></div>
+  <p id="ltxt">炭火预热中…</p>
+</div>
+
+<div id="menu" class="scr">
+  <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button><button class="tg" id="mSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M4 9h4l5-4v14l-5-4H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#6a3100" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <div style="flex:1"></div>
+  <div class="title">夜市<br>撸串王</div>
+  <div class="sub">抓 串 串 · 三 个 就 开 吃</div>
+  <img class="lambhero" src="assets/lamb.webp" alt="">
+  <div style="flex:1.6"></div>
+  <button class="btn" id="bPlay">开始营业</button>
+  <button class="btn green small" id="bLevels" style="min-width:180px">选择关卡</button>
+  <div class="stat" id="mStat"></div>
+  <div style="height:5vh"></div>
+</div>
+
+<div id="levels" class="scr">
+  <button class="tg back" id="lvBack" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" stroke="#6a3100" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <h2>选择关卡</h2>
+  <div class="tot" id="lvTot"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="pause" class="scr dim">
+  <div class="panel">
+    <div class="ph gold">暂 停</div>
+    <div class="info" id="pInfo" style="margin-top:6px"></div>
+    <div class="row" style="margin:10px 0 4px">
+      <button class="tg" id="pMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button>
+      <button class="tg" id="pSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#6a3100" d="M4 9h4l5-4v14l-5-4H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#6a3100" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <button class="btn green" id="pResume">继续营业</button><br>
+    <div class="row"><button class="btn small" id="pRestart">重新开始</button><button class="btn small red" id="pQuit">返回选关</button></div>
+    <div class="help">点击烤架上<b>最上面</b>的串，放进下方托盘<br>托盘里凑齐 <b>3 个相同</b> 就能卖出<br>托盘 7 格塞满或时间用完就失败啦<br>藏在串堆里的<b>小羊</b>凑齐 3 只有惊喜！</div>
+  </div>
+</div>
+
+<div id="win" class="scr dim">
+  <div class="panel">
+    <div class="ph gold" id="wTitle">收摊大吉！</div>
+    <div class="stars" id="wStars"><span></span><span></span><span></span></div>
+    <div class="big" id="wScore">¥ 0</div>
+    <div class="info" id="wInfo"></div>
+    <div id="wReward"></div>
+    <div class="row" style="margin-top:6px"><button class="btn small" id="wRetry">再来一次</button><button class="btn small" id="wMenu" style="background:linear-gradient(#ffe6c0,#e8b070)">选关</button></div>
+    <button class="btn green" id="wNext">下一关</button>
+  </div>
+</div>
+
+<div id="fail" class="scr dim">
+  <div class="panel">
+    <div class="ph gray" id="fTitle">托盘满啦！</div>
+    <img src="assets/lamb.webp" style="width:90px;margin-top:8px;filter:grayscale(.3) drop-shadow(0 6px 6px #0008);transform:rotate(-12deg)" alt="">
+    <div class="info" id="fInfo"></div>
+    <button class="btn green" id="fRevive" style="display:none">使用道具继续</button>
+    <div class="row"><button class="btn small" id="fRetry">再来一次</button><button class="btn small red" id="fMenu">返回选关</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="assets/meta.js"></script>
+<script src="assets/matter.min.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
