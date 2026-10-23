@@ -582,7 +582,7 @@ function showScr(n, overlay) {
   const ing = n === 'game' || !!overlay;
   $('hud').classList.toggle('on', ing); $('props').classList.toggle('on', !!(ing && n === 'game' || (overlay && n === 'feat')));
   if (n !== 'game') { $('mode').classList.remove('on'); }
-  if (n === 'menu') { $('mStat').textContent = `已收藏 ${Object.keys(save.stars).length}/${LEVELS.length} 幅花画 · ★${Object.values(save.stars).reduce((a, b) => a + b, 0)}`; }
+  if (n === 'menu') { BEE.r = null; $('mStat').textContent = `已收藏 ${Object.keys(save.stars).length}/${LEVELS.length} 幅花画 · ★${Object.values(save.stars).reduce((a, b) => a + b, 0)}`; }
 }
 function toMenu() { G.s = null; hideTut(); showScr('menu'); }
 function showLevels() {
@@ -662,6 +662,57 @@ function tgSfx() { SND.unlock(); save.sfx = !save.sfx; SND.setSfx(save.sfx); per
 $('mMusic').onclick = $('pMusic').onclick = tgMusic; $('mSfx').onclick = $('pSfx').onclick = tgSfx;
 document.addEventListener('pointerdown', () => { SND.unlock(); if (save.music && !SND.playing && G.scr !== 'load') SND.startMusic(); }, { capture: true });
 document.addEventListener('visibilitychange', () => { if (document.hidden && G.scr === 'game' && !G.over && !G.paused) $('hPause').onclick(); });
+/* ---------- 封面蜜蜂：AI 生成的透明底序列帧（24fps · 96 帧无缝循环） ---------- */
+const BEE = { fw: 436, fh: 477, cols: 6, per: 24, n: 96, fps: 24, body: [56, 63, 380, 451], basket: [305, 350], sheets: [], ok: false, t: 0, petals: [], cd: .6 };
+function loadBee() {
+  let left = 4, failed = false;
+  for (let i = 0; i < 4; i++) {
+    const im = new Image(); let tried = false;
+    im.onload = () => {
+      // 解码一次后转成画布，避免每帧重复解码大图（低端机/软件渲染下尤为明显）
+      try { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); BEE.sheets[i] = c; } catch (e) { }
+      if (--left === 0 && !failed) { BEE.ok = true; BEE.t = 0; }
+    };
+    im.onerror = () => { if (!tried) { tried = true; im.src = 'assets/bee/bee_' + i + '.png'; } else failed = true; }; // 不支持 WebP 的老设备回退 PNG
+    im.src = 'assets/bee/bee_' + i + '.webp'; BEE.sheets[i] = im;
+  }
+}
+const BEE_PC = [2, 3, 3, 15, 14, 2];
+function drawTitleBee(dt) {
+  if (!BEE.r || (BEE.rc = (BEE.rc || 0) + 1) % 30 === 0 || BEE.rw !== W) { const el = $('mBee'); if (!el) return; BEE.r = el.getBoundingClientRect(); BEE.rw = W; }
+  const r = BEE.r; if (!r.width) { BEE.r = null; return; }
+  const t = G.time; BEE.t += dt;
+  const bw = r.width * 1.1, k = bw / (BEE.body[2] - BEE.body[0]);
+  const dx = Math.sin(t * .83) * 7 + Math.sin(t * 2.1) * 2, dy = Math.sin(t * 1.27) * 6 + Math.sin(t * 3.3) * 1.5, rot = Math.sin(t * .9) * .035;
+  const cx = r.left + r.width / 2 + dx, cy = r.top + r.height * .55 + dy;
+  const bcx = (BEE.body[0] + BEE.body[2]) / 2 * k, bcy = (BEE.body[1] + BEE.body[3]) / 2 * k;
+  // 地面柔影：飞高时变淡变小
+  const sy = r.bottom + r.height * .08, ss = 1 - dy * .02;
+  if (!BEE.shadow) { const k2 = document.createElement('canvas'); k2.width = k2.height = 64; const x2 = k2.getContext('2d'), g2 = x2.createRadialGradient(32, 32, 0, 32, 32, 32); g2.addColorStop(0, 'rgba(40,70,20,.3)'); g2.addColorStop(1, 'rgba(40,70,20,0)'); x2.fillStyle = g2; x2.fillRect(0, 0, 64, 64); BEE.shadow = k2; }
+  const shw = bw * .84 * ss; ctx.globalAlpha = Math.max(0, Math.min(1, ss)); ctx.drawImage(BEE.shadow, r.left + r.width / 2 + dx * .6 - shw / 2, sy - shw * .11, shw, shw * .22); ctx.globalAlpha = 1;
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  if (BEE.ok) {
+    const f = Math.floor(BEE.t * BEE.fps) % BEE.n, j = f % BEE.per;
+    ctx.drawImage(BEE.sheets[(f / BEE.per) | 0], (j % BEE.cols) * BEE.fw, ((j / BEE.cols) | 0) * BEE.fh, BEE.fw, BEE.fh, -bcx, -bcy, BEE.fw * k, BEE.fh * k);
+  } else if (IMG.mascot && IMG.mascot.naturalWidth) { // 序列帧未就绪前：首帧同姿势的静态图
+    const m = IMG.mascot, w = bw * m.naturalWidth / (m.naturalWidth - 8), h = w * m.naturalHeight / m.naturalWidth; ctx.drawImage(m, -w / 2, -h / 2, w, h);
+  }
+  ctx.restore();
+  // 实时花瓣：从花篮里飘出、随风摇摆落下
+  const ca = Math.cos(rot), sa = Math.sin(rot), bx = (BEE.basket[0] * k - bcx), by = (BEE.basket[1] * k - bcy);
+  const ox = cx + bx * ca - by * sa, oy = cy + bx * sa + by * ca;
+  if ((BEE.cd -= dt) <= 0 && BEE.petals.length < 18) {
+    BEE.cd = .28 + Math.random() * .3;
+    BEE.petals.push({ x: ox + (Math.random() - .5) * bw * .18, y: oy, vx: -10 + Math.random() * 46, vy: -40 - Math.random() * 40, r: Math.random() * 6, vr: (Math.random() - .5) * 4, w: Math.random() * 6, s: .55 + Math.random() * .45, c: BEE_PC[(Math.random() * BEE_PC.length) | 0], life: 0, max: 2.6 + Math.random() * 1.4 });
+  }
+  for (let i = BEE.petals.length - 1; i >= 0; i--) {
+    const p = BEE.petals[i]; p.life += dt; if (p.life > p.max) { BEE.petals.splice(i, 1); continue; }
+    p.vy = Math.min(55, p.vy + 70 * dt); p.vx *= (1 - .6 * dt); p.w += dt * 2.4; p.r += p.vr * dt;
+    p.x += (p.vx + Math.sin(p.w) * 22) * dt; p.y += p.vy * dt;
+    const a = Math.min(1, p.life / .25) * Math.min(1, (p.max - p.life) / .8);
+    ctx.save(); ctx.globalAlpha = .95 * a; ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(p.s * (.55 + .45 * Math.abs(Math.cos(p.w * .7))), p.s * .75); ctx.drawImage(petalSprite(p.c), -12, -12); ctx.restore();
+  }
+}
 /* ---------- 主循环 ---------- */
 function frame(ts) {
   requestAnimationFrame(frame);
@@ -695,13 +746,14 @@ function frame(ts) {
   } else {
     drawAmb(dt);
     ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(0, 0, W, H);
+    if (G.scr === 'menu') drawTitleBee(dt);
   }
 }
 /* ---------- 启动 ---------- */
 window.addEventListener('resize', () => { layout(); });
 SND.setMusic(save.music); SND.setSfx(save.sfx); syncTg();
 loadAll(() => {
-  layout();
+  layout(); loadBee();
   setTimeout(() => {
     if (DEBUG.level) { startLevel(Math.max(0, Math.min(LEVELS.length - 1, DEBUG.level - 1))); }
     else showScr('menu');
