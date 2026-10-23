@@ -135,7 +135,7 @@ function vCenter(v) { const [dx, dy] = DIRS[v.d]; const k = (v.len - 1) / 2; ret
 function vScreen(v) { const [cx, cy] = vCenter(v); const [dx, dy] = DIRS[v.d]; return [L.ox + (cx + .5) * L.c + dx * v.off * L.c, L.oy + (cy + .5) * L.c + dy * v.off * L.c]; }
 const angOf = v => v.d * Math.PI / 2;
 function startLevel(n) {
-  n = Math.max(1, Math.min(NLV, n)); G.n = n;
+  n = Math.max(1, Math.min(NLV, n)); G.n = n; try{GT.lv(n)}catch(_e){}
   const lv = LV.generate(n); G.lv = lv;
   G.cars = lv.cars.map(c => ({ ...c, cells: c.cells.map(p => p.slice()), off: 0, state: 'park', t: 0, shake: 0, ang: c.d * Math.PI / 2, spin: null, idle: Math.random() * 6, scale: 1, hint: 0 }));
   G.obs = lv.obs.map(o => ({ ...o, kind: OBS[o.k % OBS.length], shake: 0 }));
@@ -477,7 +477,7 @@ function star5(x, cx, cy, r) { x.beginPath(); for (let i = 0; i < 10; i++) { con
 /* ---------- 胜负 ---------- */
 function winGame() {
   G.state = 'won'; setMode(null); $('tut').classList.remove('on');
-  const stars = G.tickets === 0 ? 3 : G.tickets === 1 ? 2 : 1; G.lastStars = stars;
+  const stars = G.tickets === 0 ? 3 : G.tickets === 1 ? 2 : 1; G.lastStars = stars; try{GT.win(G.n,{stars:stars,tickets:G.tickets,cars:G.total,props:G.propsUsed,combo:G.maxCombo})}catch(_e){}
   const first = !save.stars[G.n];
   save.stars[G.n] = Math.max(save.stars[G.n] || 0, stars);
   if (G.n >= save.unlocked && G.n < NLV) save.unlocked = G.n + 1;
@@ -496,7 +496,7 @@ function winGame() {
   }, 1300);
 }
 function loseGame(why) {
-  if (G.state !== 'play') return; G.state = 'lost'; setMode(null); $('tut').classList.remove('on');
+  if (G.state !== 'play') return; G.state = 'lost'; try{GT.fail(G.n,{r:why,tickets:G.tickets})}catch(_e){} setMode(null); $('tut').classList.remove('on');
   setTimeout(() => {
     SND.play('fail'); showScr('fail');
     $('fTitle').textContent = why === 'stuck' ? '车全堵死啦！' : '罚单太多啦！';
@@ -507,13 +507,13 @@ function loseGame(why) {
     $('fRevive').disabled = save.coins < cost;
   }, 700);
 }
-$('fRevive').onclick = () => { if (save.coins < 100) return; save.coins -= 100; persist(); SND.play('coin'); G.revived = true; G.tickets = Math.max(0, G.tickets - 2); G.state = 'play'; showScr(null); updHud(); toast('罚款已交，继续挪车！'); };
+$('fRevive').onclick = () => { if (save.coins < 100) return; save.coins -= 100; persist(); SND.play('coin'); G.revived = true; try{GT.revive('coins')}catch(_e){} G.tickets = Math.max(0, G.tickets - 2); G.state = 'play'; showScr(null); updHud(); toast('罚款已交，继续挪车！'); };
 /* ---------- 界面 ---------- */
 const SCRS = ['load', 'menu', 'levels', 'pause', 'win', 'fail', 'feat', 'buy'];
 function showScr(id) { for (const s of SCRS) $(s).classList.toggle('on', s === id); }
 function syncToggles() { for (const id of ['mMusic', 'pMusic']) $(id).classList.toggle('off', !save.music); for (const id of ['mSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx); }
-function toggleMusic() { save.music = !save.music; persist(); SND.setMusic(save.music); if (save.music) { SND.unlock(); SND.startMusic(); } syncToggles(); }
-function toggleSfx() { save.sfx = !save.sfx; persist(); SND.setSfx(save.sfx); syncToggles(); SND.play('click'); }
+function toggleMusic() { save.music = !save.music; try{GT.sound('music',save.music)}catch(_e){} persist(); SND.setMusic(save.music); if (save.music) { SND.unlock(); SND.startMusic(); } syncToggles(); }
+function toggleSfx() { save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(_e){} persist(); SND.setSfx(save.sfx); syncToggles(); SND.play('click'); }
 $('mMusic').onclick = $('pMusic').onclick = toggleMusic; $('mSfx').onclick = $('pSfx').onclick = toggleSfx;
 function toMenu() {
   G.state = 'menu'; G.lv = null; $('hud').classList.remove('on'); $('props').classList.remove('on'); $('tut').classList.remove('on'); setMode(null);
@@ -534,21 +534,21 @@ function toLevels() {
   }
   showScr('levels');
 }
-$('bPlay').onclick = () => { SND.play('click'); startLevel(save.unlocked); };
-$('bLevels').onclick = () => { SND.play('click'); toLevels(); };
+$('bPlay').onclick = () => { SND.play('click'); try{GT.title('play')}catch(_e){} startLevel(save.unlocked); };
+$('bLevels').onclick = () => { SND.play('click'); try{GT.title('levels')}catch(_e){} toLevels(); };
 $('lvBack').onclick = () => { SND.play('click'); toMenu(); };
-function pauseGame() { if (G.state !== 'play') return; G.state = 'paused'; setMode(null); $('pInfo').innerHTML = `第 <b>${G.n}</b> 关 · ${G.lv.name}<br>罚单 <b>${G.tickets}/${G.maxTk}</b> · 剩余 <b>${G.cars.filter(v => v.state !== 'gone').length}</b> 辆`; showScr('pause'); syncToggles(); }
+function pauseGame() { if (G.state !== 'play') return; G.state = 'paused'; try{GT.pause()}catch(_e){} setMode(null); $('pInfo').innerHTML = `第 <b>${G.n}</b> 关 · ${G.lv.name}<br>罚单 <b>${G.tickets}/${G.maxTk}</b> · 剩余 <b>${G.cars.filter(v => v.state !== 'gone').length}</b> 辆`; showScr('pause'); syncToggles(); }
 $('hPause').onclick = () => { SND.play('click'); pauseGame(); };
 $('pResume').onclick = () => { SND.play('click'); showScr(null); G.state = 'play'; };
 $('pRestart').onclick = () => { SND.play('click'); startLevel(G.n); };
-$('pQuit').onclick = () => { SND.play('click'); toLevels(); G.state = 'menu'; $('hud').classList.remove('on'); $('props').classList.remove('on'); };
+$('pQuit').onclick = () => { SND.play('click'); try{GT.quit('menu')}catch(_e){} toLevels(); G.state = 'menu'; $('hud').classList.remove('on'); $('props').classList.remove('on'); };
 $('wRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('wMenu').onclick = () => { SND.play('click'); toLevels(); G.state = 'menu'; $('hud').classList.remove('on'); $('props').classList.remove('on'); };
 $('wNext').onclick = () => { SND.play('click'); startLevel(G.n + 1); };
 $('fRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('fMenu').onclick = () => { SND.play('click'); toLevels(); G.state = 'menu'; $('hud').classList.remove('on'); $('props').classList.remove('on'); };
 // 返回 Tilo 游戏屋：先存档再离开
-function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
 for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 function showFeat(f) {
   G.state = 'feat'; $('ftTitle').textContent = f.t; $('ftInfo').innerHTML = f.d;

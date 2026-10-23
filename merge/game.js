@@ -724,8 +724,8 @@ function syncToggles() {
   for (const id of ['tSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx);
   SND.setMusic(save.music); SND.setSfx(save.sfx);
 }
-function toggleMusic() { save.music = !save.music; persist(); syncToggles(); SND.unlock(); if (save.music) SND.startMusic(); SND.tap(); }
-function toggleSfx() { save.sfx = !save.sfx; persist(); syncToggles(); SND.tap(); }
+function toggleMusic() { save.music = !save.music; try{GT.sound('music',save.music)}catch(_e){} persist(); syncToggles(); SND.unlock(); if (save.music) SND.startMusic(); SND.tap(); }
+function toggleSfx() { save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(_e){} persist(); syncToggles(); SND.tap(); }
 $('tMusic').onclick = toggleMusic; $('pMusic').onclick = toggleMusic; $('tSfx').onclick = toggleSfx; $('pSfx').onclick = toggleSfx;
 function menu() {
   G.mode = 'menu'; ['pause', 'win', 'fail', 'ask', 'rankScr'].forEach(hide); show('menu');
@@ -739,7 +739,7 @@ function startPlay(fresh) {
   SND.unlock(); SND.startMusic();
   hide('menu');
   if (fresh || !save.st) newGame(); else { G.s = save.st; }
-  G.hist = []; resetVis(); G.mode = 'play';
+  G.hist = []; resetVis(); G.mode = 'play'; try{GT.lv(G.s.stage+1,{cont:(!fresh&&G.s.merges>0)?1:0})}catch(_e){}
   if (DEBUG.fill) { debugFill(); DEBUG.fill = false; }
   else if (DEBUG.stage >= 0) { G.s.stage = DEBUG.stage; G.s.top = DEBUG.stage ? LG.GOALS[DEBUG.stage - 1] : 0; save.cp = clone(G.s); DEBUG.stage = -1; }
   if (!save.tut) tutStart();
@@ -748,18 +748,18 @@ function startPlay(fresh) {
   if (G.flyers.length) SND.shuffle(10);
   after(1.2, () => { if (LG.stuck(G.s)) { G.over = true; showFail(); } });
 }
-$('bPlay').onclick = () => { SND.unlock(); SND.tap(); startPlay(false); };
-$('bNew').onclick = () => { SND.unlock(); SND.tap(); ask('重新开局', '确定放弃当前进度，从<b>一筒</b>重新开始吗？<br>（最高纪录会保留）', '重新开局', () => { hide('menu'); startPlay(true); }); G.mode = 'menu'; };
-function pause() { if (G.mode !== 'play') return; G.mode = 'paused'; show('pause'); }
+$('bPlay').onclick = () => { SND.unlock(); SND.tap(); try{GT.title('play')}catch(_e){} startPlay(false); };
+$('bNew').onclick = () => { SND.unlock(); SND.tap(); try{GT.title('new')}catch(_e){} ask('重新开局', '确定放弃当前进度，从<b>一筒</b>重新开始吗？<br>（最高纪录会保留）', '重新开局', () => { hide('menu'); startPlay(true); }); G.mode = 'menu'; };
+function pause() { if (G.mode !== 'play') return; G.mode = 'paused'; try{GT.pause()}catch(_e){} show('pause'); }
 $('pResume').onclick = () => { SND.tap(); hide('pause'); G.mode = 'play'; };
 $('pRestart').onclick = () => { SND.tap(); hide('pause'); restartStage(); };
-$('pQuit').onclick = () => { SND.tap(); hide('pause'); save.st = G.s; persist(); menu(); };
+$('pQuit').onclick = () => { SND.tap(); try{GT.quit('menu')}catch(_e){} hide('pause'); save.st = G.s; persist(); menu(); };
 function restartStage() {
-  G.s = clone(save.cp || freshState()); save.st = G.s; persist(); G.hist = []; resetVis(); G.mode = 'play'; SND.shuffle(12);
+  G.s = clone(save.cp || freshState()); save.st = G.s; persist(); G.hist = []; resetVis(); G.mode = 'play'; try{GT.lv(G.s.stage+1)}catch(_e){} SND.shuffle(12);
   G.s.rows.forEach((r, i) => { if (!LG.isOpen(r)) return; r.t.forEach((t, k) => { G.hid[i]++; G.flyers.push({ t, x0: W / 2 - L.tw / 2, y0: H + 20, x1: tileX(k), y1: tileY(i), t0: G.time + 0.1 + (i * 0.04 + k * 0.025), dur: 0.42, row: i, arc: -20, flip: 1 }); }); });
 }
 function showWin() {
-  const s = G.s; const goal = LG.GOALS[s.stage]; const last = s.stage === LG.GOALS.length - 1;
+  const s = G.s; const goal = LG.GOALS[s.stage]; const last = s.stage === LG.GOALS.length - 1; try{GT.win(s.stage+1,{score:s.score,top:s.top})}catch(_e){}
   G.mode = 'win'; SND.win(); vib(40); toastEl.classList.remove('on');
   for (let i = 0; i < 90; i++) G.parts.push({ x: rnd(0, W), y: rnd(-60, -10), vx: rnd(-40, 40), vy: rnd(60, 200), g: 60, life: rnd(2, 3.4), t: 0, col: ['#ffd84a', '#d8302a', '#2fd07a', '#fff3c4'][i % 4], s: rnd(3, 6), k: 'paper', r: rnd(0, TAU) });
   const reward = 40 + s.stage * 25;
@@ -774,10 +774,10 @@ function showWin() {
   $('wNext').textContent = last ? '继续无尽挑战' : '下一关';
   setTimeout(() => show('win'), 500);
 }
-$('wNext').onclick = () => { SND.tap(); hide('win'); G.mode = 'play'; G.winT = -1; G.hist = []; afterAction(); };
+$('wNext').onclick = () => { SND.tap(); hide('win'); G.mode = 'play'; try{GT.lv(G.s.stage+1)}catch(_e){} G.winT = -1; G.hist = []; afterAction(); };
 function showFail() {
   if (G.mode !== 'play') { after(0.3, () => { if (G.over) showFail(); }); return; }
-  G.mode = 'fail'; G.failOpen = false; SND.fail(); vib(60);
+  G.mode = 'fail'; G.failOpen = false; SND.fail(); vib(60); try{GT.fail(G.s.stage+1,{r:'full',score:G.s.score,top:G.s.top})}catch(_e){}
   const s = G.s, m = LG.lowestTier(s);
   $('fInfo').innerHTML = `所有的行都塞满了，又凑不出 10 张同牌。<br>可以消除全部「<b>${LG.tileName(m)}</b>」腾出空位继续！`;
   $('fClearCost').innerHTML = save.props.clear > 0 ? `剩 ${save.props.clear} 次` : `<span class="coin"></span>${COST.clear}`;
@@ -786,8 +786,8 @@ function showFail() {
   $('fTempCost').innerHTML = s.tempFree ? '免费' : `<span class="coin"></span>${COST.temp}`;
   show('fail');
 }
-$('fClear').onclick = () => { SND.tap(); if (save.props.clear <= 0 && save.coins < COST.clear) { toast('铜钱不够啦'); SND.deny(); return; } hide('fail'); G.mode = 'play'; G.over = false; doClear(true); };
-$('fTemp').onclick = () => { SND.tap(); hide('fail'); G.mode = 'play'; G.over = false; G.failOpen = true; tapLocked(LG.TEMP_ROW); };
+$('fClear').onclick = () => { SND.tap(); if (save.props.clear <= 0 && save.coins < COST.clear) { toast('铜钱不够啦'); SND.deny(); return; } hide('fail'); G.mode = 'play'; G.over = false; try{GT.revive('clear')}catch(_e){} doClear(true); };
+$('fTemp').onclick = () => { SND.tap(); try{GT.revive('temp')}catch(_e){} hide('fail'); G.mode = 'play'; G.over = false; G.failOpen = true; tapLocked(LG.TEMP_ROW); };
 $('fRetry').onclick = () => { SND.tap(); hide('fail'); restartStage(); };
 $('fMenu').onclick = () => { SND.tap(); hide('fail'); restartStage(); G.flyers = []; G.hid.fill(0); menu(); };
 // 返回 Tilo 游戏屋：先存档再离开（与「返回首页」保存方式一致）
@@ -797,7 +797,7 @@ function goHub(e) {
     if (G.mode === 'fail') { G.s = clone(save.cp || freshState()); save.st = G.s; }
     else if (G.s && (G.mode === 'paused' || G.mode === 'play')) save.st = G.s;
   } catch (_) { }
-  persist(); try { SND.tap(); } catch (_) { } location.href = '../';
+  persist(); try { SND.tap(); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../';
 }
 for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 function openRank() {

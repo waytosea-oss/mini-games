@@ -288,7 +288,7 @@ function newVT(i, t, lvIdx) {
     shape: t.kind === 1 ? 'cau' : SHAPES[(i * 7 + lvIdx * 3) % 3], iceFlash: 0, glow: 0 };
 }
 function startLevel(idx) {
-  idx = clamp(idx, 0, LEVELS.length - 1);
+  idx = clamp(idx, 0, LEVELS.length - 1); try{GT.lv(idx+1)}catch(_e){}
   const lv = LEVELS[idx], s = PL.mkState(lv); PL.initCounter(s, lv.K);
   const r = seeded(idx + 7), order = [0, 1, 2, 3, 4, 5]; for (let i = 5; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
   G = { idx, lv, s, K: lv.K, vt: s.t.map((t, i) => newVT(i, t, idx)), vs: s.counter.map((c, i) => ({ q: c >= 0 ? i : -1, c, phase: 'enter', t: -.25 - i * .22, pend: null })),
@@ -974,10 +974,10 @@ function openLevels() {
   });
   setTimeout(() => { const c = gd.querySelector('.cur'); if (c) c.scrollIntoView({ block: 'center' }); }, 30);
 }
-function openPause() { if (!G) return; paused = true; showScreen('pause'); syncToggles(); }
+function openPause() { if (!G) return; paused = true; try{GT.pause()}catch(_e){} showScreen('pause'); syncToggles(); }
 function stars() { const m = G.s.moves, par = G.lv.par; return m <= Math.ceil(par * 1.15) + 1 ? 3 : m <= par * 1.6 + 3 ? 2 : 1; }
 function openWin() {
-  const st = stars(), delivered = G.s.orders.length, bonus = [0, 10, 20, 30][st], tot = delivered * 10 + bonus;
+  const st = stars(), delivered = G.s.orders.length, bonus = [0, 10, 20, 30][st], tot = delivered * 10 + bonus; try{GT.win(G.idx+1,{stars:st,moves:G.s.moves,par:G.lv.par,props:G.added})}catch(_e){}
   S.coins += tot; G.paid = true; S.stars[G.idx] = Math.max(S.stars[G.idx] || 0, st); S.unlocked = Math.max(S.unlocked, Math.min(LEVELS.length, G.idx + 2));
   if (G.idx === 0) S.tut.l1 = 1; save();
   $('wTitle').textContent = ['', '顺利打烊！', '生意兴隆！', '完美出品！'][st];
@@ -992,7 +992,7 @@ function openWin() {
   if (DBG.bot) setTimeout(() => { if (mode === 'play' && G && G.idx < LEVELS.length - 1) startLevel(G.idx + 1); }, 1500 / DBG.speed);
 }
 function openFail() {
-  paused = true; showScreen('fail'); SND.play('fail');
+  paused = true; showScreen('fail'); SND.play('fail'); try{GT.fail(G.idx+1,{r:'nomove',moves:G.s.moves})}catch(_e){}
   $('fInfo').innerHTML = '没有能倒的药水了…<br>用 <b>时光倒流</b> 退一步，或者 <b>加个空瓶</b> 吧';
 }
 function drawIntroArt(kind) {
@@ -1026,26 +1026,26 @@ function syncToggles() {
   for (const id of ['tMusic', 'pMusic']) $(id).classList.toggle('off', !S.music);
   for (const id of ['tSfx', 'pSfx']) $(id).classList.toggle('off', !S.sfx);
 }
-function toggleMusic() { S.music = !S.music; save(); SND.setMusic(S.music); if (S.music && !SND.playing) SND.startMusic(); syncToggles(); SND.play('click'); }
-function toggleSfx() { S.sfx = !S.sfx; save(); SND.setSfx(S.sfx); syncToggles(); SND.play('click'); }
+function toggleMusic() { S.music = !S.music; try{GT.sound('music',S.music)}catch(_e){} save(); SND.setMusic(S.music); if (S.music && !SND.playing) SND.startMusic(); syncToggles(); SND.play('click'); }
+function toggleSfx() { S.sfx = !S.sfx; try{GT.sound('sfx',S.sfx)}catch(_e){} save(); SND.setSfx(S.sfx); syncToggles(); SND.play('click'); }
 $('tMusic').onclick = $('pMusic').onclick = toggleMusic;
 $('tSfx').onclick = $('pSfx').onclick = toggleSfx;
-$('bPlay').onclick = () => { SND.play('click'); startLevel(Math.min(S.unlocked, LEVELS.length) - 1); };
-$('bLevels').onclick = () => { SND.play('click'); openLevels(); };
+$('bPlay').onclick = () => { SND.play('click'); try{GT.title('play')}catch(_e){} startLevel(Math.min(S.unlocked, LEVELS.length) - 1); };
+$('bLevels').onclick = () => { SND.play('click'); try{GT.title('levels')}catch(_e){} openLevels(); };
 $('lvBack').onclick = () => { SND.play('click'); openMenu(); };
 $('pResume').onclick = () => { SND.play('click'); paused = false; showScreen(null); };
 $('pRestart').onclick = () => { SND.play('click'); startLevel(G.idx); };
-$('pQuit').onclick = () => { SND.play('click'); openLevels(); };
+$('pQuit').onclick = () => { SND.play('click'); try{GT.quit('menu')}catch(_e){} openLevels(); };
 $('wNext').onclick = () => { SND.play('click'); startLevel(G.idx + 1); };
 $('wRetry').onclick = () => { SND.play('click'); startLevel(G.idx); };
 $('wMenu').onclick = () => { SND.play('click'); openLevels(); };
 $('fRetry').onclick = () => { SND.play('click'); startLevel(G.idx); };
 $('fMenu').onclick = () => { SND.play('click'); openLevels(); };
 // 返回 Tilo 游戏屋：先存档再离开
-function goHub(e) { if (e) e.stopPropagation(); save(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+function goHub(e) { if (e) e.stopPropagation(); save(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
 for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
-$('fUndo').onclick = () => { paused = false; showScreen(null); G.failShown = false; useProp('undo'); if (!G.undo.length || G.failShown) { } };
-$('fAdd').onclick = () => { paused = false; showScreen(null); G.failShown = false; useProp('add'); };
+$('fUndo').onclick = () => { try{GT.revive('undo')}catch(_e){} paused = false; showScreen(null); G.failShown = false; useProp('undo'); if (!G.undo.length || G.failShown) { } };
+$('fAdd').onclick = () => { try{GT.revive('add')}catch(_e){} paused = false; showScreen(null); G.failShown = false; useProp('add'); };
 
 /* ---------- 输入 & 音频解锁 ---------- */
 let audioOn = false;

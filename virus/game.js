@@ -247,7 +247,7 @@ function stats(){const sk=SKINS[S.skin];return{dmg:(1+S.up.pow)*sk.pow,rate:rate
 function songFor(info){return info.boss?['boss',0]:[['bright',0],['funky',0],['bright',-3],['funky',2],['funky',-2]][info.w];}
 
 function startLevel(L){
- L=clamp(L,1,30);
+ L=clamp(L,1,30);try{GT.lv(L)}catch(_e){}
  const info=levelInfo(L);
  G={L,info,q:info.q.slice(),spawnT:0,viruses:[],pills:[],coins:[],parts:[],pops:[],drops:[],shots:[],color:0,t:0,fireT:0.3,earned:0,hurt:0,
    totalHp:0,doneHp:0,pw:{laser:0,spread:0,freeze:0,rainbow:0},boss:null,ending:0,lost:false,revived:false,combo:0,comboT:0,botT:0,hintT:L<=2?4:0};
@@ -635,9 +635,9 @@ function renderShop(){
  $('bShopGo').textContent=`开始第 ${shopNext} 关`;
 }
 let toastT=0;function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>e.style.display='none',1600);}
-function togglePause(){if(state!=='play')return;paused=!paused;ptr=null;if(paused){$('pSub').textContent=`第 ${G.L} 关 · ${WORLDS[G.info.w].n}`;$('pause').classList.add('on');}else $('pause').classList.remove('on');sfx('click');}
+function togglePause(){if(state!=='play')return;paused=!paused;ptr=null;if(paused){try{GT.pause()}catch(_e){}$('pSub').textContent=`第 ${G.L} 关 · ${WORLDS[G.info.w].n}`;$('pause').classList.add('on');}else $('pause').classList.remove('on');sfx('click');}
 function winLevel(){
- state='end';const L=G.L;const stars=G.hurt===0?3:G.hurt===1?2:1;
+ state='end';const L=G.L;const stars=G.hurt===0?3:G.hurt===1?2:1;try{GT.win(L,{stars:stars,coins:G.earned,boss:G.info.boss?1:0,hurt:G.hurt})}catch(_e){}
  const bonus=Math.round((30+L*12)*stats().coin*(G.info.boss?2:1));S.coins+=bonus;G.earned+=bonus;
  S.stars[L]=Math.max(S.stars[L]||0,stars);S.unlocked=Math.max(S.unlocked,Math.min(30,L+1));save();
  $('hud').classList.remove('on');
@@ -650,31 +650,31 @@ function winLevel(){
  $('wStars').querySelectorAll('svg').forEach((s,k)=>setTimeout(()=>{s.classList.add('pop');if(k<stars)sfx('star');},350+k*260));
 }
 function loseLevel(){
- state='end';G.lost=true;$('hud').classList.remove('on');Music.stinger('lose');Music.play('menu');
+ state='end';G.lost=true;try{GT.fail(G.L,{r:'dead',revived:G.revived?1:0})}catch(_e){}$('hud').classList.remove('on');Music.stinger('lose');Music.play('menu');
  const cost=reviveCost();$('bRevive').innerHTML=`<span class="coin" style="width:22px;height:22px;font-size:13px;vertical-align:-4px">¥</span> ${fmt(cost)} 立即复活`;
  $('bRevive').style.display=G.revived?'none':'';
  $('lSub').textContent=['病毒占领了药瓶……','培养皿失守了……','显微镜下一片混乱……','血管告急！','实验室沦陷了……'][G.info.w]+' 升级药力再来！';
  showScreen('lose');
 }
 function reviveCost(){return Math.round(80+G.L*25);}
-function revive(){const c=reviveCost();if(S.coins<c){sfx('deny');toast('金币不足');return;}S.coins-=c;save();G.revived=true;doc.hp=3;doc.inv=3;doc.shield=8;$('hHearts').dataset.k='';
+function revive(){const c=reviveCost();if(S.coins<c){sfx('deny');toast('金币不足');return;}S.coins-=c;save();G.revived=true;try{GT.revive('coins')}catch(_e){}doc.hp=3;doc.inv=3;doc.shield=8;$('hHearts').dataset.k='';
  for(const v of G.viruses)v.vy=-bounceV(v.tier)*1.1;state='play';paused=false;showScreen(null);$('hud').classList.add('on');sfx('power');const sg=songFor(G.info);Music.play(sg[0],sg[1]);}
 function refreshToggles(){
  ['bMus1','bMus2'].forEach(id=>{const b=$(id);b.innerHTML=ICONS.mOn;b.classList.toggle('off',!S.music);b.style.position='relative';});
  ['bSfx1','bSfx2'].forEach(id=>{const b=$(id);b.innerHTML=ICONS.sOn;b.classList.toggle('off',!S.sfx);b.style.position='relative';});
 }
 const on=(id,f)=>$(id).addEventListener('click',f);
-on('bStart',()=>{sfx('click');goLevels();});
+on('bStart',()=>{sfx('click');try{GT.title()}catch(_e){}goLevels();});
 on('bShop1',()=>{sfx('click');goShop();});on('bShop2',()=>{sfx('click');goShop();});
 on('bBack1',()=>{sfx('click');goTitle();});on('bBack2',()=>{sfx('click');goLevels();});
 on('bShopGo',()=>{sfx('click');startLevel(shopNext);});
 on('wPrev',()=>{if(menuWorld>0){menuWorld--;renderLevels();sfx('click');}});on('wNext',()=>{if(menuWorld<4){menuWorld++;renderLevels();sfx('click');}});
-['bMus1','bMus2'].forEach(id=>on(id,()=>{setMusic(!S.music);sfx('click');}));
-['bSfx1','bSfx2'].forEach(id=>on(id,()=>{setSfx(!S.sfx);sfx('click');}));
+['bMus1','bMus2'].forEach(id=>on(id,()=>{setMusic(!S.music);sfx('click');try{GT.sound('music',S.music)}catch(_e){}}));
+['bSfx1','bSfx2'].forEach(id=>on(id,()=>{setSfx(!S.sfx);sfx('click');try{GT.sound('sfx',S.sfx)}catch(_e){}}));
 $('bPause').addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();togglePause();});
 on('bResume',()=>togglePause());
 on('bRestart',()=>{sfx('click');startLevel(G.L);});
-on('bQuit',()=>{sfx('click');goLevels();});
+on('bQuit',()=>{sfx('click');try{GT.quit('menu')}catch(_e){}goLevels();});
 on('bNext',()=>{sfx('click');startLevel(Math.min(30,G.L+1));});
 on('bWinShop',()=>{sfx('click');goShop(Math.min(30,G.L+1));});
 on('bWinMenu',()=>{sfx('click');goLevels();});
@@ -684,7 +684,7 @@ on('bLoseShop',()=>{sfx('click');goShop(G.L);});
 on('bLoseMenu',()=>{sfx('click');goLevels();});
 on('bEndOk',()=>{sfx('click');goLevels(4);});
 // back to hub (Tilo 游戏屋): save, then leave
-function goHub(e){if(e)e.stopPropagation();save();try{sfx('click');}catch(_){}location.href='../';}
+function goHub(e){if(e)e.stopPropagation();save();try{sfx('click');}catch(_){}try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){}location.href='../';}
 ['bHub0','bHubP','bHubW','bHubL','bHubE'].forEach(id=>on(id,goHub));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='play'&&!paused)togglePause();if(AU.ctx)AU.ctx.suspend();}else if(AU.ctx)AU.ctx.resume();});
 // swipe between worlds on level select

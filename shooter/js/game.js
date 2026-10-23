@@ -83,7 +83,7 @@ for (let i = 0; i < 140; i++) stars.push({ x: rnd(360), y: rnd(900), l: i < 70 ?
 let bgY = 0, shake = 0, flash = 0, flashCol = '#fff', hitStop = 0;
 
 function startLevel(n) {
-  n = clamp(n, 1, 25);
+  n = clamp(n, 1, 25); try{GT.lv(n)}catch(_e){}
   const s = (n - 1) / 5 | 0, t = (n - 1) % 5;
   const ship = SHIPS.find(x => x.id === SAVE.sel) || SHIPS[0];
   const evo = SAVE.ships[ship.id].evo;
@@ -644,6 +644,7 @@ function finishLevel(win) {
   if (win) { SAVE.stars[n] = Math.max(SAVE.stars[n] || 0, stars); SAVE.maxLevel = Math.max(SAVE.maxLevel, Math.min(25, n + 1)); if (n == 25) SAVE.beat = true; }
   SAVE.best[n] = Math.max(SAVE.best[n] || 0, G.score); SAVE.hi = Math.max(SAVE.hi, G.score);
   writeSave();
+  try{win?GT.win(n,{stars:stars,score:G.score,kills:G.kills,deaths:G.deaths}):GT.fail(n,{r:'dead',score:G.score,kills:G.kills})}catch(_e){}
   Sound.play(win ? 'clear' : 'over');
   UI.result({ win, n, stars, score: G.score, coins: G.coins, bonus, kills: G.kills });
 }

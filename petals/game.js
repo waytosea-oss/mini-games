@@ -143,6 +143,7 @@ function lvObj(li) {
   return { W: GW, H: GH, grid: SIM.decodeGrid(L.grid, GW * GH), cols: L.cols, slots: L.slots, columns: L.columns.map(col => col.map(b => ({ c: b[0], cap: b[1], hid: !!(b[2] & 1), lock: !!(b[2] & 2), key: !!(b[2] & 4), frost: b[3] }))) };
 }
 function startLevel(li) {
+  try{GT.lv(li+1)}catch(_e){}
   G.li = li; G.s = SIM.create(lvObj(li), 1000 + li); G.s.cols = LEVELS[li].cols;
   G.total = G.s.left; G.used = 0; G.revived = false; G.over = false; G.winT = -1; G.paused = false; G.beeMode = false; G.bee = null;
   G.fx = []; G.anim = {}; P.n = 0; G.qAnim = 0; G.slotGlow = 0; G.botCd = 30; G.acc = 0; G.mergedOnce = false; G.tutStep = 0;
@@ -603,7 +604,7 @@ function showLevels() {
 }
 /* ---------- 胜负 ---------- */
 function onWin() {
-  G.over = true; G.winT = 0; SND.play('win');
+  G.over = true; G.winT = 0; SND.play('win'); try{GT.win(G.li+1,{stars:G.used===0?3:G.used<=2?2:1,props:G.used})}catch(_e){}
   const p = { x: LY.px + LY.P / 2, y: LY.py + LY.P / 2 };
   for (let i = 0; i < 6; i++) setTimeout(() => { const c = G.s ? G.s.cols[(Math.random() * G.s.cols.length) | 0] : 2; burst(p.x + (Math.random() - .5) * LY.P, p.y + (Math.random() - .5) * LY.P * .6, c, 16, 220); sparkle(p.x + (Math.random() - .5) * LY.P, p.y + (Math.random() - .5) * LY.P, 8); }, i * 160);
   setTimeout(showWin, 1700);
@@ -626,7 +627,7 @@ function showWin() {
   showScr('win', true);
 }
 function onFail() {
-  G.over = true; SND.play('fail');
+  G.over = true; SND.play('fail'); try{GT.fail(G.li+1,{r:'stuck',left:Math.round(G.s.left/G.total*100)})}catch(_e){}
   setTimeout(() => {
     if (G.scr !== 'game') return;
     $('fInfo').innerHTML = `传送带上的花篮收不到花瓣了<br>还剩 <b>${Math.max(1, Math.round(G.s.left / G.total * 100))}%</b> 的花瓣没收集`;
@@ -639,7 +640,7 @@ function onFail() {
 }
 $('fRevive').onclick = () => {
   SND.play('click'); const s = G.s;
-  showScr('game'); G.over = false; s.stuck = 0;
+  showScr('game'); G.over = false; s.stuck = 0; try{GT.revive('prop')}catch(_e){}
   if (s.cap < MAXSLOT && (save.props.slot > 0 || !G.revived)) { if (save.props.slot > 0) save.props.slot--; else G.revived = true; SIM.addSlot(s); G.used++; G.slotGlow = 1; SND.play('slot'); }
   else if (save.props.bee > 0) { setMode(true); }
   persist(); updProps();
@@ -649,19 +650,19 @@ $('fMenu').onclick = () => { SND.play('click'); showLevels(); G.s = null; };
 $('wRetry').onclick = () => { SND.play('click'); startLevel(G.li); };
 $('wMenu').onclick = () => { SND.play('click'); G.s = null; showLevels(); };
 $('wNext').onclick = () => { SND.play('click'); startLevel(Math.min(LEVELS.length - 1, G.li + 1)); };
-$('hPause').onclick = () => { if (G.scr !== 'game' || G.over) return; SND.play('click'); G.paused = true; $('pInfo').innerHTML = `第 ${G.li + 1} 关 ·《${LEVELS[G.li].name}》`; syncTg(); showScr('pause', true); };
+$('hPause').onclick = () => { if (G.scr !== 'game' || G.over) return; SND.play('click'); G.paused = true; try{GT.pause()}catch(_e){} $('pInfo').innerHTML = `第 ${G.li + 1} 关 ·《${LEVELS[G.li].name}》`; syncTg(); showScr('pause', true); };
 $('pResume').onclick = () => { SND.play('click'); G.paused = false; showScr('game'); };
 $('pRestart').onclick = () => { SND.play('click'); startLevel(G.li); };
-$('pQuit').onclick = () => { SND.play('click'); G.s = null; hideTut(); showLevels(); };
-$('bPlay').onclick = () => { SND.unlock(); SND.play('click'); if (save.music) SND.startMusic(); startLevel(Math.min(save.max, LEVELS.length) - 1); };
-$('bLevels').onclick = () => { SND.unlock(); SND.play('click'); if (save.music) SND.startMusic(); showLevels(); };
+$('pQuit').onclick = () => { SND.play('click'); try{GT.quit('menu')}catch(_e){} G.s = null; hideTut(); showLevels(); };
+$('bPlay').onclick = () => { SND.unlock(); SND.play('click'); try{GT.title('play')}catch(_e){} if (save.music) SND.startMusic(); startLevel(Math.min(save.max, LEVELS.length) - 1); };
+$('bLevels').onclick = () => { SND.unlock(); SND.play('click'); try{GT.title('levels')}catch(_e){} if (save.music) SND.startMusic(); showLevels(); };
 $('lvBack').onclick = () => { SND.play('click'); showScr('menu'); };
 // 返回 Tilo 游戏屋：先存档再离开
-function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
 for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 function syncTg() { for (const id of ['mMusic', 'pMusic']) $(id).classList.toggle('off', !save.music); for (const id of ['mSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx); }
-function tgMusic() { SND.unlock(); save.music = !save.music; SND.setMusic(save.music); if (save.music) SND.startMusic(); persist(); syncTg(); }
-function tgSfx() { SND.unlock(); save.sfx = !save.sfx; SND.setSfx(save.sfx); persist(); syncTg(); SND.play('click'); }
+function tgMusic() { SND.unlock(); save.music = !save.music; try{GT.sound('music',save.music)}catch(_e){} SND.setMusic(save.music); if (save.music) SND.startMusic(); persist(); syncTg(); }
+function tgSfx() { SND.unlock(); save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(_e){} SND.setSfx(save.sfx); persist(); syncTg(); SND.play('click'); }
 $('mMusic').onclick = $('pMusic').onclick = tgMusic; $('mSfx').onclick = $('pSfx').onclick = tgSfx;
 document.addEventListener('pointerdown', () => { SND.unlock(); if (save.music && !SND.playing && G.scr !== 'load') SND.startMusic(); }, { capture: true });
 document.addEventListener('visibilitychange', () => { if (document.hidden && G.scr === 'game' && !G.over && !G.paused) $('hPause').onclick(); });

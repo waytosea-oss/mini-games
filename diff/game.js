@@ -48,8 +48,8 @@ function setToggles() {
   for (const id of ['mMusic', 'pMusic']) { $(id).innerHTML = IC.music; $(id).classList.toggle('off', !SV.music); }
   for (const id of ['mSfx', 'pSfx']) { $(id).innerHTML = IC.sfx; $(id).classList.toggle('off', !SV.sfx); }
 }
-const togM = () => { SV.music = !SV.music; SND.setMusic(SV.music); save(); setToggles(); };
-const togS = () => { SV.sfx = !SV.sfx; SND.setSfx(SV.sfx); save(); setToggles(); };
+const togM = () => { SV.music = !SV.music; try{GT.sound('music',SV.music)}catch(_e){} SND.setMusic(SV.music); save(); setToggles(); };
+const togS = () => { SV.sfx = !SV.sfx; try{GT.sound('sfx',SV.sfx)}catch(_e){} SND.setSfx(SV.sfx); save(); setToggles(); };
 ['mMusic', 'pMusic'].forEach(i => tap($(i), togM)); ['mSfx', 'pSfx'].forEach(i => tap($(i), togS));
 $('gPause').innerHTML = IC.pause;
 $('tZoom').querySelector('.ico').outerHTML = IC.zoom;
@@ -80,8 +80,8 @@ function showMenu() {
   $('mStat').textContent = `已获得 ★ ${st} / ${LV.length * 3}　·　提示 ${SV.hints} 次`;
   $('bPlay').textContent = totalStars() > 0 ? `继续 · 第${G.next}关` : '开始游戏';
 }
-tap($('bPlay'), () => startLevel((G.next || 1) - 1));
-tap($('bLevels'), showLevels);
+tap($('bPlay'), () => { try{GT.title('play')}catch(_e){} startLevel((G.next || 1) - 1); });
+tap($('bLevels'), () => { try{GT.title('levels')}catch(_e){} showLevels(); });
 tap($('lvBack'), showMenu);
 /* ---------- 选关 ---------- */
 function showLevels() {
@@ -167,7 +167,7 @@ async function startLevel(i) {
   await Promise.all(imgs.map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
   spins.forEach(s => s.remove());
   if (tok !== G.token) return;
-  G.run = true; G.lastTick = performance.now();
+  G.run = true; G.lastTick = performance.now(); try{GT.lv(i+1)}catch(_e){}
   if (i === 0 && !SV.tut && !DBG.bot) showTut();
   if (DBG.bot) runBot(tok);
   // 预载下一关
@@ -324,17 +324,17 @@ function loop(ts) {
 }
 requestAnimationFrame(loop);
 /* ---------- 暂停 ---------- */
-function pauseGame() { if (!G.run || G.pause) return; G.pause = true; $('pause').classList.add('on'); SND.duck(true); }
+function pauseGame() { if (!G.run || G.pause) return; G.pause = true; try{GT.pause()}catch(_e){} $('pause').classList.add('on'); SND.duck(true); }
 function resume() { G.pause = false; $('pause').classList.remove('on'); SND.duck(false); }
 tap($('gPause'), pauseGame);
 tap($('pResume'), resume);
 tap($('pRestart'), () => { resume(); startLevel(G.i); });
-tap($('pLevels'), () => { resume(); G.run = false; G.token++; $('game').classList.remove('on'); showLevels(); });
+tap($('pLevels'), () => { try{GT.quit('menu')}catch(_e){} resume(); G.run = false; G.token++; $('game').classList.remove('on'); showLevels(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { pauseGame(); if (SND.ctx) SND.ctx.suspend && SND.ctx.suspend(); } else if (SND.ctx && audioOK) SND.ctx.resume(); });
 /* ---------- 结算 ---------- */
 function starsFor() { const used = TOTAL_T - G.t; let s = 3; if (G.miss >= 2 || used > 150) s = 2; if (G.miss >= 4 || used > 240) s = 1; return s; }
 function winLevel() {
-  const id = G.i + 1, s = starsFor(), used = Math.round(TOTAL_T - G.t);
+  const id = G.i + 1, s = starsFor(), used = Math.round(TOTAL_T - G.t); try{GT.win(id,{stars:s,miss:G.miss,hints:G.hintUsed,used:used})}catch(_e){}
   const prev = SV.stars[id] || 0; SV.stars[id] = Math.max(prev, s);
   if (!SV.best[id] || used < SV.best[id]) SV.best[id] = used;
   let reward = '';
@@ -360,7 +360,7 @@ tap($('wNext'), () => { $('win').classList.remove('on'); if (G.i + 1 >= LV.lengt
 tap($('wRetry'), () => { $('win').classList.remove('on'); startLevel(G.i); });
 tap($('wLevels'), () => { $('win').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
 function failLevel(why) {
-  G.run = false; clearHint();
+  G.run = false; clearHint(); try{GT.fail(G.i+1,{r:why,found:G.found.length,miss:G.miss})}catch(_e){}
   SND.play('fail'); SND.duck(true); setTimeout(() => SND.duck(false), 2400);
   $('fTitle').textContent = why === 'time' ? '时间到！' : '机会用完啦！';
   $('fIco').innerHTML = why === 'time' ? IC.timeup : IC.broken;
@@ -370,7 +370,7 @@ function failLevel(why) {
 tap($('fRetry'), () => { $('fail').classList.remove('on'); startLevel(G.i); });
 tap($('fLevels'), () => { $('fail').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
 // 返回 Tilo 游戏屋：先存档再离开
-function goHub() { save(); location.href = '../'; }
+function goHub(e) { save(); try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
 ['mHub', 'pHub', 'wHub', 'fHub'].forEach(i => tap($(i), goHub));
 /* ---------- 特效 ---------- */
 const FX = []; const fxEl = $('fx');

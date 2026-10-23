@@ -58,7 +58,7 @@ const UI = {
       row.appendChild(mk('星域地图', 'blue', () => { overlay('scrResult', false); openMap(); }));
       row.appendChild(mk('机库', 'green', () => { overlay('scrResult', false); openHangar('map'); }));
       B.appendChild(row);
-      B.appendChild(mk('返回游戏屋', 'hubb', goHub));
+      { const hb = mk('返回游戏屋', 'hubb', goHub); hb.id = 'rHub'; B.appendChild(hb); }
       overlay('scrResult', true);
     }, r.win ? 300 : 500);
   },
@@ -171,7 +171,7 @@ function showEnding() {
 function pause(on_) {
   if (STATE !== 'play' || (G && G.result)) return;
   PAUSED = on_; overlay('scrPause', on_); updToggles();
-  if (on_) { Sound.laser(false); KEYS.clear(); drag = null; }
+  if (on_) { Sound.laser(false); KEYS.clear(); drag = null; try{GT.pause()}catch(_e){} }
 }
 
 // ---------- back to hub ----------
@@ -179,11 +179,12 @@ function goHub(ev) {
   if (ev && ev.stopPropagation) ev.stopPropagation();
   try { writeSave(); } catch (e) {}
   try { Sound.laser(false); } catch (e) {}
+  try{GT.hub(ev&&ev.currentTarget&&ev.currentTarget.id)}catch(_e){}
   location.href = '../';
 }
 
 // ---------- wiring ----------
-on('#btnStart', () => openMap());
+on('#btnStart', () => { try{GT.title()}catch(_e){} openMap(); });
 on('#btnHangar1', () => openHangar('title'));
 on('#btnHangar2', () => openHangar('map'));
 on('#mapBack', () => openTitle(), 'back');
@@ -192,14 +193,14 @@ on('#secPrev', () => mapStep(-1), null); on('#secNext', () => mapStep(1), null);
 on('#hgMain', hgMainAct, null);
 on('#hgSel', () => { if (SAVE.sel === hgShip) return; SAVE.sel = hgShip; writeSave(); toast('已切换出战战机'); renderHangar(); });
 on('#endBack', () => openMap(4));
-$$('.tog').forEach(b => on(b, () => { SAVE[b.dataset.k] = !SAVE[b.dataset.k]; writeSave(); updToggles(); }));
+$$('.tog').forEach(b => on(b, () => { SAVE[b.dataset.k] = !SAVE[b.dataset.k]; writeSave(); updToggles(); try{GT.sound(b.dataset.k,SAVE[b.dataset.k])}catch(_e){} }));
 on('#btnPause', () => pause(true));
 on('#pResume', () => pause(false));
 on('#pRestart', () => { overlay('scrPause', false); startLevel(LV.n); });
 on('#btnHub', goHub, 'back');
 on('#pHub', goHub, 'back');
 on('#endHub', goHub, 'back');
-on('#pQuit', () => { overlay('scrPause', false); Sound.laser(false); openMap(LV.s); });
+on('#pQuit', () => { try{GT.quit('menu')}catch(_e){} overlay('scrPause', false); Sound.laser(false); openMap(LV.s); });
 $('#btnBomb').addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); Sound.unlock(); if (G && G.bombs <= 0) Sound.sfx.deny(); else bomb(); });
 $('#btnPause').addEventListener('pointerdown', (e) => e.stopPropagation());
 $('#scrTitle').addEventListener('click', () => {

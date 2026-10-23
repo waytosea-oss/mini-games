@@ -229,7 +229,7 @@ function drawLid(x0, y0, w, h, ci, t) { // t:0 开 → 1 合
 const G = { state: 'menu', t: 0, n: 1, parts: [], texts: [], fly: [], tools: [], pouch: [] };
 window.G = G;
 function startLevel(n) {
-  n = clamp(n, 1, 30);
+  n = clamp(n, 1, 30); try{GT.lv(n)}catch(_e){}
   const lv = GEN.genLevel(n);
   G.n = n; G.lv = lv; G.state = 'play'; G.t = 0; G.over = false;
   G.panels = lv.panels.map(p => Object.assign({}, p, { gems: p.gems.slice(), left: p.gems.length, alive: true, fall: null, spr: null, intro: 0.12 + p.id * 0.045, flash: 0, wob: 0 }));
@@ -722,7 +722,7 @@ function botTick(dt) {
 function win() {
   if (G.state !== 'play') return;
   G.state = 'won';
-  const stars = G.used === 0 ? 3 : G.used <= 2 ? 2 : 1;
+  const stars = G.used === 0 ? 3 : G.used <= 2 ? 2 : 1; try{GT.win(G.n,{stars:stars,props:G.used,gems:G.total})}catch(_e){}
   const first = !save.cleared[G.n];
   save.stars[G.n] = Math.max(save.stars[G.n] || 0, stars); save.cleared[G.n] = 1;
   if (G.n >= save.unlocked && G.n < 30) save.unlocked = G.n + 1;
@@ -744,13 +744,13 @@ function win() {
 }
 function fail() {
   if (G.state !== 'play') return;
-  G.state = 'fail'; SND.play('fail'); SND.duck(true);
+  G.state = 'fail'; SND.play('fail'); SND.duck(true); try{GT.fail(G.n,{r:'full',got:G.got,gems:G.total})}catch(_e){}
   setTimeout(() => {
     showScr('fail');
     $('fInfo').innerHTML = `丝绒托盘塞满啦！先撬能直接装箱的宝石哦<br>已撬出 <b>${G.got}</b> / ${G.total} 颗`;
     const rv = $('fRevive');
     const k = save.props.clear > 0 ? 'clear' : (save.props.slot > 0 && G.trayCap < 7) ? 'slot' : null;
-    if (k) { rv.style.display = ''; rv.textContent = `用「${PROPS.find(p => p.k === k).name}」继续 ×${save.props[k]}`; rv.onclick = () => { SND.play('click'); showScr(null); G.state = 'play'; SND.duck(false); useProp(k, true); G.revived++; }; }
+    if (k) { rv.style.display = ''; rv.textContent = `用「${PROPS.find(p => p.k === k).name}」继续 ×${save.props[k]}`; rv.onclick = () => { SND.play('click'); showScr(null); G.state = 'play'; SND.duck(false); useProp(k, true); G.revived++; try{GT.revive(k)}catch(_e){} }; }
     else rv.style.display = 'none';
   }, 900);
 }
@@ -758,11 +758,11 @@ function fail() {
 /* ---------- 界面 ---------- */
 const SCR = ['load', 'menu', 'levels', 'pause', 'win', 'fail'];
 function showScr(id) { for (const s of SCR) $(s).classList.toggle('on', s === id); }
-function pause() { if (G.state !== 'play') return; G.state = 'pause'; SND.play('click'); showScr('pause'); syncToggles(); }
+function pause() { if (G.state !== 'play') return; G.state = 'pause'; try{GT.pause()}catch(_e){} SND.play('click'); showScr('pause'); syncToggles(); }
 function resume() { G.state = 'play'; showScr(null); }
 function syncToggles() { for (const id of ['tMusic', 'pMusic']) $(id).classList.toggle('off', !save.music); for (const id of ['tSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx); }
-function toggleMusic() { save.music = !save.music; persist(); SND.setMusic(save.music); if (save.music) { SND.unlock(); SND.startMusic(); } syncToggles(); }
-function toggleSfx() { save.sfx = !save.sfx; persist(); SND.setSfx(save.sfx); syncToggles(); SND.play('click'); }
+function toggleMusic() { save.music = !save.music; try{GT.sound('music',save.music)}catch(_e){} persist(); SND.setMusic(save.music); if (save.music) { SND.unlock(); SND.startMusic(); } syncToggles(); }
+function toggleSfx() { save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(_e){} persist(); SND.setSfx(save.sfx); syncToggles(); SND.play('click'); }
 function menu() {
   G.state = 'menu'; G.panels = null; showScr('menu'); SND.duck(false);
   const tot = Object.values(save.stars).reduce((a, b) => a + b, 0);
@@ -781,21 +781,21 @@ function levels() {
     gr.appendChild(b);
   }
 }
-$('bPlay').onclick = () => { SND.play('click'); startLevel(save.unlocked); };
-$('bLevels').onclick = () => { SND.play('click'); levels(); };
+$('bPlay').onclick = () => { SND.play('click'); try{GT.title('play')}catch(_e){} startLevel(save.unlocked); };
+$('bLevels').onclick = () => { SND.play('click'); try{GT.title('levels')}catch(_e){} levels(); };
 $('lvBack').onclick = () => { SND.play('click'); menu(); };
 $('tMusic').onclick = $('pMusic').onclick = toggleMusic;
 $('tSfx').onclick = $('pSfx').onclick = toggleSfx;
 $('pResume').onclick = () => { SND.play('click'); resume(); };
 $('pRestart').onclick = () => { SND.play('click'); startLevel(G.n); };
-$('pQuit').onclick = () => { SND.play('click'); levels(); G.state = 'menu'; G.panels = null; };
+$('pQuit').onclick = () => { SND.play('click'); try{GT.quit('menu')}catch(_e){} levels(); G.state = 'menu'; G.panels = null; };
 $('wNext').onclick = () => { SND.play('click'); startLevel(G.n + 1); };
 $('wRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('wMenu').onclick = () => { SND.play('click'); G.panels = null; G.state = 'menu'; levels(); };
 $('fRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('fMenu').onclick = () => { SND.play('click'); G.panels = null; G.state = 'menu'; levels(); };
 // 返回 Tilo 游戏屋：先存档再离开
-function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } location.href = '../'; }
+function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
 for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
 
 /* ---------- 音频解锁 ---------- */
