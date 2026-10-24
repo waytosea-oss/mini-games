@@ -1,24 +1,22 @@
-/* ===== 一合到底 · 规则内核（纯逻辑，浏览器与 Node 共用） ===== */
+/* ===== 摘星合合 · 规则内核（纯逻辑，浏览器与 Node 共用） ===== */
 (function (root) {
 'use strict';
-const CAP = 10, ROWS = 11, NT = 34;
-// 牌阶：一筒…九筒(0-8) 一条…九条(9-17) 一万…九万(18-26) 東南西北(27-30) 中發白(31-33)
-const NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
-const HON = ['東', '南', '西', '北', '中', '發', '白'];
-function tileName(t) {
-  if (t < 9) return NUM[t] + '筒'; if (t < 18) return NUM[t - 9] + '条'; if (t < 27) return NUM[t - 18] + '万';
-  return ['东风', '南风', '西风', '北风', '红中', '发财', '白板'][t - 27];
-}
-// 关卡目标（合出此牌即过关）
-const GOALS = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33];
-// 行的初始状态：0-3 里程碑行（合出对应牌后永久解锁），4-8 开放，9 临时解锁行，10 金币永久解锁行
-// 2026-10 难度曲线调整：原 {3:2,2:5,1:8,0:12} 在第 3→4 关出现断崖（机器人到达率 53%→7%），提前解锁后为 73%→22%
-const MILE = { 3: 2, 2: 4, 1: 7, 0: 10 }; // 行号 → 需要合出的牌阶
-const TEMP_ROW = 9, BUY_ROW = 10;
+// 2026-10 独立设计：每行 8 格、30 阶星星、10 关；开放行在上、待解锁行在下
+const CAP = 8, ROWS = 10, NT = 30;
+// 星阶：5 个家族 × 6 种颜色。星尘(0-5) 星星(6-11) 彗星(12-17) 行星(18-23) 星系(24-28)，最高阶 29 为「银河」
+const FAM = ['星尘', '星星', '彗星', '行星', '星系'];
+const HUE = ['红', '橙', '黄', '绿', '蓝', '紫'];
+function tileName(t) { if (t >= NT - 1) return '银河'; return HUE[t % 6] + FAM[Math.floor(t / 6)]; }
+// 关卡目标（合出此星即过关）
+const GOALS = [2, 4, 6, 8, 10, 12, 14, 17, 22, 29];
+// 难度：机器人（不用道具）各关到达率约 100/100/99/84/51/23/4%，每关所需补星次数稳定在 6~7 次，无断崖（tools/curve.js 实测）
+// 行：0-4 开放，5-7 里程碑行（合出对应星后永久解锁），8 临时解锁行，9 金币永久解锁行
+const MILE = { 5: 2, 6: 5, 7: 9 }; // 行号 → 需要合出的星阶
+const TEMP_ROW = 8, BUY_ROW = 9, OPEN_N = 5;
 function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function newState() {
   const rows = [];
-  for (let i = 0; i < ROWS; i++) rows.push({ t: [], st: (i >= 4 && i <= 8) ? 'open' : (i === TEMP_ROW ? 'temp' : (i === BUY_ROW ? 'buy' : 'mile')), exp: false });
+  for (let i = 0; i < ROWS; i++) rows.push({ t: [], st: i < OPEN_N ? 'open' : (i === TEMP_ROW ? 'temp' : (i === BUY_ROW ? 'buy' : 'mile')), exp: false });
   return { rows, top: 0, stage: 0, score: 0, merges: 0, deals: 0, coins: 0, tempFree: true };
 }
 const isOpen = r => r.st === 'open' || r.st === 'tempOn';
@@ -39,12 +37,12 @@ function move(s, a, b) {
 function expire(s) { for (const r of s.rows) if (r.st === 'tempOn' && r.exp && !r.t.length) { r.st = 'temp'; r.exp = false; } }
 function full10(r) { return r.t.length === CAP && r.t.every(v => v === r.t[0]) && r.t[0] < NT - 1; }
 function mergeable(s) { const o = []; s.rows.forEach((r, i) => { if (isOpen(r) && full10(r)) o.push(i); }); return o; }
-// 合成：每行 10 张同牌 → 2 张下一阶（白板为最高阶）
+// 合成：每行 8 颗同星 → 2 颗下一阶（银河为最高阶）
 function merge(s) {
   const res = [];
   for (const i of mergeable(s)) {
     const r = s.rows[i], from = r.t[0], to = from + 1;
-    r.t = [to, to]; s.merges++; s.score += (to + 1) * 10; s.coins += 2 + Math.floor(to / 3);
+    r.t = [to, to]; s.merges++; s.score += (to + 1) * 12; s.coins += 1 + Math.floor(to / 2);
     const newTop = to > s.top; if (newTop) s.top = to;
     res.push({ row: i, from, to, newTop });
   }
@@ -53,8 +51,8 @@ function merge(s) {
   return { res, unl };
 }
 function freeSpace(s) { let f = 0; for (const r of s.rows) if (isOpen(r)) f += CAP - r.t.length; return f; }
-function dealWindow(s) { const hi = s.top; const lo = Math.max(0, hi - (s.top >= 4 ? 4 : 3)); return [lo, hi]; }
-// 发牌：每个有空位的行补 1~3 张
+function dealWindow(s) { const hi = s.top; const lo = Math.max(0, hi - 3); return [lo, hi]; }
+// 补星：每个有空位的行补 1~3 颗
 function deal(s, rnd) {
   rnd = rnd || Math.random;
   const [lo, hi] = dealWindow(s); const span = hi - lo + 1;
@@ -65,7 +63,7 @@ function deal(s, rnd) {
   const out = [];
   s.rows.forEach((r, i) => {
     if (!isOpen(r) || (r.st === 'tempOn' && r.exp)) return; const free = CAP - r.t.length; if (free <= 0) return;
-    let c = [1, 2, 2, 3, 3][Math.floor(rnd() * 5)]; c = Math.min(c, free);
+    let c = [1, 1, 2, 2, 3][Math.floor(rnd() * 5)]; c = Math.min(c, free);
     const same = rnd() < 0.55; let v = pick();
     const tp = topTier(r); if (tp >= lo && tp <= hi && rnd() < 0.4) v = tp;
     for (let k = 0; k < c; k++) { const t = (same || k === 0) ? v : pick(); r.t.push(t); out.push({ row: i, idx: r.t.length - 1, t }); }
@@ -75,14 +73,14 @@ function deal(s, rnd) {
 }
 function stuck(s) { return freeSpace(s) === 0 && mergeable(s).length === 0; }
 function anyMove(s) { for (let a = 0; a < ROWS; a++) for (let b = 0; b < ROWS; b++) if (canMove(s, a, b)) return true; return false; }
-// 道具：消除——清掉牌桌上最低阶的所有牌
+// 道具：消除——清掉星盘上最低阶的所有星
 function lowestTier(s) { let m = 99; for (const r of s.rows) if (isOpen(r)) for (const v of r.t) if (v < m) m = v; return m === 99 ? -1 : m; }
 function clearLowest(s) {
   const m = lowestTier(s); if (m < 0) return [];
   const out = []; s.rows.forEach((r, i) => { if (!isOpen(r)) return; r.t.forEach((v, k) => { if (v === m) out.push({ row: i, idx: k, t: v }); }); r.t = r.t.filter(v => v !== m); });
   expire(s); return out;
 }
-// 道具：理牌——同一行内按牌阶整理（相同牌聚拢到右侧）
+// 道具：整理——同一行内按星阶整理（相同星聚拢到右侧）
 function sortRows(s) { for (const r of s.rows) if (isOpen(r)) { const c = {}; for (const v of r.t) c[v] = (c[v] || 0) + 1; r.t.sort((a, b) => (c[a] - c[b]) || (b - a)); } }
 // 机器人：评估一步
 function botStep(s) {
@@ -105,6 +103,6 @@ function botStep(s) {
   if (best) return best;
   return null;
 }
-const API = { CAP, ROWS, NT, GOALS, MILE, TEMP_ROW, BUY_ROW, tileName, newState, isOpen, topTier, runLen, canMove, move, mergeable, merge, deal, freeSpace, stuck, anyMove, lowestTier, clearLowest, sortRows, dealWindow, botStep, mulberry, expire };
+const API = { CAP, ROWS, NT, GOALS, MILE, TEMP_ROW, BUY_ROW, OPEN_N, FAM, HUE, tileName, newState, isOpen, topTier, runLen, canMove, move, mergeable, merge, deal, freeSpace, stuck, anyMove, lowestTier, clearLowest, sortRows, dealWindow, botStep, mulberry, expire };
 if (typeof module !== 'undefined') module.exports = API; else root.LOGIC = API;
 })(this);

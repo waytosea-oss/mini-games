@@ -4,14 +4,14 @@
 <canvas id="c" width="1024" height="1024"></canvas>
 <script>
 const L=[
- ['deal','发牌',110,'#fff','#0b3d5c','HY'],['merge','合成',110,'#fff','#0d4a1c','HY'],
+ ['deal','补星',110,'#fff','#0b3d5c','HY'],['merge','合成',110,'#fff','#5a0e50','HY'],
  ['goal','本关目标',52,'#ffe9a6','#5a2a00','WK'],['temp','临时解锁',60,'#7a2a00','#fff3c4','HY'],
  ['undo','撤销',56,'#fff','#5a2a00','HY'],['clear','消除',56,'#fff','#5a2a00','HY'],['rank','排行榜',44,'#fff','#3a1a00','HY'],
- ['sort','理牌',56,'#fff','#5a2a00','HY'],
+ ['sort','整理',56,'#fff','#5a2a00','HY'],
 ];
 const c=document.getElementById('c'),x=c.getContext('2d');const meta={};
 (async()=>{
- await document.fonts.load('700 40px WK','本关目标');await document.fonts.load('40px HY','发牌合成临时解锁撤销消除排行榜理牌');
+ await document.fonts.load('700 40px WK','本关目标');await document.fonts.load('40px HY','补星合成临时解锁撤销消除排行榜整理');
  let y=0;
  for(const [k,s,sz,fill,stroke,f] of L){
   x.font=`${f==='WK'?'700 ':''}${sz}px ${f}`;const w=Math.ceil(x.measureText(s).width+sz*.5),h=Math.ceil(sz*1.4);

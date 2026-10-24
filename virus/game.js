@@ -623,10 +623,10 @@ function drawVirus(v){
   for(let i=0;i<6;i++){const a=i/6*6.28+0.3;ctx.fillStyle='#4a5664';ctx.beginPath();ctx.arc(Math.cos(a)*R,Math.sin(a)*R,2.2*SC,0,6.28);ctx.fill();}}
  if(v.kind==='fast'){ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=2;for(const o of[-0.4,0,0.4]){ctx.beginPath();ctx.moveTo(o*v.r,-v.r*1.05);ctx.lineTo(o*v.r,-v.r*1.45);ctx.stroke();}}
  ctx.restore();
- // 血量数字（消灭病毒式：直接写在病毒身上）
- const hp=Math.max(0,Math.ceil(v.hp));const fs=Math.max(12,v.r*0.62);
- ctx.font=`900 ${fs}px "PingFang SC","Noto Sans CJK SC",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
- const txt=fmt(hp);ctx.lineWidth=Math.max(3,fs*0.28);ctx.lineJoin='round';ctx.strokeStyle='rgba(10,10,30,.85)';ctx.strokeText(txt,v.x,v.y+1);ctx.fillStyle=v.flash>0.5?'#ffe36b':'#fff';ctx.fillText(txt,v.x,v.y+1);
+ // 血量环：受伤后在病毒外圈显示剩余血量（不显示数字）
+ if(v.hp<v.max){const f=Math.max(0,v.hp/v.max),R=v.r*1.12+3*SC;ctx.lineCap='round';
+  ctx.lineWidth=4.5*SC;ctx.strokeStyle='rgba(10,20,40,.55)';ctx.beginPath();ctx.arc(v.x,v.y,R,0,6.283);ctx.stroke();
+  ctx.lineWidth=3*SC;ctx.strokeStyle=f>0.5?'#7dffb0':f>0.25?'#ffd84a':'#ff5a6a';ctx.beginPath();ctx.arc(v.x,v.y,R,-1.571,-1.571+6.283*f);ctx.stroke();ctx.lineCap='butt';}
 }
 function drawBoss(b){
  const img=IMG.boss;const s=b.r*2.5;const ar=img.height/img.width;const oy=-s*ar/2-b.r*0.12;
@@ -636,7 +636,6 @@ function drawBoss(b){
  ctx.drawImage(G.pw.freeze>0?BOSSI.ice:img,-s/2,oy,s,s*ar);
  if(b.flash>0){ctx.globalAlpha=ctx.globalAlpha*b.flash*0.3;ctx.drawImage(BOSSI.white,-s/2,oy,s,s*ar);}
  ctx.restore();ctx.globalAlpha=1;
- if(!b.dead&&!b.enter){const fs=17*SC;ctx.font=`900 ${fs}px "PingFang SC","Noto Sans CJK SC",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';const t=fmt(Math.ceil(b.hp));ctx.lineWidth=5;ctx.lineJoin='round';ctx.strokeStyle='rgba(20,0,30,.85)';ctx.strokeText(t,b.x,b.y+b.r*0.75);ctx.fillStyle='#fff';ctx.fillText(t,b.x,b.y+b.r*0.75);}
 }
 function drawRobot(){
  const img=IMG.robot;const h=RB*1.7,w=h*img.width/img.height;

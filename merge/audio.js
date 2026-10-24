@@ -1,6 +1,6 @@
-/* ===== 一合到底 · 原创音频引擎（WebAudio 实时合成，无外部音频文件） =====
+/* ===== 摘星合合 · 原创音频引擎（WebAudio 实时合成，无外部音频文件） =====
    BGM《竹窗听雨》：D 宫五声调式，古筝（Karplus-Strong 拨弦合成）+ 竹笛 + 低音大阮 + 木鱼/堂鼓
-   音效：象牙麻将牌碰撞（多层噪声+共振体）、洗牌、合成风铃、过关锣声 */
+   音效：清脆宝石碰撞（多层噪声+共振体）、洗牌、合成风铃、过关锣声 */
 const SND = (() => {
   let ac = null, master, musicBus, sfxBus, comp, verbIn, noiseBuf;
   let musicOn = true, sfxOn = true, playing = false, timer = null, nextT = 0, step = 0, loop = 0;
@@ -129,7 +129,7 @@ const SND = (() => {
   function setSfx(on) { sfxOn = on; if (sfxBus) sfxBus.gain.setTargetAtTime(on ? 0.9 : 0, ac.currentTime, 0.02); }
   /* ---- 音效 ---- */
   const S = {
-    // 麻将碰撞：硬质高频瞬态 + 两个象牙共振峰 + 桌面低频
+    // 宝石碰撞：硬质高频瞬态 + 两个象牙共振峰 + 桌面低频
     clack(v = 1, pitch = 1) {
       if (!ac) return; const t = now() + 0.002;
       noise(t, 0.012, 0.55 * v, sfxBus, 'highpass', 3200, 0.8);

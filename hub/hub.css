@@ -118,6 +118,7 @@ img{display:block}
 .li .meta-wrap .meta{border:0}
 
 .note{font-size:12px;color:var(--label2);text-align:center;line-height:1.6;margin:26px 8px 0}
+.note a{color:var(--blue,#0a84ff);text-decoration:none}
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;

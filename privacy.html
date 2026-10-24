@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>隐私政策 · 游戏屋</title>
+<link rel="icon" href="hub/favicon.png">
+<style>
+body{margin:0;background:#f2f2f7;color:#1c1c1e;font:15px/1.75 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 16px) 18px calc(env(safe-area-inset-bottom) + 40px)}
+a{color:#0a64d8}
+.back{display:inline-block;padding:6px 14px;border-radius:99px;background:#fff;color:#1c1c1e;text-decoration:none;font-weight:700;box-shadow:0 1px 4px #0001}
+h1{font-size:26px;margin:16px 0 4px}h2{font-size:18px;margin:26px 0 6px}
+.meta{color:#6b6b70;font-size:13px}
+.card{background:#fff;border-radius:16px;padding:14px 16px;margin:12px 0;box-shadow:0 1px 4px #0001}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-top:1px solid #e5e5ea;padding:7px 4px;text-align:left;vertical-align:top}th{white-space:nowrap;color:#3a3a3c}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px}
+button{font:inherit;font-weight:700;border:0;border-radius:99px;padding:8px 18px;background:#1c1c1e;color:#fff}
+button.on{background:#34c759}
+.st{font-weight:700}
+</style></head><body><main>
+<a class="back" href="./">‹ 游戏屋</a>
+<h1>隐私政策</h1>
+<div class="meta">适用于「游戏屋」网站及其中的全部小游戏（trigger-tech.fun/games/ 与 waytosea-oss.github.io/mini-games/）。更新日期：2026 年 10 月 24 日。</div>
+
+<h2>一、运营者</h2>
+<div class="card">运营者：南京彰往察来文化科技有限公司<br>联系邮箱：待补充<br>联系地址：待补充<br>联系电话：待补充</div>
+
+<h2>二、我们收集什么</h2>
+<p>游戏屋不需要注册，不收集姓名、手机号、邮箱、通讯录、精确定位等信息。为了解哪些游戏好玩、哪一关太难，网页中的统计脚本（track.js）会向我们的服务器（trigger-tech.fun/games/api/collect.php）发送以下匿名的玩法统计：</p>
+<div class="card"><table>
+<tr><th>标识</th><td>浏览器本地随机生成的访客 ID 与会话 ID（存放在本机 localStorage，可随时清除），用于区分新老访客、计算会话时长。</td></tr>
+<tr><th>设备</th><td>设备类型（手机/平板/电脑）、系统与浏览器大类及版本、手机品牌与型号（由浏览器提供的型号信息或屏幕尺寸推断）、屏幕尺寸与像素比、是否触屏、CPU 核数与内存档位（仅用于机型分组）、语言。浏览器不再上报完整 User-Agent 字符串；服务器只在内存中解析请求自带的 User-Agent 得到上述大类，原文不保存。</td></tr>
+<tr><th>地区</th><td>服务器根据请求的 IP 地址，在内存中通过离线库查出国家、省份、城市与运营商大类（电信/联通/移动等），只保存到<b>城市级</b>。<b>IP 地址本身不写入数据库</b>；仅以加盐哈希的形式在一分钟级的限流表中短暂使用以防刷量，随后清理。</td></tr>
+<tr><th>来源</th><td>来源网站域名、链接中的 utm/from 推广参数、从游戏屋的哪个位置进入游戏。</td></tr>
+<tr><th>游戏事件</th><td>打开页面、开始/通关/失败/退出某关、用时、得分与星级、暂停、复活、音效开关、返回游戏屋、页面停留与活跃时长。</td></tr>
+</table></div>
+<p>我们不使用第三方统计、广告或社交 SDK，不做跨站跟踪，不做设备指纹识别，也不把数据出售或提供给第三方。</p>
+
+<h2>三、用途</h2>
+<p>上述数据仅用于统计游戏的访问量、各关卡难度与流失点、设备兼容情况和推广渠道效果，从而改进游戏。统计看板只供运营者内部查看。</p>
+
+<h2>四、本地存储</h2>
+<p>游戏会在你的浏览器 localStorage 中保存游戏进度、最高分、音效设置，以及上述随机 ID 和「是否已看过统计提示 / 是否关闭统计」的选择。这些数据留在你的设备上，清除浏览器网站数据即可删除。</p>
+
+<h2>五、保存与安全</h2>
+<p>统计数据保存在运营者自有服务器的数据库中，看板需密码登录。保存期限：待补充。</p>
+
+<h2 id="optout">六、关闭统计</h2>
+<div class="card"><div class="sw"><div>本浏览器的统计状态：<span class="st" id="st">…</span></div><button type="button" id="tg">…</button></div>
+<p class="meta" style="margin:8px 0 0">关闭后，track.js 在本浏览器中不再发送任何统计，并删除本机保存的随机 ID；游戏照常可玩。开启浏览器的“请勿跟踪”（Do Not Track）或 GPC 设置也会停止统计。关闭对 trigger-tech.fun 与 github.io 两个站点分别生效。</p></div>
+
+<h2>七、未成年人</h2>
+<p>游戏屋面向所有年龄段，不要求提供任何身份信息。未成年人请在监护人指导下游玩，并注意游戏时长。</p>
+
+<h2>八、你的权利与联系我们</h2>
+<p>由于我们不收集可识别你身份的信息，通常无法把统计记录与具体个人对应。如需查询、删除与某个访客 ID 相关的数据，或对本政策有疑问，请通过第一节的联系方式联系我们（联系方式待补充）。本政策如有更新，将在本页面公布。</p>
+</main>
+<script>
+(function(){var st=document.getElementById('st'),tg=document.getElementById('tg');
+function off(){try{return localStorage.getItem('gt_off')==='1'}catch(e){return false}}
+function draw(){var o=off();st.textContent=o?'已关闭':'已开启';tg.textContent=o?'重新开启统计':'关闭统计';tg.className=o?'on':''}
+tg.onclick=function(){try{if(off())localStorage.removeItem('gt_off');else{localStorage.setItem('gt_off','1');['gt_vid','gt_sid','gt_sn','gt_last','gt_test'].forEach(function(k){localStorage.removeItem(k)})}localStorage.setItem('gt_notice','1')}catch(e){}draw()};
+draw();})();
+</script>
+</body></html>

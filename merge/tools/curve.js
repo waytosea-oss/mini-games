@@ -10,7 +10,7 @@ for(let g=0;g<N;g++){
   for(let steps=0;steps<300000&&st<G.length;steps++){
     const m=L.botStep(s); if(!m) break;
     if(m.type==='merge') L.merge(s); else if(m.type==='move') L.move(s,m.a,m.b); else {L.deal(s,rnd);deals++;}
-    while(st<G.length && s.top>=G[st]){ cost[st].push(deals-last); last=deals; st++; reach[st]++; if(st===1) s.rows[9].st='tempOn'; }
+    while(st<G.length && s.top>=G[st]){ cost[st].push(deals-last); last=deals; st++; reach[st]++; if(st===1) s.rows[L.TEMP_ROW].st='tempOn'; }
   }
 }
 const med=a=>{if(!a.length)return null;const b=[...a].sort((x,y)=>x-y);return b[b.length>>1];};

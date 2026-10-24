@@ -1,4 +1,4 @@
-/* ===== 一合到底 · 麻将合成  主程序 ===== */
+/* ===== 摘星合合 · 星星合成  主程序 ===== */
 (() => {
 'use strict';
 const Q = new URLSearchParams(location.search);
@@ -11,12 +11,13 @@ const TAU = Math.PI * 2, rnd = (a, b) => a + Math.random() * (b - a), clamp = (v
 const easeOut = t => 1 - Math.pow(1 - t, 3), easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, easeBack = t => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 const LBL = { deal: [0, 0, 275, 154], merge: [0, 158, 275, 154], goal: [0, 316, 234, 73], temp: [0, 393, 270, 84], undo: [0, 481, 140, 79], clear: [0, 564, 140, 79], rank: [0, 647, 154, 62], sort: [0, 713, 140, 79] };
 const IMG = {};
-const ASSETS = ['faces.webp', 'labels.webp'];
-const COST = { temp: 120, buy: 300, undo: 20, clear: 80 };
+const ASSETS = ['labels.webp'];
+const COST = { temp: 100, buy: 260, undo: 15, clear: 60 };
+const TA = 1.08; // 星星棋子高宽比（近方形圆角）
 
 /* ---------- 存档 ---------- */
-const SKEY = 'yiheddaodi_v1';
-let save = { st: null, cp: null, coins: 60, props: { undo: 3, clear: 2 }, best: { score: 0, top: 0 }, runs: [], music: true, sfx: true, tut: false, runId: 1 };
+const SKEY = 'zhaixinghehe_v1';
+let save = { st: null, cp: null, coins: 50, props: { undo: 2, clear: 2 }, best: { score: 0, top: 0 }, runs: [], music: true, sfx: true, tut: false, runId: 1 };
 try { const s = JSON.parse(localStorage.getItem(SKEY)); if (s && s.props && !DEBUG.reset) save = Object.assign(save, s); } catch (e) { }
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (e) { } };
 if (DEBUG.coins) save.coins = DEBUG.coins;
@@ -49,12 +50,12 @@ function layout() {
   const innerH = bBot - bTop - fr * 2 - 8;
   let rh = (innerH - gap * (n - 1)) / n;
   let th = rh - (short ? 4 : 7);
-  let tw = th / 1.3;
-  const maxTw = (GW - 24 - fr * 2 - 16 - 9 * 1.5) / 10;
-  if (tw > maxTw) { tw = maxTw; th = tw * 1.3; }
-  tw = Math.floor(tw); th = Math.floor(tw * 1.3);
-  L.tw = tw; L.th = th; L.tg = Math.max(1, Math.round(tw * 0.04)); L.rh = rh; L.rgap = gap;
-  L.rowW = tw * 10 + L.tg * 9 + 14;
+  let tw = th / TA;
+  const maxTw = (GW - 24 - fr * 2 - 16 - (LG.CAP - 1) * 2) / LG.CAP;
+  if (tw > maxTw) { tw = maxTw; th = tw * TA; }
+  tw = Math.floor(tw); th = Math.floor(tw * TA);
+  L.tw = tw; L.th = th; L.tg = Math.max(2, Math.round(tw * 0.07)); L.rh = rh; L.rgap = gap;
+  L.rowW = tw * LG.CAP + L.tg * (LG.CAP - 1) + 14;
   L.bw = L.rowW + fr * 2 + 8; L.bx = gx + (GW - L.bw) / 2; L.bh = bBot - bTop;
   L.rx = L.bx + fr + 4; L.ry0 = bTop + fr + 4;
   const bw2 = Math.min(170, (GW - 48) / 2);
@@ -77,38 +78,74 @@ const tileY = i => rowY(i) + (L.rh - L.th) / 2;
 function rr(c, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 function mk(w, h) { const c = document.createElement('canvas'); c.width = Math.max(1, Math.ceil(w * DPR)); c.height = Math.max(1, Math.ceil(h * DPR)); const x = c.getContext('2d'); x.scale(DPR, DPR); return [c, x]; }
 let tileCache = {};
-// 麻将牌：绿色牌背在上方露出一条（俯视角），象牙牌面，柔和投影 + 斜面高光
+// 星星棋子：圆角宝石底（六色）+ 白色星体图标（五族），顶部高光、柔和投影
+const HUEC = [['#ffc2c8', '#ff5a6e', '#c42245', '#6e0f2a'], ['#ffd9b0', '#ff9a3c', '#d9600e', '#7a3304'], ['#fff3b0', '#ffd23f', '#e09a0a', '#7a5204'], ['#c6ffe0', '#3fd68a', '#13965a', '#0a4f30'], ['#c4e6ff', '#3fa8ff', '#1a62d0', '#0b2f70'], ['#e6d2ff', '#a86bff', '#6a32d6', '#331470']];
+function starPath(x, cx, cy, ro, ri, n = 5, rot = -Math.PI / 2, round = 0) {
+  x.beginPath();
+  for (let i = 0; i < n * 2; i++) { const r = i % 2 ? ri : ro, a = rot + i * Math.PI / n; const px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r; i ? x.lineTo(px, py) : x.moveTo(px, py); }
+  x.closePath(); if (round) { x.lineJoin = 'round'; }
+}
+function sparkPath(x, cx, cy, r, k = .28) { x.beginPath(); for (let i = 0; i < 8; i++) { const a = -Math.PI / 2 + i * Math.PI / 4, rr2 = i % 2 ? r * k : r; const px = cx + Math.cos(a) * rr2, py = cy + Math.sin(a) * rr2; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.closePath(); }
+function starIcon(x, fam, cx, cy, s, dk) {
+  // s = 图标半径；先描深色外轮廓，再填白色渐变
+  const W2 = s * .2; x.lineJoin = 'round'; x.lineCap = 'round';
+  const wg = x.createLinearGradient(0, cy - s, 0, cy + s); wg.addColorStop(0, '#ffffff'); wg.addColorStop(.6, '#fffaf0'); wg.addColorStop(1, '#ffe7b8');
+  const both = (fn) => { fn(); x.strokeStyle = dk; x.lineWidth = W2; x.stroke(); fn(); x.fillStyle = wg; x.fill(); };
+  if (fam === 0) { // 星尘：三颗闪光
+    for (const [dx, dy, r] of [[-.32, .22, .58], [.38, -.3, .46], [.34, .48, .3]]) both(() => sparkPath(x, cx + dx * s, cy + dy * s, r * s, .3));
+  } else if (fam === 1) { // 星星：圆润五角星
+    both(() => starPath(x, cx, cy + s * .06, s * .98, s * .46));
+  } else if (fam === 2) { // 彗星：星头 + 三道尾巴
+    x.save(); x.strokeStyle = dk; x.lineWidth = W2 + s * .2;
+    for (const o of [-.28, 0, .28]) { x.beginPath(); x.moveTo(cx + s * .05 + o * s * .4, cy - s * .05 + o * s * .4); x.lineTo(cx - s * .85 + o * s * .5, cy + s * .8 + o * s * .1); x.stroke(); }
+    x.strokeStyle = 'rgba(255,255,255,.92)'; x.lineWidth = s * .16;
+    for (const o of [-.28, 0, .28]) { x.beginPath(); x.moveTo(cx + s * .05 + o * s * .4, cy - s * .05 + o * s * .4); x.lineTo(cx - s * .78 + o * s * .5, cy + s * .74 + o * s * .1); x.stroke(); }
+    x.restore();
+    both(() => starPath(x, cx + s * .28, cy - s * .26, s * .66, s * .31, 5, -Math.PI / 2 + .3));
+  } else if (fam === 3) { // 行星：球体 + 光环
+    x.save(); x.translate(cx, cy); x.rotate(-.35);
+    const ring = (back) => { x.beginPath(); x.ellipse(0, 0, s * 1.02, s * .34, 0, back ? Math.PI : 0, back ? TAU : Math.PI); };
+    x.strokeStyle = dk; x.lineWidth = s * .3; ring(1); x.stroke(); x.strokeStyle = '#fff3d0'; x.lineWidth = s * .13; ring(1); x.stroke();
+    both(() => { x.beginPath(); x.arc(0, 0, s * .6, 0, TAU); });
+    x.strokeStyle = 'rgba(0,0,0,.12)'; x.lineWidth = s * .1; x.beginPath(); x.arc(0, 0, s * .4, .3, 1.4); x.stroke();
+    x.strokeStyle = dk; x.lineWidth = s * .3; ring(0); x.stroke(); x.strokeStyle = '#fff3d0'; x.lineWidth = s * .13; ring(0); x.stroke();
+    x.restore();
+  } else { // 星系：双臂旋涡
+    x.save(); x.translate(cx, cy);
+    for (const pass of [0, 1]) for (let k = 0; k < 2; k++) { x.save(); x.rotate(k * Math.PI); x.beginPath();
+      for (let i = 0; i <= 24; i++) { const t = i / 24, a = t * 3.6, r = s * (.12 + t * .86); const px = Math.cos(a) * r, py = Math.sin(a) * r * .82; i ? x.lineTo(px, py) : x.moveTo(px, py); }
+      x.strokeStyle = pass ? '#ffffff' : dk; x.lineWidth = pass ? s * .17 : s * .17 + W2; x.stroke(); x.restore(); }
+    both(() => { x.beginPath(); x.arc(0, 0, s * .26, 0, TAU); });
+    x.restore();
+  }
+}
 function tileSprite(t, w, h, back) {
   const key = (back ? 'b' : t) + '_' + w + '_' + h; if (tileCache[key]) return tileCache[key];
   const p = Math.ceil(w * 0.22); const [c, x] = mk(w + p * 2, h + p * 2); const ox = p, oy = p;
-  const R = w * 0.16;
-  // 投影
-  x.save(); x.shadowColor = 'rgba(0,18,8,.55)'; x.shadowBlur = w * 0.18; x.shadowOffsetY = h * 0.06; x.shadowOffsetX = w * 0.04;
-  rr(x, ox, oy, w, h, R); x.fillStyle = '#0b5a34'; x.fill(); x.restore();
-  // 牌背（翡翠绿）
-  let g = x.createLinearGradient(0, oy, 0, oy + h); g.addColorStop(0, '#5fe0a0'); g.addColorStop(0.18, '#1fa865'); g.addColorStop(1, '#0a5a32');
-  rr(x, ox, oy, w, h, R); x.fillStyle = g; x.fill();
-  x.strokeStyle = 'rgba(0,50,25,.8)'; x.lineWidth = 1; rr(x, ox + .5, oy + .5, w - 1, h - 1, R); x.stroke();
+  const R = w * 0.3, top = t >= LG.NT - 1;
+  const C = back ? ['#a6a0ff', '#5a4bd6', '#2c1f86', '#140c45'] : top ? ['#ffffff', '#c9a8ff', '#6a3fd6', '#2a1460'] : HUEC[t % 6];
+  // 投影 + 深色底边（厚度感）
+  x.save(); x.shadowColor = 'rgba(6,2,30,.6)'; x.shadowBlur = w * 0.16; x.shadowOffsetY = h * 0.07;
+  rr(x, ox, oy + h * .04, w, h * .96, R); x.fillStyle = C[3]; x.fill(); x.restore();
+  // 主体
+  let g = x.createLinearGradient(0, oy, 0, oy + h * .92);
+  if (top && !back) { g = x.createLinearGradient(ox, oy, ox + w, oy + h); ['#ff7a8a', '#ffb24a', '#ffe14a', '#59e39a', '#4ab0ff', '#b07aff'].forEach((col, i) => g.addColorStop(i / 5, col)); }
+  else { g.addColorStop(0, C[0]); g.addColorStop(.45, C[1]); g.addColorStop(1, C[2]); }
+  rr(x, ox, oy, w, h * .92, R); x.fillStyle = g; x.fill();
+  x.strokeStyle = 'rgba(255,255,255,.55)'; x.lineWidth = Math.max(1, w * .03); rr(x, ox + w * .05, oy + h * .04, w * .9, h * .82, R * .85); x.stroke();
+  // 顶部高光
+  g = x.createLinearGradient(0, oy, 0, oy + h * .4); g.addColorStop(0, 'rgba(255,255,255,.7)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.save(); x.beginPath(); x.ellipse(ox + w * .5, oy + h * .16, w * .38, h * .14, 0, 0, TAU); x.fillStyle = g; x.fill(); x.restore();
+  const cx = ox + w / 2, cy = oy + h * .47;
   if (back) {
-    x.globalAlpha = .35; x.strokeStyle = '#c8ffe2'; x.lineWidth = w * 0.05; rr(x, ox + w * .18, oy + h * .14, w * .64, h * .72, w * .1); x.stroke();
-    x.beginPath(); x.arc(ox + w / 2, oy + h / 2, w * .16, 0, TAU); x.stroke(); x.globalAlpha = 1;
-    g = x.createLinearGradient(0, oy, 0, oy + h * 0.4); g.addColorStop(0, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-    rr(x, ox + 2, oy + 1.5, w - 4, h * 0.4, R); x.fillStyle = g; x.fill();
-    return (tileCache[key] = { c, p });
+    x.globalAlpha = .55; x.fillStyle = '#e6e0ff'; sparkPath(x, cx, cy, w * .26, .26); x.fill();
+    x.fillStyle = '#ffffff'; for (const [dx, dy] of [[-.26, -.2], [.27, .2], [.22, -.26]]) { x.beginPath(); x.arc(cx + dx * w, cy + dy * h, w * .03, 0, TAU); x.fill(); }
+    x.globalAlpha = 1; return (tileCache[key] = { c, p });
   }
-  // 象牙夹层
-  const fy = oy + h * 0.15;
-  rr(x, ox + 0.5, fy, w - 1, h - (fy - oy) - 0.5, R * 0.9); x.fillStyle = '#d8c79a'; x.fill();
-  // 牌面
-  g = x.createLinearGradient(ox, fy, ox + w * 0.4, oy + h); g.addColorStop(0, '#fffffa'); g.addColorStop(0.55, '#fbf5e4'); g.addColorStop(1, '#ecdfbd');
-  rr(x, ox + 0.8, fy + 1.4, w - 1.6, h - (fy - oy) - h * 0.075, R * 0.85); x.fillStyle = g; x.fill();
-  // 斜面高光
-  x.strokeStyle = 'rgba(255,255,255,.95)'; x.lineWidth = 1.1; rr(x, ox + 1.6, fy + 2.2, w - 3.2, h - (fy - oy) - h * 0.075 - 1.6, R * 0.8); x.stroke();
-  // 牌面图案
-  const fw = w * 0.86, fh = h * 0.74, cw = 120, ch = 160;
-  const sc = Math.min(fw / cw, fh / ch);
-  const dw = cw * sc, dh = ch * sc, dx = ox + (w - dw) / 2, dy = fy + 1.4 + (h - (fy - oy) - h * 0.075 - dh) / 2;
-  if (IMG.faces) { x.imageSmoothingQuality = 'high'; x.drawImage(IMG.faces, (t % 10) * cw, Math.floor(t / 10) * ch, cw, ch, dx, dy, dw, dh); }
+  if (top) { // 银河：星系图标 + 环绕小星
+    starIcon(x, 4, cx, cy, w * .3, '#3a1a7a');
+    x.fillStyle = '#fff'; for (const [dx, dy, r] of [[-.3, -.27, .07], [.31, -.24, .05], [.3, .27, .06], [-.28, .26, .04]]) { sparkPath(x, cx + dx * w, cy + dy * h, r * w, .3); x.fill(); }
+  } else starIcon(x, Math.floor(t / 6), cx, cy, w * .3, C[3]);
   return (tileCache[key] = { c, p });
 }
 function drawTile(t, x, y, w, h, o) {
@@ -122,16 +159,15 @@ function drawTile(t, x, y, w, h, o) {
   if (o && o.a !== undefined) ctx.globalAlpha = 1;
 }
 function tileCanvas(t, w) { // 独立小画布（DOM 面板用）
-  const h = Math.round(w * 1.3); const sp = tileSprite(t, w, h); const c = document.createElement('canvas');
+  const h = Math.round(w * TA); const sp = tileSprite(t, w, h); const c = document.createElement('canvas');
   c.width = (w + sp.p * 2) * DPR; c.height = (h + sp.p * 2) * DPR; c.style.width = (w + sp.p * 2) + 'px'; c.style.height = (h + sp.p * 2) + 'px';
   c.getContext('2d').drawImage(sp.c, 0, 0); return c;
 }
 function label(k, cx, cy, h, a) { const m = LBL[k]; if (!IMG.labels) return; const w = h * m[2] / m[3]; if (a !== undefined) ctx.globalAlpha = a; ctx.drawImage(IMG.labels, m[0], m[1], m[2], m[3], cx - w / 2, cy - h / 2, w, h); ctx.globalAlpha = 1; return w; }
-function coinIcon(c, x, y, r) { // 铜钱
+function coinIcon(c, x, y, r) { // 星币：金色圆币 + 浮雕五角星
   const g = c.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r); g.addColorStop(0, '#fff6c0'); g.addColorStop(.5, '#f3c23a'); g.addColorStop(1, '#a8700c');
   c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); c.strokeStyle = '#7a4a06'; c.lineWidth = r * .14; c.stroke();
-  c.strokeStyle = 'rgba(122,74,6,.6)'; c.lineWidth = r * .08; c.beginPath(); c.arc(x, y, r * .72, 0, TAU); c.stroke();
-  c.fillStyle = '#7a4a06'; c.fillRect(x - r * .26, y - r * .26, r * .52, r * .52); c.fillStyle = '#ffe9a0'; c.fillRect(x - r * .26, y - r * .26, r * .52, r * .1);
+  starPath(c, x, y + r * .04, r * .58, r * .26); c.fillStyle = '#fff3c0'; c.fill(); c.strokeStyle = '#a8700c'; c.lineWidth = r * .1; c.stroke();
 }
 function crown(c, x, y, s) {
   c.save(); c.translate(x, y); c.scale(s, s);
@@ -157,70 +193,51 @@ function lockIcon(x, y, s) {
   ctx.drawImage(lockCache, x - 20 * s, y - 22 * s, 40 * s, 44 * s);
 }
 
-/* ---------- 背景：翡翠绒面 + 金色回纹框 ---------- */
+/* ---------- 背景：深蓝紫星空 + 星光边框 ---------- */
 let bgCache = null, menuCache = null;
-function keyPattern(c, x, y, len, sz, horiz) { // 回纹带
-  c.beginPath();
-  const n = Math.floor(len / (sz * 2));
-  for (let i = 0; i < n; i++) {
-    const o = i * sz * 2;
-    const P = [[0, 1], [0, 0], [1.6, 0], [1.6, .8], [.5, .8], [.5, .35], [1.1, .35]];
-    P.forEach(([a, b], k) => { const px = horiz ? x + o + a * sz : x + b * sz, py = horiz ? y + b * sz : y + o + a * sz; k ? c.lineTo(px, py) : c.moveTo(px, py); });
-  }
-  c.stroke();
+function skyStars(x, n, seed) {
+  let r = seed; const R2 = () => (r = (r * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < n; i++) { const px = R2() * W, py = R2() * H, s = R2(); x.globalAlpha = .25 + s * .6; x.fillStyle = s > .85 ? '#ffe9a8' : s > .6 ? '#cfd8ff' : '#ffffff';
+    if (s > .93) { sparkPath(x, px, py, 3 + s * 3, .22); x.fill(); } else { x.beginPath(); x.arc(px, py, .5 + s * 1.2, 0, TAU); x.fill(); } }
+  x.globalAlpha = 1;
 }
 function buildBg() {
   const [c, x] = mk(W, H);
-  // 绒面
-  let g = x.createRadialGradient(W / 2, H * 0.42, 20, W / 2, H * 0.45, Math.max(W, H) * 0.75);
-  g.addColorStop(0, '#1d8a5c'); g.addColorStop(0.55, '#0f6442'); g.addColorStop(1, '#062e1f');
+  let g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2b1d68'); g.addColorStop(.5, '#170f45'); g.addColorStop(1, '#0a0624');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
-  // 绒毛噪点
-  const n = Math.floor(W * H / 18);
-  for (let i = 0; i < n; i++) { x.fillStyle = Math.random() < .5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.05)'; x.fillRect(Math.random() * W, Math.random() * H, 1, 1); }
-  // 暗纹：祥云团花
-  x.globalAlpha = 0.06; x.strokeStyle = '#bff5d8'; x.lineWidth = 1.4;
-  for (let yy = 30; yy < H; yy += 90) for (let xx = (yy / 90 % 2) * 45; xx < W + 40; xx += 90) {
-    x.beginPath(); x.arc(xx, yy, 12, Math.PI * .2, Math.PI * 1.8); x.stroke(); x.beginPath(); x.arc(xx + 8, yy - 3, 6, Math.PI, Math.PI * 2.4); x.stroke(); x.beginPath(); x.arc(xx - 9, yy + 2, 5, 0, Math.PI * 1.3); x.stroke();
+  // 星云
+  for (const [px, py, rad, col] of [[.18, .2, .55, '120,80,255'], [.85, .55, .5, '255,90,180'], [.3, .85, .45, '60,170,255']]) {
+    g = x.createRadialGradient(W * px, H * py, 0, W * px, H * py, W * rad); g.addColorStop(0, `rgba(${col},.22)`); g.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g; x.fillRect(0, 0, W, H);
   }
-  x.globalAlpha = 1;
-  // 外侧回纹边（左右）
-  x.strokeStyle = 'rgba(233,196,106,.22)'; x.lineWidth = 1.6;
-  keyPattern(x, 4, 0, H, 7, false); keyPattern(x, W - 16, 0, H, 7, false);
+  skyStars(x, Math.floor(W * H / 2600), 7);
   { const [mc, mx] = mk(W, H); mx.drawImage(c, 0, 0, W, H); menuCache = mc; }
-  // 牌桌框
+  // 星盘框：金色到薰衣草渐变边框
   const { bx, bTop, bw, bh, fr } = L;
-  x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 16; x.shadowOffsetY = 6;
-  rr(x, bx, bTop, bw, bh, 14); x.fillStyle = '#3a2408'; x.fill(); x.restore();
-  g = x.createLinearGradient(bx, bTop, bx + bw, bTop + bh); g.addColorStop(0, '#fff0b0'); g.addColorStop(.25, '#d9a440'); g.addColorStop(.5, '#f8dc86'); g.addColorStop(.75, '#b9822a'); g.addColorStop(1, '#f3d27a');
-  rr(x, bx, bTop, bw, bh, 14); x.fillStyle = g; x.fill();
-  rr(x, bx + 3, bTop + 3, bw - 6, bh - 6, 12); x.strokeStyle = 'rgba(90,50,8,.7)'; x.lineWidth = 1.2; x.stroke();
-  // 框上回纹
-  x.strokeStyle = 'rgba(110,64,10,.75)'; x.lineWidth = 1.2;
-  keyPattern(x, bx + 16, bTop + 2.5, bw - 32, 3.4, true); keyPattern(x, bx + 16, bTop + bh - 6.5, bw - 32, 3.4, true);
-  keyPattern(x, bx + 2.5, bTop + 16, bh - 32, 3.4, false); keyPattern(x, bx + bw - 6.5, bTop + 16, bh - 32, 3.4, false);
-  // 内面：深绿绒
-  g = x.createLinearGradient(0, bTop, 0, bTop + bh); g.addColorStop(0, '#0b4a31'); g.addColorStop(1, '#083826');
-  rr(x, bx + fr, bTop + fr, bw - fr * 2, bh - fr * 2, 8); x.fillStyle = g; x.fill();
+  x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18; x.shadowOffsetY = 6;
+  rr(x, bx, bTop, bw, bh, 18); x.fillStyle = '#1a0f48'; x.fill(); x.restore();
+  g = x.createLinearGradient(bx, bTop, bx + bw, bTop + bh); g.addColorStop(0, '#fff0b8'); g.addColorStop(.3, '#e6b75a'); g.addColorStop(.55, '#d9c2ff'); g.addColorStop(.8, '#9a7ae0'); g.addColorStop(1, '#ffe39a');
+  rr(x, bx, bTop, bw, bh, 18); x.fillStyle = g; x.fill();
+  rr(x, bx + 3, bTop + 3, bw - 6, bh - 6, 16); x.strokeStyle = 'rgba(60,30,120,.55)'; x.lineWidth = 1.2; x.stroke();
+  // 内面：深夜蓝
+  g = x.createLinearGradient(0, bTop, 0, bTop + bh); g.addColorStop(0, '#22185e'); g.addColorStop(1, '#120a3a');
+  rr(x, bx + fr, bTop + fr, bw - fr * 2, bh - fr * 2, 12); x.fillStyle = g; x.fill();
   x.strokeStyle = 'rgba(0,0,0,.5)'; x.lineWidth = 2; x.stroke();
-  // 角花
-  for (const [cx, cy] of [[bx + 7, bTop + 7], [bx + bw - 7, bTop + 7], [bx + 7, bTop + bh - 7], [bx + bw - 7, bTop + bh - 7]]) {
-    x.fillStyle = '#c9302c'; x.beginPath(); x.arc(cx, cy, 5.5, 0, TAU); x.fill(); x.strokeStyle = '#6a3a04'; x.lineWidth = 1.5; x.stroke();
-    x.fillStyle = '#ffe9a0'; x.beginPath(); x.arc(cx - 1.3, cy - 1.5, 1.8, 0, TAU); x.fill();
+  x.save(); rr(x, bx + fr, bTop + fr, bw - fr * 2, bh - fr * 2, 12); x.clip(); x.globalAlpha = .5; skyStars(x, 60, 3); x.restore();
+  // 四角小星
+  for (const [cx, cy] of [[bx + 8, bTop + 8], [bx + bw - 8, bTop + 8], [bx + 8, bTop + bh - 8], [bx + bw - 8, bTop + bh - 8]]) {
+    starPath(x, cx, cy, 7, 3.2); x.fillStyle = '#fff6c8'; x.fill(); x.strokeStyle = '#7a4a10'; x.lineWidth = 1.2; x.stroke();
   }
-  // 行槽
+  // 星轨槽：圆角胶囊 + 每格小圆点
   for (let i = 0; i < LG.ROWS; i++) {
     const y = rowY(i);
-    rr(x, L.rx, y, L.rowW, L.rh, 6); x.fillStyle = 'rgba(0,0,0,.2)'; x.fill();
-    x.strokeStyle = 'rgba(160,240,200,.13)'; x.lineWidth = 1; rr(x, L.rx + .5, y + .5, L.rowW - 1, L.rh - 1, 6); x.stroke();
-    x.fillStyle = 'rgba(190,255,220,.14)';
-    for (let k = 1; k < 10; k++) { const px = tileX(k) - L.tg / 2; x.fillRect(px - .5, y + L.rh / 2 - 3, 1, 6); x.fillRect(px - 3, y + L.rh / 2 - .5, 6, 1); }
+    rr(x, L.rx, y, L.rowW, L.rh, L.rh / 2.4); x.fillStyle = 'rgba(10,4,40,.42)'; x.fill();
+    x.strokeStyle = 'rgba(190,170,255,.16)'; x.lineWidth = 1; rr(x, L.rx + .5, y + .5, L.rowW - 1, L.rh - 1, L.rh / 2.4); x.stroke();
+    x.fillStyle = 'rgba(210,200,255,.18)';
+    for (let k = 0; k < LG.CAP; k++) { x.beginPath(); x.arc(tileX(k) + L.tw / 2, y + L.rh / 2, 2, 0, TAU); x.fill(); }
   }
-  // 底部按钮区域台面
   g = x.createLinearGradient(0, L.btnY - 8, 0, H); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.25)'); x.fillStyle = g; x.fillRect(0, L.btnY - 8, W, H);
-  // 目标轨道底板
   const ty = L.trackY, th = L.trackH, tx = L.gx + 8, tw = L.GW - 16;
-  rr(x, tx, ty, tw, th, 12); x.fillStyle = 'rgba(0,30,18,.45)'; x.fill(); x.strokeStyle = 'rgba(233,196,106,.35)'; x.lineWidth = 1.2; x.stroke();
+  rr(x, tx, ty, tw, th, 16); x.fillStyle = 'rgba(12,6,44,.55)'; x.fill(); x.strokeStyle = 'rgba(214,190,255,.38)'; x.lineWidth = 1.2; x.stroke();
   bgCache = c;
 }
 
@@ -236,9 +253,9 @@ function toast(s, sec = 1.6) { toastEl.textContent = s; toastEl.classList.add('o
 /* ---------- 新开局 / 存取 ---------- */
 function freshState() {
   const s = LG.newState();
-  // 开局：两行各 5 张一筒（教学：挪过去凑满 10 张）
-  s.rows[6].t = [0, 0, 0, 0, 0]; s.rows[8].t = [0, 0, 0, 0, 0];
-  if (save.tut) { s.rows[4].t = [0, 0]; s.rows[5].t = [0, 0, 0]; s.rows[7].t = [0]; }
+  // 开局：两条星轨各 4 颗红色星尘（教学：挪过去凑满 8 颗）
+  s.rows[1].t = [0, 0, 0, 0]; s.rows[3].t = [0, 0, 0, 0];
+  if (save.tut) { s.rows[0].t = [0, 0]; s.rows[2].t = [0]; s.rows[4].t = [0, 0, 0]; }
   return s;
 }
 function newGame() {
@@ -255,11 +272,11 @@ function debugFill() {
   const s = G.s; const st = DEBUG.stage >= 0 ? DEBUG.stage : 4; s.stage = st; s.top = st ? LG.GOALS[st - 1] + 1 : 1;
   for (const i in LG.MILE) if (s.top >= LG.MILE[i]) s.rows[i].st = 'open';
   const [lo, hi] = LG.dealWindow(s);
-  s.rows.forEach(r => { if (!LG.isOpen(r)) return; r.t = []; const n = Math.floor(rnd(3, 9)); let v = Math.floor(rnd(lo, hi + 1)); for (let k = 0; k < n; k++) { if (Math.random() < .35) v = Math.floor(rnd(lo, hi + 1)); r.t.push(v); } });
+  s.rows.forEach(r => { if (!LG.isOpen(r)) return; r.t = []; const n = Math.floor(rnd(2, LG.CAP - 1)); let v = Math.floor(rnd(lo, hi + 1)); for (let k = 0; k < n; k++) { if (Math.random() < .35) v = Math.floor(rnd(lo, hi + 1)); r.t.push(v); } });
   // 一行差 1 张就满、一行可合成
   const open = s.rows.map((r, i) => i).filter(i => LG.isOpen(s.rows[i]));
-  s.rows[open[1]].t = new Array(10).fill(lo + 1);
-  s.rows[open[3]].t = [lo, lo + 2, ...new Array(6).fill(hi)];
+  s.rows[open[1]].t = new Array(LG.CAP).fill(lo + 1);
+  s.rows[open[3]].t = [lo, lo + 2, ...new Array(LG.CAP - 4).fill(hi)];
   s.rows[open[4]].t = [hi, hi];
   s.score = 1200 * (st + 1); save.cp = clone(s);
 }
@@ -300,7 +317,7 @@ function doMove(a, b) {
 }
 function doDeal() {
   if (busy()) return; const s = G.s;
-  if (LG.freeSpace(s) === 0 || !s.rows.some(r => LG.isOpen(r) && !(r.st === 'tempOn' && r.exp) && r.t.length < LG.CAP)) { if (LG.stuck(s)) { G.over = true; showFail(); return; } SND.deny(); toast('没有空位了，先挪牌或合成'); shakeBtn('deal'); return; }
+  if (LG.freeSpace(s) === 0 || !s.rows.some(r => LG.isOpen(r) && !(r.st === 'tempOn' && r.exp) && r.t.length < LG.CAP)) { if (LG.stuck(s)) { G.over = true; showFail(); return; } SND.deny(); toast('没有空位了，先挪星星或合成'); shakeBtn('deal'); return; }
   snapshot(); G.sel = null;
   const out = LG.deal(s);
   const sx = L.bDeal.x + L.bDeal.w / 2 - L.tw / 2, sy = L.bDeal.y;
@@ -312,13 +329,13 @@ function doDeal() {
 }
 function doMerge() {
   if (busy()) return; const s = G.s; const rows = LG.mergeable(s);
-  if (!rows.length) { SND.deny(); shakeBtn('merge'); toast('一行凑满 10 张相同的牌才能合成'); return; }
+  if (!rows.length) { SND.deny(); shakeBtn('merge'); toast('一条星轨凑满 8 颗同样的星才能合成'); return; }
   G.sel = null; G.hist = [];
   const before = rows.map(i => s.rows[i].t.slice());
   const r = LG.merge(s); save.coins += s.coins; const gotCoins = s.coins; s.coins = 0;
   let newTop = false;
   r.res.forEach((m, k) => {
-    G.mfx.push({ row: m.row, from: m.from, to: m.to, t0: G.time + k * 0.12, n: 10, newTop: m.newTop });
+    G.mfx.push({ row: m.row, from: m.from, to: m.to, t0: G.time + k * 0.12, n: LG.CAP, newTop: m.newTop });
     G.hid[m.row] = 2; if (m.newTop) newTop = m.to;
   });
   SND.shuffle(8);
@@ -341,7 +358,7 @@ function afterAction() {
     const s = G.s;
     if (LG.stuck(s)) { G.over = true; after(0.4, showFail); return; }
     const f = LG.freeSpace(s);
-    if (f <= 6 && !G.warned && !LG.mergeable(s).length) { G.warned = true; toast('空位不多了，小心牌桌被塞满'); }
+    if (f <= 6 && !G.warned && !LG.mergeable(s).length) { G.warned = true; toast('空位不多了，小心星盘被塞满'); }
     if (f > 12) G.warned = false;
   });
 }
@@ -365,19 +382,19 @@ function doClear(fromFail) {
 function payProp(k) {
   if (save.props[k] > 0) { save.props[k]--; persist(); return true; }
   if (save.coins >= COST[k]) { save.coins -= COST[k]; persist(); SND.coin(); return true; }
-  SND.deny(); toast('铜钱不够啦（需要 ' + COST[k] + '）'); return false;
+  SND.deny(); toast('星币不够啦（需要 ' + COST[k] + '）'); return false;
 }
 function tapLocked(i) {
   const s = G.s, r = s.rows[i];
   if (r.st === 'temp') {
     const free = s.tempFree;
-    ask('临时解锁', free ? '本关可以<b>免费</b>临时解锁这一行！<br>过关后这一行清空就会重新锁上。' : '花费 <b>' + COST.temp + '</b> 铜钱临时解锁这一行<br>（你有 ' + save.coins + ' 铜钱）', free ? '免费解锁' : '解锁', () => {
-      if (!free) { if (save.coins < COST.temp) { toast('铜钱不够啦'); SND.deny(); return; } save.coins -= COST.temp; } else s.tempFree = false;
+    ask('临时解锁', free ? '本关可以<b>免费</b>临时解锁这一行！<br>过关后这一行清空就会重新锁上。' : '花费 <b>' + COST.temp + '</b> 星币临时解锁这一行<br>（你有 ' + save.coins + ' 星币）', free ? '免费解锁' : '解锁', () => {
+      if (!free) { if (save.coins < COST.temp) { toast('星币不够啦'); SND.deny(); return; } save.coins -= COST.temp; } else s.tempFree = false;
       r.st = 'tempOn'; r.exp = false; G.ufx[i] = G.time; SND.unlock(); persist(); G.over = false;
     });
   } else if (r.st === 'buy') {
-    ask('永久解锁', '花费 <b>' + COST.buy + '</b> 铜钱永久解锁这一行<br>（你有 ' + save.coins + ' 铜钱）', '解锁', () => {
-      if (save.coins < COST.buy) { toast('铜钱不够啦，多合成攒铜钱'); SND.deny(); return; }
+    ask('永久解锁', '花费 <b>' + COST.buy + '</b> 星币永久解锁这一行<br>（你有 ' + save.coins + ' 星币）', '解锁', () => {
+      if (save.coins < COST.buy) { toast('星币不够啦，多合成攒星币'); SND.deny(); return; }
       save.coins -= COST.buy; r.st = 'open'; G.ufx[i] = G.time; SND.unlock(); persist(); G.over = false;
     });
   } else { SND.deny(); toast('合出「' + LG.tileName(LG.MILE[i]) + '」后自动解锁'); }
@@ -393,12 +410,12 @@ function vib(ms) { if (!userTapped || DEBUG.bot) return; try { if (navigator.vib
 
 /* ---------- 新手引导 ---------- */
 function tutStart() { G.tut = 0; }
-function tutNext() { G.tut++; if (G.tut >= 4) { G.tut = -1; save.tut = true; persist(); toast('把相同的牌挪到一起，凑满 10 张就合成！', 2.6); } }
+function tutNext() { G.tut++; if (G.tut >= 4) { G.tut = -1; save.tut = true; persist(); toast('把同样的星星挪到一起，凑满 8 颗就合成！', 2.6); } }
 function tutTarget() {
-  if (G.tut === 0) return { kind: 'row', row: 8, text: '点击选择' };
-  if (G.tut === 1) return { kind: 'row', row: 6, text: '放到这一行' };
-  if (G.tut === 2) return { kind: 'btn', b: L.bMerge, text: '凑满10张，点合成' };
-  if (G.tut === 3) return { kind: 'btn', b: L.bDeal, text: '牌少了就发牌' };
+  if (G.tut === 0) return { kind: 'row', row: 3, text: '点这条星轨' };
+  if (G.tut === 1) return { kind: 'row', row: 1, text: '放到这一条' };
+  if (G.tut === 2) return { kind: 'btn', b: L.bMerge, text: '凑满 8 颗，点合成' };
+  if (G.tut === 3) return { kind: 'btn', b: L.bDeal, text: '星星少了就补星' };
   return null;
 }
 
@@ -437,7 +454,7 @@ function drawBtn(b, k, enabled, glow) {
   const pt = G.time - (G.press[k] || -9); const pr = pt < 0.12 ? 3 : 0;
   let sx = 0; if (shakeB.k === k && G.time - shakeB.t < 0.35) sx = Math.sin((G.time - shakeB.t) * 60) * 5 * (1 - (G.time - shakeB.t) / .35);
   const x = b.x + sx, y = b.y + pr, w = b.w, h = b.h;
-  const cols = k === 'deal' ? ['#7fe0ff', '#1e9ad6', '#0c5d92', '#06304e'] : ['#8ff0b0', '#22b562', '#0c7a3c', '#06401e'];
+  const cols = k === 'deal' ? ['#7fe0ff', '#1e9ad6', '#0c5d92', '#06304e'] : ['#ffb8e8', '#e45cc0', '#9a2a8a', '#4a0e44'];
   ctx.save();
   if (glow) { const p = .5 + .5 * Math.sin(G.time * 6); ctx.shadowColor = `rgba(255,226,120,${.6 + .4 * p})`; ctx.shadowBlur = 14 + 12 * p; }
   rr(ctx, x - 3, y - 3 + (pr ? 0 : 0), w + 6, h + 6 + 5 - pr, 14); ctx.fillStyle = '#4a2c06'; ctx.fill(); ctx.restore();
@@ -445,13 +462,13 @@ function drawBtn(b, k, enabled, glow) {
   rr(ctx, x - 3, y - 3, w + 6, h + 6, 14); ctx.fillStyle = g; ctx.fill();
   g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, cols[0]); g.addColorStop(.45, cols[1]); g.addColorStop(1, cols[2]);
   rr(ctx, x, y, w, h, 11); ctx.fillStyle = g; ctx.fill();
-  // 祥云角饰
-  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1.6;
-  for (const [cx, dir] of [[x + 14, 1], [x + w - 14, -1]]) { ctx.beginPath(); ctx.arc(cx, y + h - 12, 6, Math.PI * (dir > 0 ? .5 : -.5) , Math.PI * (dir > 0 ? 2 : 1)); ctx.stroke(); ctx.beginPath(); ctx.arc(cx + dir * 9, y + h - 10, 4, Math.PI, TAU); ctx.stroke(); }
+  // 小星角饰
+  ctx.fillStyle = 'rgba(255,255,255,.4)';
+  for (const [cx, cy, r] of [[x + 13, y + h - 12, 5], [x + 23, y + h - 9, 3], [x + w - 13, y + 12, 5], [x + w - 23, y + 9, 3]]) { sparkPath(ctx, cx, cy, r, .3); ctx.fill(); }
   g = ctx.createLinearGradient(0, y, 0, y + h * .5); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
   rr(ctx, x + 3, y + 2, w - 6, h * .45, 9); ctx.fillStyle = g; ctx.fill();
   label(k, x + w / 2, y + h / 2 + 1, h * 0.72);
-  if (!enabled) { rr(ctx, x - 3, y - 3, w + 6, h + 6, 14); ctx.fillStyle = 'rgba(20,30,25,.45)'; ctx.fill(); }
+  if (!enabled) { rr(ctx, x - 3, y - 3, w + 6, h + 6, 14); ctx.fillStyle = 'rgba(20,14,50,.45)'; ctx.fill(); }
   if (glow) { // 流光
     const sw = ((G.time * 0.8) % 1.6) * (w + 60) - 30; ctx.save(); rr(ctx, x, y, w, h, 11); ctx.clip();
     const lg = ctx.createLinearGradient(x + sw - 20, 0, x + sw + 20, 0); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(.5, 'rgba(255,255,255,.55)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
@@ -465,7 +482,7 @@ function pill(b, k, count, cost) {
   rr(ctx, x, y, w, h, h / 2); ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = '#6a3a06'; ctx.lineWidth = 1.5; ctx.stroke();
   label(k, x + w / 2 - 4, y + h / 2, h * 0.78);
   // 角标
-  const bx = x + w - 6, by = y + 2; ctx.fillStyle = count > 0 ? '#d8302a' : '#2a6a4a'; ctx.beginPath(); ctx.arc(bx, by, 9, 0, TAU); ctx.fill(); ctx.strokeStyle = '#fff3c4'; ctx.lineWidth = 1.6; ctx.stroke();
+  const bx = x + w - 6, by = y + 2; ctx.fillStyle = count > 0 ? '#e0306a' : '#3a2f6a'; ctx.beginPath(); ctx.arc(bx, by, 9, 0, TAU); ctx.fill(); ctx.strokeStyle = '#fff3c4'; ctx.lineWidth = 1.6; ctx.stroke();
   ctx.fillStyle = '#fff'; ctx.font = `800 ${count > 0 ? 11 : 9}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText(count > 0 ? count : '+', bx, by + .5);
 }
@@ -473,11 +490,11 @@ function drawHud() {
   const s = G.s;
   // 暂停
   const b = L.bPause; let g = ctx.createRadialGradient(b.x + b.w * .4, b.y + b.h * .35, 2, b.x + b.w / 2, b.y + b.h / 2, b.w / 2);
-  g.addColorStop(0, '#4fd99a'); g.addColorStop(1, '#0b5a38');
+  g.addColorStop(0, '#a98bff'); g.addColorStop(1, '#3b2a8a');
   ctx.beginPath(); ctx.arc(b.x + b.w / 2, b.y + b.h / 2, b.w / 2, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = '#f3d27a'; ctx.lineWidth = 2.5; ctx.stroke();
   ctx.fillStyle = '#fff6d8'; rr(ctx, b.x + b.w * .34, b.y + b.h * .3, b.w * .1, b.h * .4, 2); ctx.fill(); rr(ctx, b.x + b.w * .56, b.y + b.h * .3, b.w * .1, b.h * .4, 2); ctx.fill();
-  // 铜钱
-  const c = L.coin; rr(ctx, c.x, c.y, c.w, c.h, c.h / 2); ctx.fillStyle = 'rgba(0,25,14,.6)'; ctx.fill(); ctx.strokeStyle = 'rgba(243,210,122,.6)'; ctx.lineWidth = 1.2; ctx.stroke();
+  // 星币
+  const c = L.coin; rr(ctx, c.x, c.y, c.w, c.h, c.h / 2); ctx.fillStyle = 'rgba(14,8,44,.6)'; ctx.fill(); ctx.strokeStyle = 'rgba(243,210,122,.6)'; ctx.lineWidth = 1.2; ctx.stroke();
   coinIcon(ctx, c.x + c.h / 2, c.y + c.h / 2, c.h * 0.46);
   ctx.fillStyle = '#ffe9a0'; ctx.font = `800 ${Math.round(c.h * .52)}px ${FONT}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(save.coins, c.x + c.h + 4, c.y + c.h / 2 + 1);
   pill(L.bUndo, 'undo', save.props.undo); pill(L.bClear, 'clear', save.props.clear);
@@ -498,16 +515,16 @@ function drawHud() {
 function drawTrack() {
   const s = G.s, st = s.stage, goal = LG.GOALS[st];
   const tx = L.gx + 8, tw = L.GW - 16, ty = L.trackY, th = L.trackH;
-  const gw = th * 0.62; // 目标牌宽
-  // 关卡牌匾
+  const gw = th * 0.62; // 目标星宽
+  // 关卡名牌
   ctx.fillStyle = '#ffe9a0'; ctx.font = `900 ${Math.round(th * .2)}px ${FONT}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillText(goal === undefined ? '一合到底' : `第 ${st + 1} 关`, tx + 10, ty + 6);
+  ctx.fillText(goal === undefined ? '摘星合合' : `第 ${st + 1} 关`, tx + 10, ty + 6);
   ctx.fillStyle = 'rgba(255,240,200,.75)'; ctx.font = `700 ${Math.round(th * .16)}px ${FONT}`;
   ctx.fillText('分数 ' + s.score, tx + 10, ty + 8 + th * .22);
-  if (goal === undefined) { ctx.fillText('已合出白板 · 无尽挑战', tx + 10, ty + 10 + th * .42); return; }
+  if (goal === undefined) { ctx.fillText('已摘下银河 · 无尽挑战', tx + 10, ty + 10 + th * .42); return; }
   const a = st ? LG.GOALS[st - 1] : 0;
   const steps = []; for (let t = a; t < goal; t++) steps.push(t);
-  const x0 = tx + Math.min(96, tw * 0.25), x1 = tx + tw - gw - 26; const sw = th * 0.4, sh = sw * 1.3;
+  const x0 = tx + Math.min(96, tw * 0.25), x1 = tx + tw - gw - 26; const sw = th * 0.4, sh = sw * TA;
   const cy = ty + th * 0.55;
   // 进度线
   const n = steps.length; const px = k => x0 + (x1 - x0) * (n > 1 ? k / (n) : 0) + sw / 2;
@@ -520,8 +537,8 @@ function drawTrack() {
     drawTile(t, x, y, sw, sh, { a: got ? 1 : 0.45 });
     if (got) { ctx.fillStyle = '#2fd07a'; ctx.beginPath(); ctx.arc(x + sw, y + sh, 6, 0, TAU); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + sw - 3, y + sh); ctx.lineTo(x + sw - .5, y + sh + 2.5); ctx.lineTo(x + sw + 3, y + sh - 2.5); ctx.stroke(); }
   });
-  // 目标牌 + 皇冠 + 光芒
-  const gx = tx + tw - gw - 12, gh = gw * 1.3, gy = ty + th - gh - 6 + 4;
+  // 目标星 + 皇冠 + 光芒
+  const gx = tx + tw - gw - 12, gh = gw * TA, gy = ty + th - gh - 6 + 4;
   ctx.save(); ctx.translate(gx + gw / 2, gy + gh / 2); ctx.rotate(G.time * .4);
   for (let i = 0; i < 12; i++) { ctx.rotate(TAU / 12); ctx.fillStyle = 'rgba(255,230,140,.16)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-5, -gh * .9); ctx.lineTo(5, -gh * .9); ctx.fill(); }
   ctx.restore();
@@ -536,7 +553,7 @@ function drawRows() {
     const r = s.rows[i], y = rowY(i), open = LG.isOpen(r);
     const uf = G.time - G.ufx[i];
     if (!open) {
-      rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
+      rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
       if (r.st === 'temp') {
         const bw = Math.min(150, L.rowW * .45), bh = L.rh * .72, bx = L.rx + (L.rowW - bw) / 2, by = y + (L.rh - bh) / 2;
         const p = 1 + .03 * Math.sin(G.time * 4);
@@ -550,7 +567,7 @@ function drawRows() {
       } else {
         lockIcon(L.rx + L.rowW / 2, y + L.rh / 2, Math.min(1, L.rh / 50));
         ctx.font = `700 ${Math.round(clamp(L.rh * .26, 10, 13))}px ${FONT}`; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(255,240,200,.6)';
-        if (r.st === 'mile') { ctx.textAlign = 'left'; ctx.fillText('合出', L.rx + L.rowW / 2 + 22, y + L.rh / 2); const tw2 = L.rh * .42; drawTile(LG.MILE[i], L.rx + L.rowW / 2 + 52, y + (L.rh - tw2 * 1.3) / 2, tw2, tw2 * 1.3); ctx.fillStyle = 'rgba(255,240,200,.6)'; ctx.fillText('解锁', L.rx + L.rowW / 2 + 58 + tw2, y + L.rh / 2); }
+        if (r.st === 'mile') { ctx.textAlign = 'left'; ctx.fillText('合出', L.rx + L.rowW / 2 + 22, y + L.rh / 2); const tw2 = L.rh * .42; drawTile(LG.MILE[i], L.rx + L.rowW / 2 + 52, y + (L.rh - tw2 * TA) / 2, tw2, tw2 * TA); ctx.fillStyle = 'rgba(255,240,200,.6)'; ctx.fillText('解锁', L.rx + L.rowW / 2 + 58 + tw2, y + L.rh / 2); }
         else if (r.st === 'buy') { ctx.textAlign = 'left'; coinIcon(ctx, L.rx + L.rowW / 2 + 32, y + L.rh / 2, 7); ctx.fillText(COST.buy + ' 永久解锁', L.rx + L.rowW / 2 + 42, y + L.rh / 2); }
       }
       continue;
@@ -560,15 +577,15 @@ function drawRows() {
     const canTo = G.sel && !sel && LG.canMove(s, G.sel.row, i);
     const isM = mg.includes(i) && !G.mfx.some(m => m.row === i);
     if (uf < 2) { const a = uf < 1.4 ? 1 : 1 - (uf - 1.4) / .6; ctx.save(); ctx.globalAlpha = a;
-      rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.fillStyle = `rgba(255,226,122,${.18 + .12 * Math.sin(uf * 10)})`; ctx.fill();
-      rr(ctx, L.rx - 2, y - 2, L.rowW + 4, L.rh + 4, 8); ctx.strokeStyle = '#ffe27a'; ctx.lineWidth = 3 + 2 * Math.max(0, 1 - uf * 2); ctx.stroke();
+      rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.fillStyle = `rgba(255,226,122,${.18 + .12 * Math.sin(uf * 10)})`; ctx.fill();
+      rr(ctx, L.rx - 2, y - 2, L.rowW + 4, L.rh + 4, L.rh / 2.4 + 2); ctx.strokeStyle = '#ffe27a'; ctx.lineWidth = 3 + 2 * Math.max(0, 1 - uf * 2); ctx.stroke();
       if (open && !r.t.length) { const sc = uf < .3 ? easeBack(uf / .3) : 1; ctx.translate(L.rx + L.rowW / 2, y + L.rh / 2); ctx.scale(sc, sc);
-        ctx.font = `900 ${Math.round(L.rh * .36)}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#4a2600'; ctx.lineWidth = 5; ctx.strokeText('新的一行 已解锁！', 0, 0); ctx.fillStyle = '#ffe9a0'; ctx.fillText('新的一行 已解锁！', 0, 0); }
+        ctx.font = `900 ${Math.round(L.rh * .36)}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#4a2600'; ctx.lineWidth = 5; ctx.strokeText('新星轨 已解锁！', 0, 0); ctx.fillStyle = '#ffe9a0'; ctx.fillText('新星轨 已解锁！', 0, 0); }
       ctx.restore(); }
-    if (r.st === 'tempOn') { rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.strokeStyle = 'rgba(255,200,80,.55)'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); }
-    if (sel) { rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.fillStyle = 'rgba(255,226,120,.12)'; ctx.fill(); ctx.strokeStyle = 'rgba(255,226,120,.9)'; ctx.lineWidth = 2; ctx.stroke(); }
-    if (canTo) { const p = .5 + .5 * Math.sin(G.time * 7); rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.fillStyle = `rgba(120,255,180,${.08 + .07 * p})`; ctx.fill(); ctx.strokeStyle = `rgba(140,255,190,${.5 + .4 * p})`; ctx.lineWidth = 1.8; ctx.stroke(); }
-    if (isM) { const p = .5 + .5 * Math.sin(G.time * 5); ctx.save(); ctx.shadowColor = '#ffd84a'; ctx.shadowBlur = 12 + 8 * p; rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.strokeStyle = `rgba(255,220,90,${.7 + .3 * p})`; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore(); }
+    if (r.st === 'tempOn') { rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.strokeStyle = 'rgba(255,200,80,.55)'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); }
+    if (sel) { rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.fillStyle = 'rgba(255,226,120,.12)'; ctx.fill(); ctx.strokeStyle = 'rgba(255,226,120,.9)'; ctx.lineWidth = 2; ctx.stroke(); }
+    if (canTo) { const p = .5 + .5 * Math.sin(G.time * 7); rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.fillStyle = `rgba(120,255,180,${.08 + .07 * p})`; ctx.fill(); ctx.strokeStyle = `rgba(140,255,190,${.5 + .4 * p})`; ctx.lineWidth = 1.8; ctx.stroke(); }
+    if (isM) { const p = .5 + .5 * Math.sin(G.time * 5); ctx.save(); ctx.shadowColor = '#ffd84a'; ctx.shadowBlur = 12 + 8 * p; rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.strokeStyle = `rgba(255,220,90,${.7 + .3 * p})`; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore(); }
     const n = r.t.length - G.hid[i]; const ty = tileY(i);
     const run = sel ? G.sel.n : 0; const popT = G.time - G.pop[i];
     for (let k = 0; k < n; k++) {
@@ -577,28 +594,28 @@ function drawRows() {
       if (lifted) yy -= 5 + 2 * Math.sin((G.time - G.sel.t0) * 8 + k * .5);
       if (popT < 0.5) { const q = clamp(popT / 0.45, 0, 1); o = { s: easeBack(q) }; }
       drawTile(r.t[k], tileX(k), yy, L.tw, L.th, o);
-      if (lifted) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; rr(ctx, tileX(k) + .5, yy + .5, L.tw - 1, L.th - 1, L.tw * .16); ctx.strokeStyle = 'rgba(255,220,100,.85)'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); }
+      if (lifted) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; rr(ctx, tileX(k) + .5, yy + .5, L.tw - 1, L.th * .92 - 1, L.tw * .3); ctx.strokeStyle = 'rgba(255,220,100,.85)'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); }
     }
     if (isM) { // 流光扫过整行
       const sw = ((G.time * .9 + i * .13) % 1.4) / 1.4 * (L.rowW + 80) - 40;
-      ctx.save(); rr(ctx, L.rx, y, L.rowW, L.rh, 6); ctx.clip(); ctx.globalCompositeOperation = 'lighter';
+      ctx.save(); rr(ctx, L.rx, y, L.rowW, L.rh, L.rh / 2.4); ctx.clip(); ctx.globalCompositeOperation = 'lighter';
       const lg = ctx.createLinearGradient(L.rx + sw - 30, 0, L.rx + sw + 30, 0); lg.addColorStop(0, 'rgba(255,240,180,0)'); lg.addColorStop(.5, 'rgba(255,240,180,.35)'); lg.addColorStop(1, 'rgba(255,240,180,0)');
       ctx.fillStyle = lg; ctx.fillRect(L.rx, y, L.rowW, L.rh); ctx.restore();
     }
-    // 可放置位置：落点幽灵牌
+    // 可放置位置：落点幽灵星
     if (canTo && G.flyers.length === 0) {
-      const k = r.t.length; if (k < 10) { const p = .5 + .5 * Math.sin(G.time * 7); drawTile(s.rows[G.sel.row].t[s.rows[G.sel.row].t.length - 1], tileX(k), ty, L.tw, L.th, { a: .28 + .15 * p }); }
+      const k = r.t.length; if (k < LG.CAP) { const p = .5 + .5 * Math.sin(G.time * 7); drawTile(s.rows[G.sel.row].t[s.rows[G.sel.row].t.length - 1], tileX(k), ty, L.tw, L.th, { a: .28 + .15 * p }); }
     }
   }
 }
 function drawMfx() {
   for (let j = G.mfx.length - 1; j >= 0; j--) {
-    const m = G.mfx[j], e = G.time - m.t0; if (e < 0) { // 未开始：照常画旧牌
-      for (let k = 0; k < 10; k++) drawTile(m.from, tileX(k), tileY(m.row), L.tw, L.th); continue; }
-    const cx = tileX(4.5), ty = tileY(m.row);
+    const m = G.mfx[j], e = G.time - m.t0; if (e < 0) { // 未开始：照常画旧星
+      for (let k = 0; k < LG.CAP; k++) drawTile(m.from, tileX(k), tileY(m.row), L.tw, L.th); continue; }
+    const cx = tileX((LG.CAP - 1) / 2), ty = tileY(m.row);
     if (e < 0.48) {
-      for (let k = 0; k < 10; k++) {
-        const st = k * 0.022, q = clamp((e - st) / (0.4 - st), 0, 1), qq = easeInOut(q);
+      for (let k = 0; k < LG.CAP; k++) {
+        const st = k * 0.026, q = clamp((e - st) / (0.4 - st), 0, 1), qq = easeInOut(q);
         const x = lerp(tileX(k), cx, qq), y = ty - Math.sin(q * Math.PI) * 10;
         drawTile(m.from, x, y, L.tw, L.th, { s: 1 - qq * .25, a: 1 - Math.max(0, q - .85) * 4 });
         if (q > 0 && q < 1 && Math.random() < .08) SND.clack(.25, 1.1);
@@ -607,7 +624,7 @@ function drawMfx() {
     } else if (!m.done) {
       m.done = true; G.hid[m.row] = 0; G.pop[m.row] = G.time;
       const px = cx + L.tw / 2, py = ty + L.th / 2;
-      burst(px, py, m.newTop ? 46 : 28, ['#ffe27a', '#fff6d0', '#ff6a4a', '#7dffb8'], m.newTop ? 360 : 260, 4.5, .9);
+      burst(px, py, m.newTop ? 46 : 28, ['#ffe27a', '#fff6d0', '#ff7ad0', '#9fd8ff'], m.newTop ? 360 : 260, 4.5, .9);
       ring(px, py, L.tw * 4, 'rgba(255,230,140,.9)', .5, 5); ring(px, py, L.tw * 2.4, 'rgba(255,255,255,.9)', .35, 3);
       floatText(px, py - 16, '合成！' + LG.tileName(m.to), '#fff3c4', 20);
       G.shake = m.newTop ? 7 : 4;
@@ -649,21 +666,21 @@ function drawBanner() {
   const b = G.banner; if (!b) return; const e = G.time - b.t0; if (e > 1.9) { G.banner = null; return; }
   const a = e < .2 ? e / .2 : e > 1.5 ? 1 - (e - 1.5) / .4 : 1;
   const cx = W / 2, cy = L.bTop + (L.bBot - L.bTop) * .64;
-  ctx.save(); ctx.globalAlpha = a; { const bg = ctx.createLinearGradient(0, cy - 130, 0, cy + 130); bg.addColorStop(0, 'rgba(2,26,16,0)'); bg.addColorStop(.25, 'rgba(2,26,16,.78)'); bg.addColorStop(.75, 'rgba(2,26,16,.78)'); bg.addColorStop(1, 'rgba(2,26,16,0)'); ctx.fillStyle = bg; ctx.fillRect(0, cy - 130, W, 260);
+  ctx.save(); ctx.globalAlpha = a; { const bg = ctx.createLinearGradient(0, cy - 130, 0, cy + 130); bg.addColorStop(0, 'rgba(10,6,36,0)'); bg.addColorStop(.25, 'rgba(10,6,36,.8)'); bg.addColorStop(.75, 'rgba(10,6,36,.8)'); bg.addColorStop(1, 'rgba(10,6,36,0)'); ctx.fillStyle = bg; ctx.fillRect(0, cy - 130, W, 260);
     for (const yy of [cy - 98, cy + 98]) { const gl = ctx.createLinearGradient(0, 0, W, 0); gl.addColorStop(0, 'rgba(255,214,110,0)'); gl.addColorStop(.5, 'rgba(255,214,110,.9)'); gl.addColorStop(1, 'rgba(255,214,110,0)'); ctx.fillStyle = gl; ctx.fillRect(0, yy - 1, W, 2); } } ctx.restore();
   ctx.save(); ctx.globalAlpha = a; ctx.translate(cx, cy); ctx.rotate(e * .6);
   for (let i = 0; i < 16; i++) { ctx.rotate(TAU / 16); const lg = ctx.createLinearGradient(0, 0, 0, -150); lg.addColorStop(0, 'rgba(255,230,140,.5)'); lg.addColorStop(1, 'rgba(255,230,140,0)'); ctx.fillStyle = lg; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-14, -150); ctx.lineTo(14, -150); ctx.fill(); }
   ctx.restore();
-  const s = e < .35 ? easeBack(e / .35) : 1; const tw = 66, th = tw * 1.3;
+  const s = e < .35 ? easeBack(e / .35) : 1; const tw = 66, th = tw * TA;
   ctx.save(); ctx.globalAlpha = a; drawTile(b.t, cx - tw / 2, cy - th / 2 - 8, tw, th, { s: s * (1 + .03 * Math.sin(e * 8)) });
   ctx.font = `900 24px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#4a2600'; ctx.lineWidth = 6;
-  const t1 = '新牌 · ' + LG.tileName(b.t); ctx.strokeText(t1, cx, cy + th / 2 + 20); const lg = ctx.createLinearGradient(0, cy + th / 2 + 8, 0, cy + th / 2 + 32); lg.addColorStop(0, '#fffbe0'); lg.addColorStop(1, '#ffc94a'); ctx.fillStyle = lg; ctx.fillText(t1, cx, cy + th / 2 + 20);
+  const t1 = '新星 · ' + LG.tileName(b.t); ctx.strokeText(t1, cx, cy + th / 2 + 20); const lg = ctx.createLinearGradient(0, cy + th / 2 + 8, 0, cy + th / 2 + 32); lg.addColorStop(0, '#fffbe0'); lg.addColorStop(1, '#ffc94a'); ctx.fillStyle = lg; ctx.fillText(t1, cx, cy + th / 2 + 20);
   ctx.restore();
 }
 function drawTut() {
   const t = tutTarget(); if (!t || G.mode !== 'play' || busy()) return;
   let x, y, bx, by;
-  if (t.kind === 'row') { const r = G.s.rows[t.row]; const k = Math.max(0, (t.row === 6 ? r.t.length : r.t.length - 1)); x = tileX(Math.min(9, k)) + L.tw * .6; y = tileY(t.row) + L.th * .7; }
+  if (t.kind === 'row') { const r = G.s.rows[t.row]; const k = Math.max(0, (t.row === 1 ? r.t.length : r.t.length - 1)); x = tileX(Math.min(LG.CAP - 1, k)) + L.tw * .6; y = tileY(t.row) + L.th * .7; }
   else { x = t.b.x + t.b.w * .6; y = t.b.y + t.b.h * .6; }
   // 气泡
   ctx.font = `900 16px ${FONT}`; const tw = ctx.measureText(t.text).width + 26; bx = clamp(x - tw / 2, 8, W - tw - 8); by = y - L.th - 46;
@@ -686,7 +703,7 @@ function hand(x, y) {
   ctx.restore();
 }
 function drawMenuBg() {
-  // 标题背景：牌桌 + 漂浮麻将
+  // 标题背景：星空 + 漂浮星星
   ctx.drawImage(menuCache || bgCache, 0, 0, W, H);
   // 标题后旋转金光
   const lg = $('mLogo'); let cy = H * .25; if (lg && lg.offsetHeight) { const r = lg.getBoundingClientRect(); cy = r.top + r.height * .5; }
@@ -694,9 +711,9 @@ function drawMenuBg() {
   for (let i = 0; i < 18; i++) { ctx.rotate(TAU / 18); const g = ctx.createLinearGradient(0, 0, 0, -H * .6); g.addColorStop(0, 'rgba(255,226,140,.16)'); g.addColorStop(1, 'rgba(255,226,140,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-W * .09, -H * .6); ctx.lineTo(W * .09, -H * .6); ctx.fill(); }
   ctx.restore();
   { const g = ctx.createRadialGradient(W / 2, cy, 10, W / 2, cy, W * .7); g.addColorStop(0, 'rgba(255,240,170,.22)'); g.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
-  { const g = ctx.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .75); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,10,5,.55)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
-  if (!G.deco) { G.deco = []; for (let i = 0; i < 14; i++) G.deco.push({ x: rnd(0, W), y: rnd(0, H), v: rnd(10, 26), r: rnd(-.6, .6), vr: rnd(-.3, .3), t: Math.floor(rnd(0, 34)), s: rnd(.7, 1.3) }); }
-  for (const d of G.deco) { d.y -= d.v * G.dt; d.r += d.vr * G.dt; if (d.y < -80) { d.y = H + 60; d.x = rnd(0, W); d.t = Math.floor(rnd(0, 34)); } const w = 30 * d.s; drawTile(d.t, d.x, d.y, w, w * 1.3, { rot: d.r, a: .5 }); }
+  { const g = ctx.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, H * .75); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(4,0,20,.55)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  if (!G.deco) { G.deco = []; for (let i = 0; i < 14; i++) G.deco.push({ x: rnd(0, W), y: rnd(0, H), v: rnd(10, 26), r: rnd(-.6, .6), vr: rnd(-.3, .3), t: Math.floor(rnd(0, LG.NT)), s: rnd(.7, 1.3) }); }
+  for (const d of G.deco) { d.y -= d.v * G.dt; d.r += d.vr * G.dt; if (d.y < -80) { d.y = H + 60; d.x = rnd(0, W); d.t = Math.floor(rnd(0, LG.NT)); } const w = 32 * d.s; drawTile(d.t, d.x, d.y, w, w * TA, { rot: d.r, a: .5 }); }
 }
 function render(dt) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -705,9 +722,9 @@ function render(dt) {
   let sx = 0, sy = 0; if (G.shake > 0) { sx = rnd(-1, 1) * G.shake; sy = rnd(-1, 1) * G.shake; G.shake = Math.max(0, G.shake - dt * 30); }
   ctx.save(); ctx.translate(sx, sy);
   ctx.drawImage(bgCache, 0, 0, W, H);
-  // 牌桌快满：边框红光
+  // 星盘快满：边框红光
   const f = LG.freeSpace(G.s);
-  if (f <= 8 && !LG.mergeable(G.s).length) { const p = .5 + .5 * Math.sin(G.time * 5); ctx.save(); rr(ctx, L.bx + 2, L.bTop + 2, L.bw - 4, L.bh - 4, 13); ctx.strokeStyle = `rgba(255,70,50,${.35 + .4 * p})`; ctx.lineWidth = 4; ctx.shadowColor = '#ff3a2a'; ctx.shadowBlur = 16; ctx.stroke(); ctx.restore(); }
+  if (f <= 8 && !LG.mergeable(G.s).length) { const p = .5 + .5 * Math.sin(G.time * 5); ctx.save(); rr(ctx, L.bx + 2, L.bTop + 2, L.bw - 4, L.bh - 4, 17); ctx.strokeStyle = `rgba(255,70,50,${.35 + .4 * p})`; ctx.lineWidth = 4; ctx.shadowColor = '#ff3a2a'; ctx.shadowBlur = 16; ctx.stroke(); ctx.restore(); }
   drawRows(); drawMfx(); drawFlyers();
   ctx.restore();
   drawHud();
@@ -732,8 +749,9 @@ function menu() {
   const has = save.st && (save.st.merges > 0 || save.st.deals > 0);
   $('bPlay').textContent = has ? `继续游戏 · 第 ${save.st.stage + 1} 关` : '开始游戏';
   $('bNew').style.display = has ? '' : 'none';
+  const rd = $('mRoad'); if (rd && !rd.childNodes.length) { [0, 6, 12, 18, 24, LG.NT - 1].forEach((t, i, A) => { const c = tileCanvas(t, 32); c.style.animationDelay = (i * .15) + 's'; if (i === A.length - 1) c.className = 'end'; rd.append(c); if (i < A.length - 1) { const ar = document.createElement('span'); ar.className = 'ar'; ar.textContent = '›'; rd.append(ar); } }); }
   const ms = $('mStat'); ms.innerHTML = '';
-  const bt = save.best.top; ms.append('最大的牌 '); ms.append(tileCanvas(bt, 16)); ms.append(` ${LG.tileName(bt)} · 最高分 ${save.best.score}`);
+  const bt = save.best.top; ms.append('最大的星 '); ms.append(tileCanvas(bt, 16)); ms.append(` ${LG.tileName(bt)} · 最高分 ${save.best.score}`);
 }
 function startPlay(fresh) {
   SND.unlock(); SND.startMusic();
@@ -743,13 +761,13 @@ function startPlay(fresh) {
   if (DEBUG.fill) { debugFill(); DEBUG.fill = false; }
   else if (DEBUG.stage >= 0) { G.s.stage = DEBUG.stage; G.s.top = DEBUG.stage ? LG.GOALS[DEBUG.stage - 1] : 0; save.cp = clone(G.s); DEBUG.stage = -1; }
   if (!save.tut) tutStart();
-  // 进入时出牌动画
+  // 进入时星星飞入动画
   G.s.rows.forEach((r, i) => { if (!LG.isOpen(r)) return; r.t.forEach((t, k) => { G.hid[i]++; G.flyers.push({ t, x0: W / 2 - L.tw / 2, y0: H + 20, x1: tileX(k), y1: tileY(i), t0: G.time + 0.15 + (i * 0.04 + k * 0.025), dur: 0.42, row: i, arc: -20, flip: 1, land: () => SND.clack(.35, 1.05) }); }); });
   if (G.flyers.length) SND.shuffle(10);
   after(1.2, () => { if (LG.stuck(G.s)) { G.over = true; showFail(); } });
 }
 $('bPlay').onclick = () => { SND.unlock(); SND.tap(); try{GT.title('play')}catch(_e){} startPlay(false); };
-$('bNew').onclick = () => { SND.unlock(); SND.tap(); try{GT.title('new')}catch(_e){} ask('重新开局', '确定放弃当前进度，从<b>一筒</b>重新开始吗？<br>（最高纪录会保留）', '重新开局', () => { hide('menu'); startPlay(true); }); G.mode = 'menu'; };
+$('bNew').onclick = () => { SND.unlock(); SND.tap(); try{GT.title('new')}catch(_e){} ask('重新开局', '确定放弃当前进度，从<b>红色星尘</b>重新开始吗？<br>（最高纪录会保留）', '重新开局', () => { hide('menu'); startPlay(true); }); G.mode = 'menu'; };
 function pause() { if (G.mode !== 'play') return; G.mode = 'paused'; try{GT.pause()}catch(_e){} show('pause'); }
 $('pResume').onclick = () => { SND.tap(); hide('pause'); G.mode = 'play'; };
 $('pRestart').onclick = () => { SND.tap(); hide('pause'); restartStage(); };
@@ -761,13 +779,13 @@ function restartStage() {
 function showWin() {
   const s = G.s; const goal = LG.GOALS[s.stage]; const last = s.stage === LG.GOALS.length - 1; try{GT.win(s.stage+1,{score:s.score,top:s.top})}catch(_e){}
   G.mode = 'win'; SND.win(); vib(40); toastEl.classList.remove('on');
-  for (let i = 0; i < 90; i++) G.parts.push({ x: rnd(0, W), y: rnd(-60, -10), vx: rnd(-40, 40), vy: rnd(60, 200), g: 60, life: rnd(2, 3.4), t: 0, col: ['#ffd84a', '#d8302a', '#2fd07a', '#fff3c4'][i % 4], s: rnd(3, 6), k: 'paper', r: rnd(0, TAU) });
-  const reward = 40 + s.stage * 25;
-  $('wTitle').textContent = last ? '一合到底！' : `第 ${s.stage + 1} 关 · 过关！`;
+  for (let i = 0; i < 90; i++) G.parts.push({ x: rnd(0, W), y: rnd(-60, -10), vx: rnd(-40, 40), vy: rnd(60, 200), g: 60, life: rnd(2, 3.4), t: 0, col: ['#ffd84a', '#ff7ad0', '#9fd8ff', '#fff3c4'][i % 4], s: rnd(3, 6), k: 'paper', r: rnd(0, TAU) });
+  const reward = 35 + s.stage * 22;
+  $('wTitle').textContent = last ? '摘下银河！' : `第 ${s.stage + 1} 关 · 过关！`;
   const tb = $('wTiles'); tb.innerHTML = ''; const a = s.stage ? LG.GOALS[s.stage - 1] : 0;
-  [a, goal].forEach((t, k) => { const c = tileCanvas(t, k ? 58 : 40); tb.append(c); if (!k) { const ar = document.createElement('span'); ar.textContent = '➜'; ar.style.cssText = 'font-size:26px;color:#c0391c;margin-bottom:30px;font-weight:900'; tb.append(ar); } });
-  $('wInfo').innerHTML = last ? '从一筒一路合到了<b>白板</b>，真正的「一合到底」！<br>分数 <b>' + s.score + '</b>' : `合出了 <b>${LG.tileName(goal)}</b>！ 分数 <b>${s.score}</b><br>下一关目标：<b>${LG.tileName(LG.GOALS[s.stage + 1])}</b>`;
-  $('wReward').innerHTML = `<div class="reward"><span class="coin"></span> 铜钱 <b>+${reward}</b>&nbsp;·&nbsp;撤销 <b>+1</b>&nbsp;·&nbsp;消除 <b>+1</b></div>`;
+  [a, goal].forEach((t, k) => { const c = tileCanvas(t, k ? 58 : 40); tb.append(c); if (!k) { const ar = document.createElement('span'); ar.textContent = '➜'; ar.style.cssText = 'font-size:26px;color:#7a4ad8;margin-bottom:30px;font-weight:900'; tb.append(ar); } });
+  $('wInfo').innerHTML = last ? '从一粒星尘一路合成了<b>银河</b>，星空尽收眼底！<br>分数 <b>' + s.score + '</b>' : `合出了 <b>${LG.tileName(goal)}</b>！ 分数 <b>${s.score}</b><br>下一关目标：<b>${LG.tileName(LG.GOALS[s.stage + 1])}</b>`;
+  $('wReward').innerHTML = `<div class="reward"><span class="coin"></span> 星币 <b>+${reward}</b>&nbsp;·&nbsp;撤销 <b>+1</b>&nbsp;·&nbsp;消除 <b>+1</b></div>`;
   save.coins += reward; save.props.undo++; save.props.clear++;
   s.stage++; s.tempFree = true; s.rows.forEach(r => { if (r.st === 'tempOn') r.exp = true; }); LG.expire(s);
   save.cp = clone(s); save.st = s; recordRun(); persist();
@@ -779,18 +797,18 @@ function showFail() {
   if (G.mode !== 'play') { after(0.3, () => { if (G.over) showFail(); }); return; }
   G.mode = 'fail'; G.failOpen = false; SND.fail(); vib(60); try{GT.fail(G.s.stage+1,{r:'full',score:G.s.score,top:G.s.top})}catch(_e){}
   const s = G.s, m = LG.lowestTier(s);
-  $('fInfo').innerHTML = `所有的行都塞满了，又凑不出 10 张同牌。<br>可以消除全部「<b>${LG.tileName(m)}</b>」腾出空位继续！`;
+  $('fInfo').innerHTML = `星轨都塞满了，又凑不出 8 颗同样的星。<br>可以消除全部「<b>${LG.tileName(m)}</b>」腾出空位继续！`;
   $('fClearCost').innerHTML = save.props.clear > 0 ? `剩 ${save.props.clear} 次` : `<span class="coin"></span>${COST.clear}`;
   const tr = s.rows[LG.TEMP_ROW];
   $('fTemp').style.display = tr.st === 'temp' ? '' : 'none';
   $('fTempCost').innerHTML = s.tempFree ? '免费' : `<span class="coin"></span>${COST.temp}`;
   show('fail');
 }
-$('fClear').onclick = () => { SND.tap(); if (save.props.clear <= 0 && save.coins < COST.clear) { toast('铜钱不够啦'); SND.deny(); return; } hide('fail'); G.mode = 'play'; G.over = false; try{GT.revive('clear')}catch(_e){} doClear(true); };
+$('fClear').onclick = () => { SND.tap(); if (save.props.clear <= 0 && save.coins < COST.clear) { toast('星币不够啦'); SND.deny(); return; } hide('fail'); G.mode = 'play'; G.over = false; try{GT.revive('clear')}catch(_e){} doClear(true); };
 $('fTemp').onclick = () => { SND.tap(); try{GT.revive('temp')}catch(_e){} hide('fail'); G.mode = 'play'; G.over = false; G.failOpen = true; tapLocked(LG.TEMP_ROW); };
 $('fRetry').onclick = () => { SND.tap(); hide('fail'); restartStage(); };
 $('fMenu').onclick = () => { SND.tap(); hide('fail'); restartStage(); G.flyers = []; G.hid.fill(0); menu(); };
-// 返回 Tilo 游戏屋：先存档再离开（与「返回首页」保存方式一致）
+// 返回游戏屋：先存档再离开（与「返回首页」保存方式一致）
 function goHub(e) {
   if (e) e.stopPropagation();
   try {
@@ -804,7 +822,7 @@ function openRank() {
   if (G.mode !== 'play') return; G.mode = 'rank'; recordRun(); persist();
   const tb = $('rankTbl'); tb.innerHTML = '';
   const runs = (save.runs || []).slice(0, 8);
-  if (!runs.length) { tb.innerHTML = '<tr><td colspan="4" style="color:#8a6a40">还没有战绩，先合几张牌吧！</td></tr>'; }
+  if (!runs.length) { tb.innerHTML = '<tr><td colspan="4" style="color:#8a6a40">还没有战绩，先合几颗星吧！</td></tr>'; }
   runs.forEach((r, i) => {
     const tr = document.createElement('tr'); if (r.id === save.runId) tr.className = 'me';
     const d = new Date(r.d); const td = (h) => { const e = document.createElement('td'); if (typeof h === 'string') e.innerHTML = h; else e.append(h); return e; };

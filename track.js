@@ -1,6 +1,8 @@
-/* 游戏屋 · 匿名玩法统计（无第三方依赖）
-   只记录：随机访客 ID、会话 ID、设备/系统/浏览器大类、屏幕尺寸、语言、来源域名与 utm/from 参数、游戏内事件。
-   不采集任何个人信息，不做指纹识别，不读取/存储 IP。任何异常都被吞掉，绝不影响游戏。
+/* 游戏屋 · 玩法统计（无第三方依赖；说明见站点根目录 privacy.html）
+   浏览器端只发送：随机访客 ID、会话 ID、设备/系统/浏览器大类、手机型号与系统版本（仅支持 UA-CH 的浏览器）、屏幕尺寸与像素比、
+   触屏、CPU 核数/内存档位、语言、来源域名与 utm/from 参数、游戏内事件。不发送完整 User-Agent 字符串。
+   服务端用请求自带的 IP 在内存中查出城市级地区与运营商大类，IP 本身不入库（仅以加盐哈希做短时限流）。
+   首次访问显示统计提示；localStorage gt_off=1（「关闭统计」）或浏览器“请勿跟踪”时完全不发送。任何异常都被吞掉，绝不影响游戏。
    开发自测：网址加 ?test=1 会把本设备标记为测试（看板默认排除），?test=0 取消。 */
 (function () {
   'use strict';
@@ -12,7 +14,9 @@
     var EP = 'https://trigger-tech.fun/games/api/collect.php';
     var GAMES = ['shooter', 'virus', 'grab', 'gems', 'parking', 'diff', 'petals', 'potion', 'merge'];
     var IDLE = 60000, SESSION = 30 * 60000;
-    if (N.doNotTrack === '1' || W.doNotTrack === '1') return;   // 尊重“请勿跟踪”
+    if (N.doNotTrack === '1' || W.doNotTrack === '1' || N.globalPrivacyControl === true) return;   // 尊重“请勿跟踪”/GPC
+    var lsOff = null; try { lsOff = W.localStorage && W.localStorage.getItem('gt_off'); } catch (e) {}
+    if (lsOff === '1') return;                                    // 用户已「关闭统计」
     var now = function () { return new Date().getTime(); };
     var ls = {}, ss = {};
     try { ls = W.localStorage || {}; } catch (e) {}
@@ -63,22 +67,43 @@
       sw: (W.screen && screen.width) || 0, sh: (W.screen && screen.height) || 0, ref: cut(refHost, 80), utm: utm, from: cut(qs.from || '', 40),
       sn: sn, test: get(ls, 'gt_test') === '1' ? 1 : 0,
       /* 设备细节：UA 交给服务端解析型号；屏幕 DPR / 触屏 / 核数 / 内存只用于机型分组，不做指纹 */
-      ua: cut(ua, 400), dpr: Math.round((W.devicePixelRatio || 1) * 100) / 100, tch: tp > 0 ? 1 : 0,
+      dpr: Math.round((W.devicePixelRatio || 1) * 100) / 100, tch: tp > 0 ? 1 : 0,
       hc: N.hardwareConcurrency || 0, dm: N.deviceMemory || 0
     };
     /* Android Chrome 等：通过 UA-CH 取真实型号 / 系统版本（不支持的浏览器忽略；结果在本次会话内缓存） */
     try {
       var uch = get(ss, 'gt_uach');
-      if (uch) { uch = JSON.parse(uch); ctx.m = uch.m; ctx.pfv = uch.pfv; ctx.fv = uch.fv; }
+      if (uch) { uch = JSON.parse(uch); ctx.m = uch.m; ctx.pfv = uch.pfv; }
       else if (N.userAgentData && N.userAgentData.getHighEntropyValues) {
-        N.userAgentData.getHighEntropyValues(['model', 'platformVersion', 'fullVersionList']).then(function (h) {
-          var fv = (h.fullVersionList || []).filter(function (b) { return !/Not.?A.?Brand|Chromium/i.test(b.brand); })
-            .map(function (b) { return b.brand + '/' + String(b.version).split('.')[0]; }).join(',');
-          ctx.m = cut(h.model || '', 40); ctx.pfv = cut(h.platformVersion || '', 20); ctx.fv = cut(fv, 80);
-          set(ss, 'gt_uach', JSON.stringify({ m: ctx.m, pfv: ctx.pfv, fv: ctx.fv }));
+        N.userAgentData.getHighEntropyValues(['model', 'platformVersion']).then(function (h) {
+          ctx.m = cut(h.model || '', 40); ctx.pfv = cut(h.platformVersion || '', 20);
+          set(ss, 'gt_uach', JSON.stringify({ m: ctx.m, pfv: ctx.pfv }));
         }).catch(noop);
       }
     } catch (e) {}
+
+    /* 首次访问提示：说明统计用途，可直接「关闭统计」 */
+    var notice = function () {
+      try {
+        if (get(ls, 'gt_notice') === '1' || qs.gtnotice === '0') return;
+        var pp = page === 'hub' ? 'privacy.html' : '../privacy.html';
+        var box = D.createElement('div'); box.id = 'gtNotice'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '统计说明');
+        box.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);z-index:2147483000;width:min(94vw,380px);box-sizing:border-box;padding:7px 8px 7px 12px;display:flex;align-items:center;gap:6px;border-radius:14px;background:rgba(20,16,40,.94);color:#f4f0ff;font:12px/1.55 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.45);text-align:left;-webkit-user-select:none;user-select:none';
+        box.innerHTML = '<div style="flex:1;min-width:0">游戏屋会匿名统计玩法以改进游戏，不保存 IP。<a href="' + pp + '" style="color:#ffd76a;white-space:nowrap">隐私政策</a></div>' +
+          '<button type="button" data-k="off" style="flex:none;font:inherit;padding:4px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#f4f0ff">关闭统计</button>' +
+          '<button type="button" data-k="ok" style="flex:none;font:inherit;font-weight:700;padding:4px 11px;border-radius:99px;border:0;background:#ffd76a;color:#3a2600">知道了</button>';
+        var stop = function (e) { e.stopPropagation(); };
+        ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup', 'click'].forEach(function (k) { box.addEventListener(k, stop, false); });
+        box.addEventListener('click', function (e) {
+          var k = e.target && e.target.getAttribute && e.target.getAttribute('data-k'); if (!k) return;
+          set(ls, 'gt_notice', '1');
+          if (k === 'off') GT.off();
+          if (box.parentNode) box.parentNode.removeChild(box);
+        });
+        var add = function () { (D.body || D.documentElement).appendChild(box); };
+        if (D.body) add(); else D.addEventListener('DOMContentLoaded', add);
+      } catch (e) {}
+    };
 
     /* 发送：批量、即发即忘 */
     var Q = [], seq = 0, timer = 0, pv = rid(6);
@@ -90,11 +115,12 @@
     var flush = function () {
       try {
         clearTimeout(timer); timer = 0;
-        while (Q.length) send(JSON.stringify({ v: 1, vid: vid, sid: sid, pv: pv, c: ctx, e: Q.splice(0, 40) }));
+        while (Q.length && !OFF) send(JSON.stringify({ v: 1, vid: vid, sid: sid, pv: pv, c: ctx, e: Q.splice(0, 40) }));
       } catch (e) {}
     };
     var push = function (n, p) {
       try {
+        if (OFF) return;
         Q.push({ n: n, t: now(), q: ++seq, p: p || {} }); touch();
         if (Q.length >= 25) flush(); else if (!timer) timer = setTimeout(flush, 4000);
       } catch (e) {}
@@ -137,6 +163,13 @@
     GT.hub = safe(function (from) { push('back_to_hub', { from: HUBF[from] || (!cur.on && lastEnd) || cut(from || 'other', 20), lv: cur.lv, inLv: cur.on, ms: cur.on ? lvMs() : null }); flush(); });
     GT.sound = safe(function (k, on) { push('sound', { k: cut(k, 10), on: on ? 1 : 0 }); });
     GT.flush = safe(flush);
+    var OFF = false;
+    GT.off = safe(function () {
+      OFF = true; Q.length = 0; clearTimeout(timer);
+      set(ls, 'gt_off', '1'); ['gt_vid', 'gt_sid', 'gt_sn', 'gt_last', 'gt_test'].forEach(function (k) { del(ls, k); }); del(ss, 'gt_uach'); del(ss, 'gt_nav');
+      for (var k in GT) if (typeof GT[k] === 'function' && k !== 'off') GT[k] = noop;
+    });
+    notice();
 
     /* 来源判断 */
     var navType = '';
