@@ -58,7 +58,7 @@ button.on{background:#34c759}
 (function(){var st=document.getElementById('st'),tg=document.getElementById('tg');
 function off(){try{return localStorage.getItem('gt_off')==='1'}catch(e){return false}}
 function draw(){var o=off();st.textContent=o?'已关闭':'已开启';tg.textContent=o?'重新开启统计':'关闭统计';tg.className=o?'on':''}
-tg.onclick=function(){try{if(off())localStorage.removeItem('gt_off');else{localStorage.setItem('gt_off','1');['gt_vid','gt_sid','gt_sn','gt_last','gt_test'].forEach(function(k){localStorage.removeItem(k)})}localStorage.setItem('gt_notice','1')}catch(e){}draw()};
+tg.onclick=function(){try{if(off())localStorage.removeItem('gt_off');else{localStorage.setItem('gt_off','1');['gt_vid','gt_sid','gt_sn','gt_last','gt_test'].forEach(function(k){localStorage.removeItem(k)})}}catch(e){}draw()};
 draw();})();
 </script>
 </body></html>

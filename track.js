@@ -2,7 +2,7 @@
    浏览器端只发送：随机访客 ID、会话 ID、设备/系统/浏览器大类、手机型号与系统版本（仅支持 UA-CH 的浏览器）、屏幕尺寸与像素比、
    触屏、CPU 核数/内存档位、语言、来源域名与 utm/from 参数、游戏内事件。不发送完整 User-Agent 字符串。
    服务端用请求自带的 IP 在内存中查出城市级地区与运营商大类，IP 本身不入库（仅以加盐哈希做短时限流）。
-   首次访问显示统计提示；localStorage gt_off=1（「关闭统计」）或浏览器“请勿跟踪”时完全不发送。任何异常都被吞掉，绝不影响游戏。
+   不弹任何提示；localStorage gt_off=1（「关闭统计」）或浏览器“请勿跟踪”时完全不发送。任何异常都被吞掉，绝不影响游戏。
    开发自测：网址加 ?test=1 会把本设备标记为测试（看板默认排除），?test=0 取消。 */
 (function () {
   'use strict';
@@ -82,29 +82,6 @@
       }
     } catch (e) {}
 
-    /* 首次访问提示：说明统计用途，可直接「关闭统计」 */
-    var notice = function () {
-      try {
-        if (get(ls, 'gt_notice') === '1' || qs.gtnotice === '0') return;
-        var pp = page === 'hub' ? 'privacy.html' : '../privacy.html';
-        var box = D.createElement('div'); box.id = 'gtNotice'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '统计说明');
-        box.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);z-index:2147483000;width:min(94vw,380px);box-sizing:border-box;padding:7px 8px 7px 12px;display:flex;align-items:center;gap:6px;border-radius:14px;background:rgba(20,16,40,.94);color:#f4f0ff;font:12px/1.55 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.45);text-align:left;-webkit-user-select:none;user-select:none';
-        box.innerHTML = '<div style="flex:1;min-width:0">游戏屋会匿名统计玩法以改进游戏，不保存 IP。<a href="' + pp + '" style="color:#ffd76a;white-space:nowrap">隐私政策</a></div>' +
-          '<button type="button" data-k="off" style="flex:none;font:inherit;padding:4px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#f4f0ff">关闭统计</button>' +
-          '<button type="button" data-k="ok" style="flex:none;font:inherit;font-weight:700;padding:4px 11px;border-radius:99px;border:0;background:#ffd76a;color:#3a2600">知道了</button>';
-        var stop = function (e) { e.stopPropagation(); };
-        ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup', 'click'].forEach(function (k) { box.addEventListener(k, stop, false); });
-        box.addEventListener('click', function (e) {
-          var k = e.target && e.target.getAttribute && e.target.getAttribute('data-k'); if (!k) return;
-          set(ls, 'gt_notice', '1');
-          if (k === 'off') GT.off();
-          if (box.parentNode) box.parentNode.removeChild(box);
-        });
-        var add = function () { (D.body || D.documentElement).appendChild(box); };
-        if (D.body) add(); else D.addEventListener('DOMContentLoaded', add);
-      } catch (e) {}
-    };
-
     /* 发送：批量、即发即忘 */
     var Q = [], seq = 0, timer = 0, pv = rid(6);
     var send = function (body) {
@@ -169,7 +146,6 @@
       set(ls, 'gt_off', '1'); ['gt_vid', 'gt_sid', 'gt_sn', 'gt_last', 'gt_test'].forEach(function (k) { del(ls, k); }); del(ss, 'gt_uach'); del(ss, 'gt_nav');
       for (var k in GT) if (typeof GT[k] === 'function' && k !== 'off') GT[k] = noop;
     });
-    notice();
 
     /* 来源判断 */
     var navType = '';
