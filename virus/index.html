@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b2a3a">
-<title>药丸医生：病毒大作战</title>
+<title>健康小卫士：消灭病毒大作战</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 html,body{margin:0;height:100%;background:#071822;overflow:hidden;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",sans-serif;color:#fff;touch-action:none}
@@ -113,9 +113,9 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 #hud .bossbar b{font-size:13px;letter-spacing:2px;text-shadow:0 2px 0 #000}
 #hud .bossbar div{height:12px;border-radius:6px;background:rgba(0,0,0,.5);overflow:hidden;box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);margin-top:2px}
 #hud .bossbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff3d6e,#c55bff);transition:width .15s}
-#colors{position:absolute;left:0;right:0;bottom:0;padding:0 0 calc(env(safe-area-inset-bottom) + 12px);display:flex;justify-content:center;gap:22px;pointer-events:none}
-.cb{pointer-events:auto;width:62px;height:62px;border-radius:50%;border:0;padding:0;cursor:pointer;position:relative;background:rgba(0,0,0,.4);box-shadow:inset 0 0 0 3px rgba(255,255,255,.25);transition:transform .12s}
-.cb canvas{position:absolute;left:7px;top:7px;width:48px;height:48px}
+#colors{position:absolute;left:0;right:0;bottom:0;padding:0 0 calc(env(safe-area-inset-bottom) + 10px);display:flex;justify-content:center;gap:min(2.6vw,14px);pointer-events:none}
+.cb{pointer-events:auto;width:min(14.5vw,58px);height:min(14.5vw,58px);border-radius:50%;border:0;padding:0;cursor:pointer;position:relative;background:rgba(0,0,0,.4);box-shadow:inset 0 0 0 3px rgba(255,255,255,.25);transition:transform .12s}
+.cb canvas{position:absolute;left:10%;top:10%;width:80%;height:80%}
 .cb.on{transform:scale(1.14) translateY(-4px);box-shadow:inset 0 0 0 4px #fff,0 0 18px var(--g),0 0 4px var(--g)}
 .cb .k{position:absolute;bottom:-2px;right:-2px;font-size:10px;font-weight:900;background:#000a;border-radius:6px;padding:0 4px;opacity:.6}
 #banner{position:absolute;left:0;right:0;top:34%;text-align:center;z-index:6;pointer-events:none;opacity:0}
@@ -151,6 +151,28 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .hubPill:active{transform:scale(.94)}
 .btn.hub{background:linear-gradient(#4fd8cf,#1f9aa6);box-shadow:0 5px 0 #11646d,0 8px 18px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
 .btn.hub:active{box-shadow:0 2px 0 #11646d,0 4px 10px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.5)}
+
+#tip .tipArt{width:min(76vw,300px);height:auto;display:block;margin:6px auto 0;overflow:visible}
+#tip .tV{animation:tipV 1.6s ease-in-out infinite;transform-origin:205px 63px}
+#tip .tB{animation:tipB 1.6s ease-in-out infinite}
+#tip .tHit{animation:tipH 1.6s ease-in-out infinite;transform-origin:170px 72px}
+#tip .tMinus{animation:tipM 1.6s ease-in-out infinite}
+@keyframes tipV{0%,100%{transform:translate(18px,-6px)}45%,55%{transform:translate(-14px,10px)}}
+@keyframes tipB{0%,40%,70%,100%{stroke:#dff}48%,58%{stroke:#ff4d6a}}
+@keyframes tipH{0%,42%,70%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes tipM{0%,45%{opacity:0;transform:translateY(8px)}55%{opacity:1;transform:translateY(0)}90%,100%{opacity:0;transform:translateY(-10px)}}
+#tip .tipT{font-size:20px;font-weight:900;line-height:1.45;margin:6px 0 4px}
+#tip .tipS{font-size:13px;opacity:.8;margin-bottom:10px}
+.pcs{width:min(92vw,420px);display:flex;flex-direction:column;gap:10px;margin:8px 0 16px}
+.pc{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.05));box-shadow:inset 0 0 0 2px rgba(255,255,255,.12)}
+.pc.eq{box-shadow:inset 0 0 0 3px var(--c),0 0 14px var(--c)}
+.pc canvas{position:static;width:64px;height:64px;flex:none;border-radius:14px;background:rgba(0,0,0,.35)}
+.pc .tx{flex:1;min-width:0}.pc .nm{font-size:17px;font-weight:900}.pc .nm small{font-size:12px;opacity:.75;margin-left:6px;white-space:nowrap}
+.pc .ds{font-size:12px;opacity:.85;margin-top:2px;line-height:1.35}
+.pc .bt{display:flex;flex-direction:column;gap:6px;flex:none}
+.pc .btn{font-size:14px;padding:7px 10px;min-width:84px}
+.cb.lock{opacity:.45;filter:grayscale(1)}
+.cb.lock::after{content:'🔒';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:18px}
 </style>
 </head>
 <body>
@@ -170,16 +192,16 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 
 <div class="scr on" id="title">
  <button class="hubPill" id="bHub0" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
- <div class="logo"><img id="tLogo" src="assets/logo.png" alt="药丸医生 · 病毒大作战"></div>
+ <div class="logo"><img id="tLogo" src="assets/logo.png" alt="健康小卫士 · 消灭病毒大作战"></div>
  <div class="hero">
   <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
   <img class="v" src="assets/v_yellow.png" style="right:8%;top:2%;animation-delay:-2s;width:min(17vw,78px)" alt="">
   <img class="v" src="assets/v_blue.png" style="right:5%;top:44%;animation-delay:-.4s" alt="">
-  <img class="doc" id="tDoc" src="assets/doctor/doctor_static.webp" width="284" height="484" alt="">
+  <img class="doc" id="tDoc" src="assets/robot/robot_static.webp" width="243" height="284" alt="">
  </div>
  <div class="tbtns">
-  <button class="btn big" id="bStart">开始治疗</button>
-  <div class="row"><button class="btn orange sm" id="bShop1">升级商店</button><button class="ibtn" id="bMus1"></button><button class="ibtn" id="bSfx1"></button></div>
+  <button class="btn big" id="bStart">开始守护</button>
+  <div class="row"><button class="btn orange sm" id="bShop1">升级商店</button><button class="ibtn" id="bMus1"></button><button class="ibtn" id="bSfx1"></button><button class="ibtn" id="bVib1" aria-label="震动"></button></div>
  </div>
 </div>
 
@@ -188,9 +210,9 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
  <div class="wnav"><button class="arrow" id="wPrev">‹</button><div style="text-align:center;min-width:200px"><div class="wtitle" id="wName"></div><div class="wsub" id="wSub"></div></div><button class="arrow" id="wNext">›</button></div>
  <div class="wcard" id="wGrid"></div>
  <div class="dots" id="wDots"></div>
- <div class="help"><span>👆 左右滑动移动医生</span><span>🎨 点底部按钮换药丸颜色</span></div>
- <div class="tip">同色药丸伤害 ×3，病毒碰到医生会扣血！</div>
- <div class="lvdeco"><img id="lvDoc" src="assets/doctor1.png" alt=""><div class="vs">VS</div><div class="lvboss"><img src="assets/boss.png" alt=""><span id="lvBossN">病毒大王</span></div></div>
+ <div class="help"><span>👆 按住拖动，小卫士自由移动</span><span>💊 底部切换药丸颜色</span></div>
+ <div class="tip">病毒碰到防护罩会掉血，躲开它们！</div>
+ <div class="lvdeco"><img id="lvDoc" src="assets/robot.png" alt=""><div class="vs">VS</div><div class="lvboss"><img src="assets/boss.png" alt=""><span id="lvBossN">病毒大王</span></div></div>
  <div class="lbtns"><button class="btn orange" id="bShop2">升级商店</button></div>
 </div>
 
@@ -198,15 +220,33 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
  <div class="topbar" style="position:fixed;max-width:520px;left:50%;transform:translateX(-50%);background:linear-gradient(#0e3550 60%,rgba(14,53,80,0));padding-bottom:12px"><button class="ibtn" id="bBack2"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="coinbox"><span class="coin">¥</span><span class="cval">0</span></div></div>
  <div class="shoph">升级商店</div>
  <div class="ups" id="ups"></div>
- <div class="sech">医生形象</div>
- <div class="skins" id="skins"></div>
+ <div class="sech">药丸颜色 · 每种都有独特攻击</div>
+ <div class="pcs" id="skins"></div>
  <div style="padding-bottom:calc(env(safe-area-inset-bottom) + 24px)"><button class="btn" id="bShopGo">开始下一关</button></div>
+</div>
+
+<div class="scr dim" id="tip">
+ <div class="panel tipP"><div class="ribbon">小卫士须知</div>
+  <svg class="tipArt" viewBox="0 0 300 170" aria-hidden="true">
+   <defs><radialGradient id="tb" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#bff" stop-opacity=".05"/><stop offset=".75" stop-color="#6ee6ff" stop-opacity=".18"/><stop offset="1" stop-color="#bff8ff" stop-opacity=".8"/></radialGradient></defs>
+   <circle class="tB" cx="105" cy="92" r="62" fill="url(#tb)" stroke="#dff" stroke-width="3"/>
+   <image href="assets/robot.png" x="62" y="42" width="86" height="100"/>
+   <g class="tHit"><path d="M158 64l14-8-4 14 14 2-12 8 8 12-14-4-2 14-8-12" fill="#ff3b4e" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></g>
+   <image class="tV" href="assets/v_red.png" x="170" y="28" width="70" height="70"/>
+   <g class="tMinus"><text x="62" y="30" font-size="26" font-weight="900" fill="#ff4d6a" stroke="#4a0010" stroke-width="5" paint-order="stroke">-1 ♥</text></g>
+   <g transform="translate(250 128) rotate(-30)"><rect x="-8" y="-20" width="16" height="40" rx="8" fill="#fff" stroke="#123049" stroke-width="3"/><path d="M-8 0v-12a8 8 0 0 1 16 0V0z" fill="#ff3b4e"/></g>
+   <path d="M232 112 L212 86" stroke="#fff" stroke-width="3" stroke-dasharray="5 5" stroke-linecap="round"/>
+  </svg>
+  <div class="tipT">病毒碰到防护罩会掉血，<br>躲开它们，用药丸消灭它们！</div>
+  <div class="tipS">按住屏幕任意位置拖动，小卫士会跟着移动并自动发射药丸</div>
+  <div class="col"><button class="btn" id="bTipOk">知道了，出发！</button></div>
+ </div>
 </div>
 
 <div class="scr dim" id="pause">
  <div class="panel"><h2>暂停</h2><div class="sub" id="pSub">第 1 关</div>
   <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button><button class="btn hub" id="bHubP">返回游戏屋</button></div>
-  <div class="togs"><button class="ibtn" id="bMus2"></button><button class="ibtn" id="bSfx2"></button></div>
+  <div class="togs"><button class="ibtn" id="bMus2"></button><button class="ibtn" id="bSfx2"></button><button class="ibtn" id="bVib2" aria-label="震动"></button></div>
  </div>
 </div>
 
@@ -230,58 +270,71 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 
 <div class="scr dim" id="ending">
  <div class="panel"><div class="ribbon">全部治愈！</div><div style="height:14px"></div>
-  <img src="assets/logo.png" alt="药丸医生" style="width:min(68vw,260px);display:block;margin:0 auto 4px">
-  <img src="assets/doctor1.png" id="endDoc" style="height:120px" alt="">
-  <h2 style="font-size:26px;margin-top:8px">恭喜你，神医！</h2>
+  <img src="assets/logo.png" alt="健康小卫士" style="width:min(68vw,260px);display:block;margin:0 auto 4px">
+  <img src="assets/robot.png" id="endDoc" style="height:120px" alt="">
+  <h2 style="font-size:26px;margin-top:8px">恭喜你，健康小卫士！</h2>
   <div class="sub">病毒大王被彻底击败，世界恢复了健康。<br>试试把每一关都拿到三颗星吧！</div>
   <div class="col"><button class="btn" id="bEndOk">返回选关</button><button class="btn hub sm" id="bHubE">返回游戏屋</button></div>
  </div>
 </div>
 
 <div id="toast"></div>
-<div id="loading"><img src="assets/logo.png" alt="药丸医生" style="width:min(82vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div style="font-size:15px;opacity:.8">加载中…</div><div class="lb"><i id="ldBar"></i></div></div>
+<div id="loading"><img src="assets/logo.png" alt="健康小卫士" style="width:min(82vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div style="font-size:15px;opacity:.8">加载中…</div><div class="lb"><i id="ldBar"></i></div></div>
 </div>
 <script src="../track.js"></script>
 <script src="game.js"></script>
 <script src="mascot.js"></script>
 <script>
-/* 封面小林医生：眨眼、抛接胶囊（AI 生成序列帧 · 24fps · 120 帧无缝循环）；胶囊光晕 + 气泡 + 医疗十字星光实时粒子。
-   换成其他皮肤时自动退回该皮肤的静态立绘。 */
+/* 封面主角「健康小卫士」：AI 生成序列帧（24fps · 96 帧无缝循环，透明底）；
+   实时绘制：六边形防护罩泡泡（流光 + 呼吸）、药丸炮口光晕、推进器火花、消毒气泡与医疗十字星光粒子。 */
 (function () {
-  const M = {"fw":284,"fh":484,"cols":6,"rows":4,"n":120,"fps":24,"sheets":["doctor_0","doctor_1","doctor_2","doctor_3","doctor_4"],"body":[15,104,252,478],"track":[42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,249,42,249,42,249,42,249,42,249,42,249,42,249,42,249,42,248,42,248,42,248,42,248,42,248,42,248,42,248,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,247,42,248,42,250,42,252,42,254,41,256,40,256,40,254,39,248,38,238,36,221,33,193,31,157,34,125,41,101,48,84,53,74,53,67,49,56,46,41,48,32,52,32,54,39,54,49,53,62,51,78,49,96,47,118,46,143,45,168,44,190,44,208,44,226,45,243,46,258,46,270,46,278,45,282,44,283,43,283,41,281,40,279,39,276,38,273,38,270,37,266,37,263,38,260,38,258,39,256,40,253,40,252,41,250,41,249,42,249,42,248,42,248,42,248,42,248,42,249,42,249,42,249,41,250,41,250,41,250,41,251,41,251,41,251,41,251,40,252,40,252,40,252,40,252,40,252,40,252,40,251,41,251,41,250,41,250,41,249,42,249,42,249,42,248,42,248,42,248]};
-  const doc = document.getElementById('tDoc'), BUB = ['#7fe9ff', '#a8f3ff', '#5fd0ff'], CR = ['#3ddc97', '#7ff0c0', '#ffffff'], SPK = ['#bff7ff', '#ffffff', '#7fe9ff'];
-  let cdB = 0, cdC = .5, cdS = .2, pv = null;
-  TitleMascot({ meta: M, base: 'assets/doctor/', host: doc, screen: document.getElementById('title'),
-    clipTop: () => document.querySelector('#title .logo'), clipBottom: () => document.querySelector('#title .tbtns'), maxParts: 60,
-    enabled: () => /doctor_static/.test(doc.src),
+  const M = {"fw": 243, "fh": 284, "cols": 6, "rows": 4, "n": 96, "fps": 24, "sheets": ["robot_0", "robot_1", "robot_2", "robot_3"], "body": [17, 5, 232, 263], "track": [62, 70, 62, 70, 62, 71, 62, 72, 62, 73, 61, 75, 61, 78, 60, 80, 60, 83, 59, 86, 58, 88, 58, 91, 57, 94, 57, 96, 56, 98, 56, 100, 55, 103, 55, 105, 53, 108, 53, 110, 52, 113, 51, 114, 51, 115, 51, 115, 50, 112, 50, 109, 50, 103, 50, 98, 52, 92, 53, 87, 57, 83, 61, 81, 68, 82, 78, 99, 90, 131, 93, 155, 95, 171, 91, 170, 78, 155, 71, 143, 65, 122, 64, 112, 59, 102, 58, 99, 56, 95, 55, 93, 56, 90, 56, 85, 63, 77, 68, 73, 76, 79, 84, 103, 88, 147, 93, 164, 81, 164, 73, 152, 62, 133, 61, 120, 58, 104, 58, 98, 58, 94, 58, 92, 61, 87, 63, 82, 67, 79, 69, 78, 73, 88, 78, 108, 88, 148, 94, 170, 94, 191, 93, 193, 90, 190, 86, 188, 82, 182, 78, 175, 72, 166, 69, 157, 65, 144, 61, 134, 60, 119, 60, 111, 60, 99, 60, 92, 60, 85, 61, 81, 61, 77, 62, 75, 62, 74, 61, 72, 62, 71, 62, 71, 62, 70, 62, 70, 62, 70, 62, 70]};
+  const doc = document.getElementById('tDoc'), BUB = ['#7fe9ff', '#a8f3ff', '#5fd0ff'], CR = ['#3ddc97', '#7ff0c0', '#ffffff'], SPK = ['#bff7ff', '#ffffff', '#ff9aa4'];
+  let cdB = 0, cdC = .5, cdS = .2, cdJ = 0;
+  function hexBubble(c, cx, cy, r, t) {
+    c.save();
+    const g = c.createRadialGradient(cx - r * .25, cy - r * .3, r * .15, cx, cy, r);
+    g.addColorStop(0, 'rgba(190,255,255,.04)'); g.addColorStop(.72, 'rgba(110,225,255,.10)'); g.addColorStop(1, 'rgba(170,250,255,.55)');
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, 0, 6.283); c.fill();
+    c.beginPath(); c.arc(cx, cy, r, 0, 6.283); c.clip();
+    const s = r * .2, sweep = ((t * .35) % 1.6 - .3) * r * 2.4 - r * 1.2;
+    c.lineWidth = 1.4;
+    for (let yy = -r; yy < r; yy += s * 1.5) for (let xx = -r - s; xx < r + s; xx += s * 1.732) {
+      const ox = (Math.round((yy + r) / (s * 1.5)) % 2) ? s * .866 : 0, hx = cx + xx + ox, hy = cy + yy;
+      const d = Math.abs((hx - cx) + (hy - cy) * .6 - sweep); const a = .07 + .35 * Math.max(0, 1 - d / (r * .35));
+      c.strokeStyle = 'rgba(200,250,255,' + a.toFixed(3) + ')'; c.beginPath();
+      for (let k = 0; k < 6; k++) { const an = k * 1.0472 + .5236; c.lineTo(hx + Math.cos(an) * s * .92, hy + Math.sin(an) * s * .92); } c.closePath(); c.stroke();
+    }
+    c.restore();
+    c.strokeStyle = 'rgba(220,255,255,.9)'; c.lineWidth = Math.max(2, r * .03); c.beginPath(); c.arc(cx, cy, r, 0, 6.283); c.stroke();
+    c.globalAlpha = .8; c.fillStyle = '#fff'; c.beginPath(); c.ellipse(cx - r * .45, cy - r * .5, r * .2, r * .08, -.7, 0, 6.283); c.fill();
+    c.globalAlpha = .5; c.beginPath(); c.arc(cx + r * .6, cy + r * .42, r * .045, 0, 6.283); c.fill(); c.globalAlpha = 1;
+  }
+  TitleMascot({ meta: M, base: 'assets/robot/', host: doc, screen: document.getElementById('title'),
+    clipTop: () => document.querySelector('#title .logo'), clipBottom: () => document.querySelector('#title .tbtns'), maxParts: 70,
     onToggle: (on) => doc.classList.toggle('still', !on),
-    back(A, S) { // 身后薄荷蓝光晕 + 地面柔影
-      const c = A.c, cx = S.ox + S.dw / 2 + S.dx, by = S.oy + S.dh;
-      c.globalAlpha = .35; c.drawImage(A.spr('glow', '#000000'), cx - S.dw * .32, by - S.dh * .035, S.dw * .64, S.dh * .07);
+    back(A, S) {
+      const c = A.c, [cx, cy] = S.map(M.fw / 2, M.fh * .5);
       c.globalCompositeOperation = 'lighter'; const p = .8 + .2 * Math.sin(S.t * 2.1);
-      A.glow('#5fe8ff', cx, by - S.dh * .42 + S.bob, S.dw * 1.2, S.dh * .8, .3 * p);
+      A.glow('#5fe8ff', cx, cy, S.dw * 1.25, S.dh * 1.05, .28 * p);
     },
     front(A, S) {
       const c = A.c, u = S.u, g = S.track(); if (!g) return;
-      const v = pv ? Math.hypot(g[0] - pv[0], g[1] - pv[1]) / Math.max(S.dt, .001) : 0; pv = g;
+      const [cx, cy] = S.map(M.fw / 2, M.fh * .5), r = Math.max(S.dw, S.dh) * .58 * (1 + .015 * Math.sin(S.t * 2.4));
+      c.globalCompositeOperation = 'source-over'; hexBubble(c, cx, cy, r, S.t);
       c.globalCompositeOperation = 'lighter';
-      A.glow('#6fdcff', g[0], g[1], 80 * u, 80 * u, .5 + .18 * Math.sin(S.t * 4.2));
-      // 胶囊飞起时拖出星光尾迹
-      if (S.ok && (cdS -= S.dt * (1 + Math.min(6, v / (100 * u)))) <= 0) {
-        cdS = .16 + Math.random() * .14; const a = Math.random() * 6.283, sp = (8 + Math.random() * 20) * u;
-        A.add({ x: g[0] + (Math.random() - .5) * 16 * u, y: g[1] + (Math.random() - .5) * 16 * u, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 10 * u, drag: 1.5, s: (.2 + Math.random() * .22) * u * 1.6, k: 'spark', c: SPK[(Math.random() * SPK.length) | 0], max: .6 + Math.random() * .5, tw: .3, rot: Math.random() * 3, vr: (Math.random() - .5) * 3 });
-      }
-      // 消毒气泡：从胶囊附近冒出、摇摆上升
-      if ((cdB -= S.dt) <= 0) {
-        cdB = .22 + Math.random() * .2;
-        A.add({ x: g[0] + (Math.random() - .5) * 30 * u, y: g[1] + (Math.random() - .3) * 20 * u, vx: (Math.random() - .5) * 6 * u, vy: -(18 + Math.random() * 18) * u, s: (.16 + Math.random() * .2) * u * 1.6, k: 'bubble', c: BUB[(Math.random() * BUB.length) | 0], add: false, a: .85, max: 1.3 + Math.random() * .8, fin: .2, fout: .4, wob: 12 * u });
-      }
-      // 医疗十字星光：在医生身边轻轻闪现
-      if ((cdC -= S.dt) <= 0) {
-        cdC = .45 + Math.random() * .45;
-        const [x, y] = S.map(M.body[0] + Math.random() * (M.body[2] - M.body[0]), M.body[1] + Math.random() * (M.body[3] - M.body[1]) * .7);
-        A.add({ x: x + (Math.random() < .5 ? -1 : 1) * (30 + Math.random() * 40) * u, y, vy: -12 * u, s: (.18 + Math.random() * .16) * u * 1.6, k: 'cross', c: CR[(Math.random() * CR.length) | 0], max: .9 + Math.random() * .5, fin: .25, fout: .4 });
-      }
+      A.glow('#ff6b7a', g[0], g[1], 70 * u, 70 * u, .45 + .2 * Math.sin(S.t * 4.2));
+      // 推进器火花
+      if (S.ok && (cdJ -= S.dt) <= 0) { cdJ = .05;
+        for (const fx of [.38, .62]) { const [x, y] = S.map(M.fw * fx + (Math.random() - .5) * 8, M.fh * .97); A.add({ x, y, vx: (Math.random() - .5) * 14 * u, vy: (40 + Math.random() * 40) * u, s: (.12 + Math.random() * .1) * u * 1.6, k: 'dot', c: '#7fe9ff', max: .35 + Math.random() * .2, fout: .25 }); } }
+      // 炮口星光
+      if (S.ok && (cdS -= S.dt) <= 0) { cdS = .18 + Math.random() * .16; const a = Math.random() * 6.283, sp = (8 + Math.random() * 20) * u;
+        A.add({ x: g[0] + (Math.random() - .5) * 16 * u, y: g[1] + (Math.random() - .5) * 16 * u, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 10 * u, drag: 1.5, s: (.2 + Math.random() * .22) * u * 1.6, k: 'spark', c: SPK[(Math.random() * SPK.length) | 0], max: .6 + Math.random() * .5, tw: .3, rot: Math.random() * 3, vr: (Math.random() - .5) * 3 }); }
+      // 防护罩外缘冒出的消毒气泡
+      if ((cdB -= S.dt) <= 0) { cdB = .25 + Math.random() * .22; const a = Math.random() * 6.283;
+        A.add({ x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, vx: Math.cos(a) * 8 * u, vy: -(16 + Math.random() * 16) * u, s: (.14 + Math.random() * .18) * u * 1.6, k: 'bubble', c: BUB[(Math.random() * BUB.length) | 0], add: false, a: .85, max: 1.3 + Math.random() * .8, fin: .2, fout: .4, wob: 10 * u }); }
+      if ((cdC -= S.dt) <= 0) { cdC = .5 + Math.random() * .45; const a = Math.random() * 6.283;
+        A.add({ x: cx + Math.cos(a) * r * 1.05, y: cy + Math.sin(a) * r * 1.05, vy: -12 * u, s: (.18 + Math.random() * .16) * u * 1.6, k: 'cross', c: CR[(Math.random() * CR.length) | 0], max: .9 + Math.random() * .5, fin: .25, fout: .4 }); }
     } });
 })();
 </script>
