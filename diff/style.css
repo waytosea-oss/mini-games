@@ -68,6 +68,7 @@ svg.i{width:24px;height:24px;display:block}
 .lv{position:relative;border-radius:14px;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 5px 0 #1d2a8a,0 8px 14px #0006;cursor:pointer}
 .lv:active{transform:translateY(3px);box-shadow:0 2px 0 #1d2a8a}
 .lv img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.lv .mys{display:flex;width:100%;aspect-ratio:4/3;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:900;text-shadow:0 2px 0 #0004}
 .lv .no{position:absolute;left:4px;top:4px;min-width:26px;height:26px;padding:0 6px;border-radius:13px;background:linear-gradient(#ffe066,#ff9a1f);color:#7a2a00;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
 .lv .st{display:flex;justify-content:center;gap:1px;padding:3px 0 4px;background:#fff}
 .lv .st i{width:17px;height:17px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 6l13 28 30 4-22 21 6 30-27-15-27 15 6-30L7 38l30-4z' fill='%23dfe3ee'/%3E%3C/svg%3E") center/contain no-repeat}

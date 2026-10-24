@@ -12,7 +12,8 @@ function tileName(t) {
 // 关卡目标（合出此牌即过关）
 const GOALS = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33];
 // 行的初始状态：0-3 里程碑行（合出对应牌后永久解锁），4-8 开放，9 临时解锁行，10 金币永久解锁行
-const MILE = { 3: 2, 2: 5, 1: 8, 0: 12 }; // 行号 → 需要合出的牌阶
+// 2026-10 难度曲线调整：原 {3:2,2:5,1:8,0:12} 在第 3→4 关出现断崖（机器人到达率 53%→7%），提前解锁后为 73%→22%
+const MILE = { 3: 2, 2: 4, 1: 7, 0: 10 }; // 行号 → 需要合出的牌阶
 const TEMP_ROW = 9, BUY_ROW = 10;
 function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function newState() {

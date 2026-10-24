@@ -82,15 +82,19 @@ const stars = [];
 for (let i = 0; i < 140; i++) stars.push({ x: rnd(360), y: rnd(900), l: i < 70 ? 0 : i < 115 ? 1 : 2, tw: rnd(TAU) });
 let bgY = 0, shake = 0, flash = 0, flashCol = '#fff', hitStop = 0;
 
+// 难度参数（首关 → 第 25 关）：d 波次强度、bs 敌弹速度、fire 射速增幅、hpm 敌机血量倍率（几何插值）
+const CURVE = { d: [0, 5.0], bs: [100, 178], fire: 0.95, hpm: [1, 4.9], bossBump: 0.3 };
 function startLevel(n) {
   n = clamp(n, 1, 25); try{GT.lv(n)}catch(_e){}
   const s = (n - 1) / 5 | 0, t = (n - 1) % 5;
   const ship = SHIPS.find(x => x.id === SAVE.sel) || SHIPS[0];
   const evo = SAVE.ships[ship.id].evo;
-  const d = s * 1.0 + t * 0.3;
+  // 难度曲线：按关卡进度 p 连续插值（原公式按星域重置，每个星域首关敌人血量骤降，形成锯齿）
+  const p = (n - 1) / 24, C = CURVE, boss = t == 4 ? C.bossBump : 0;
+  const d = C.d[0] + (C.d[1] - C.d[0]) * p + boss;
   LV = { n, s, t, d, tv: Math.min(t, 3), bg: IMG['bg' + (s + 1)],
-    bs: 100 + 13 * s + 7 * t, fm: 1 / (1 + 0.16 * s + 0.09 * t),
-    hpm: (1 + 0.55 * s) * (1 + 0.14 * t), cols: [['p', 'v'], ['o', 'y'], ['p', 'w'], ['o', 'r'], ['g', 'y']][s],
+    bs: C.bs[0] + (C.bs[1] - C.bs[0]) * p, fm: 1 / (1 + C.fire * p),
+    hpm: C.hpm[0] * Math.pow(C.hpm[1] / C.hpm[0], p), cols: [['p', 'v'], ['o', 'y'], ['p', 'w'], ['o', 'r'], ['g', 'y']][s],
     variants: [], tl: genLevel(n), idx: 0 };
   for (let k = 0; k < 4; k++) {
     const im = recolor(IMG[`e${s + 1}_${k}`], TIER_FX[LV.tv]);

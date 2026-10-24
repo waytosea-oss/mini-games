@@ -4,8 +4,11 @@
 const $ = id => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
 const DBG = { level: +Q.get('level') || 0, bot: Q.has('bot'), unlock: Q.has('unlock') };
-const IW = 1152, IH = 864, TOTAL_T = 300, MAX_H = 5;
-const LV = window.LEVELS, CHS = window.CHAPTERS;
+const IW = 1152, IH = 864, MAX_H = 5; let TOTAL_T = 300;
+const LV = window.LEVELS, CHS = window.POOLS;
+/* ---------- 星级题库：同档随机抽图，抽完一轮才重复 ---------- */
+const BAND_START = []; { let a = 0; CHS.forEach(b => { BAND_START.push(a); a += b.slots; }); }
+const NSLOT = CHS.reduce((a, b) => a + b.slots, 0);
 /* ---------- 图标 ---------- */
 const IC = {
   music: '<svg class="i" viewBox="0 0 24 24"><path fill="currentColor" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg>',
@@ -25,10 +28,19 @@ const IC = {
 };
 /* ---------- 存档 ---------- */
 const SKEY = 'hyjj_save_v1';
-let SV = { unlocked: 1, stars: {}, best: {}, hints: 3, music: true, sfx: true, tut: false, h3: {} };
+let SV = { unlocked: 1, stars: {}, best: {}, hints: 3, music: true, sfx: true, tut: false, h3: {}, seen: {}, pick: {} };
 try { Object.assign(SV, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch (e) { }
 const save = () => { try { localStorage.setItem(SKEY, JSON.stringify(SV)); } catch (e) { } };
-if (DBG.unlock) SV.unlocked = LV.length;
+if (!SV.seen || typeof SV.seen !== 'object') SV.seen = {}; if (!SV.pick || typeof SV.pick !== 'object') SV.pick = {};
+// 抽图：从该档未看过的图里随机取一张；本档全看过后清空重来（避开刚玩过的那张）
+function drawImg(band) {
+  const ids = CHS[band].ids, seen = (SV.seen[band] || []).filter(x => ids.includes(x));
+  let left = ids.filter(x => !seen.includes(x));
+  if (!left.length) { const last = seen[seen.length - 1]; SV.seen[band] = []; left = ids.filter(x => x !== last); if (!left.length) left = ids.slice(); }
+  const id = Q.get('img') && ids.includes(+Q.get('img')) ? +Q.get('img') : left[Math.floor(Math.random() * left.length)];
+  (SV.seen[band] = SV.seen[band] || []).push(id); save(); return id;
+}
+if (DBG.unlock) SV.unlocked = NSLOT;
 /* ---------- 通用 ---------- */
 let curScr = 'load';
 function show(id) {
@@ -56,7 +68,7 @@ $('tZoom').querySelector('.ico').outerHTML = IC.zoom;
 $('tHint').querySelector('.ico').outerHTML = IC.bulb;
 $('hand').innerHTML = IC.hand;
 const pad = n => String(n).padStart(2, '0');
-const chOf = i => Math.floor(i / 6);
+const chOf = i => { let b = 0; while (b + 1 < CHS.length && i >= BAND_START[b + 1]) b++; return b; };
 const totalStars = () => Object.values(SV.stars).reduce((a, b) => a + b, 0);
 /* ---------- 加载 ---------- */
 function loadImg(src) { return new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(im); im.src = src; }); }
@@ -70,14 +82,14 @@ async function boot() {
   for (let k = 0; k < 2; k++) for (const i of order) h += `<img src="assets/th/${pad(i + 1)}.webp" alt="">`;
   ms.innerHTML = h;
   setToggles();
-  if (DBG.level) { startLevel(Math.min(LV.length, DBG.level) - 1); return; }
+  if (DBG.level) { startLevel(Math.min(NSLOT, DBG.level) - 1); return; }
   showMenu();
 }
 function showMenu() {
   show('menu');
   const st = totalStars();
   G.next = 1; while (G.next < SV.unlocked && SV.stars[G.next]) G.next++;
-  $('mStat').textContent = `已获得 ★ ${st} / ${LV.length * 3}　·　提示 ${SV.hints} 次`;
+  $('mStat').textContent = `已获得 ★ ${st} / ${NSLOT * 3}　·　提示 ${SV.hints} 次`;
   $('bPlay').textContent = totalStars() > 0 ? `继续 · 第${G.next}关` : '开始游戏';
 }
 tap($('bPlay'), () => { try{GT.title('play')}catch(_e){} startLevel((G.next || 1) - 1); });
@@ -86,14 +98,14 @@ tap($('lvBack'), showMenu);
 /* ---------- 选关 ---------- */
 function showLevels() {
   show('levels');
-  $('lvTot').textContent = `★ ${totalStars()} / ${LV.length * 3}`;
+  $('lvTot').textContent = `★ ${totalStars()} / ${NSLOT * 3}`;
   let h = '';
   CHS.forEach((c, ci) => {
-    const got = [0, 1, 2, 3, 4, 5].reduce((a, k) => a + (SV.stars[ci * 6 + k + 1] || 0), 0);
-    h += `<div class="chap"><span class="cb" style="background:linear-gradient(${c.c[0]},${c.c[1]})">第${'一二三四五'[ci]}章 · ${c.n}</span><small>★ ${got}/18</small></div><div class="lvgrid">`;
-    for (let k = 0; k < 6; k++) {
-      const i = ci * 6 + k, id = i + 1, lock = id > SV.unlocked, s = SV.stars[id] || 0;
-      h += `<div class="lv${lock ? ' lock' : ''}${id === SV.unlocked && !SV.stars[id] ? ' cur' : ''}" data-i="${i}"><img src="assets/th/${pad(id)}.webp" alt=""><span class="no">${id}</span><div class="st">${[0, 1, 2].map(j => `<i class="${j < s ? 'on' : ''}"></i>`).join('')}</div></div>`;
+    const b0 = BAND_START[ci]; let got = 0; for (let k = 0; k < c.slots; k++) got += SV.stars[b0 + k + 1] || 0;
+    h += `<div class="chap"><span class="cb" style="background:linear-gradient(${c.c[0]},${c.c[1]})">${c.n}</span><small>★ ${got}/${c.slots * 3}　·　题库 ${c.ids.length} 张随机出题</small></div><div class="lvgrid">`;
+    for (let k = 0; k < c.slots; k++) {
+      const i = b0 + k, id = i + 1, lock = id > SV.unlocked, s = SV.stars[id] || 0, pk = SV.pick[id];
+      h += `<div class="lv${lock ? ' lock' : ''}${id === SV.unlocked && !SV.stars[id] ? ' cur' : ''}" data-i="${i}">${pk ? `<img src="assets/th/${pad(pk)}.webp" alt="">` : `<span class="mys" style="background:linear-gradient(${c.c[0]},${c.c[1]})">?</span>`}<span class="no">${id}</span><div class="st">${[0, 1, 2].map(j => `<i class="${j < s ? 'on' : ''}"></i>`).join('')}</div></div>`;
     }
     h += '</div>';
   });
@@ -150,16 +162,21 @@ function setQs() {
 function setHint() { $('hintN').textContent = SV.hints; $('tHint').classList.toggle('empty', SV.hints <= 0); }
 function fmt(t) { t = Math.max(0, Math.ceil(t)); return Math.floor(t / 60) + ':' + pad(t % 60); }
 function setTimer() { const el = $('gTimer'); el.innerHTML = IC.clock + '<span>' + fmt(G.t) + '</span>'; el.classList.toggle('warn', G.t <= 30); }
-async function startLevel(i) {
+async function startLevel(i, keep) {
   G.token++; const tok = G.token;
-  G.i = i; G.lv = LV[i]; G.found = []; G.miss = 0; G.hearts = MAX_H; G.t = TOTAL_T; G.run = false; G.pause = false; G.lock = 0; G.combo = 0; G.lastFound = 0; G.z = { s: 1, x: 0, y: 0 }; G.hintEls = []; G.hintUsed = 0;
+  const band = chOf(i), BD = CHS[band];
+  // 重玩同一关沿用同一张图；新开一关从题库随机抽
+  const img = (keep && G.i === i && G.img) ? G.img : drawImg(band);
+  G.img = img; SV.pick[i + 1] = img; save();
+  TOTAL_T = BD.time; G.band = band;
+  G.i = i; G.lv = LV[img - 1]; G.found = []; G.miss = 0; G.hearts = MAX_H; G.t = TOTAL_T; G.run = false; G.pause = false; G.lock = 0; G.combo = 0; G.lastFound = 0; G.z = { s: 1, x: 0, y: 0 }; G.hintEls = []; G.hintUsed = 0;
   ['pause', 'win', 'fail', 'menu', 'levels', 'load'].forEach(s => $(s).classList.remove('on'));
   const g = $('game'); g.classList.add('on'); curScr = 'game';
   const c = CHS[chOf(i)].c; g.style.background = `radial-gradient(ellipse at 50% 0%, ${c[0]} 0%, ${c[1]} 70%, ${shade(c[1])} 100%)`;
   $('gName').textContent = `第${i + 1}关 · ${G.lv.n}`;
   setHearts(); setQs(); setHint(); setTimer(); $('tZoom').classList.remove('on'); $('tZoom').querySelector('svg').outerHTML = IC.zoom; $('tZoom').querySelector('.lb').textContent = '放大';
   layout();
-  G.svgA = buildStage(stA, G.lv, i, false); G.svgB = buildStage(stB, G.lv, i, true);
+  G.svgA = buildStage(stA, G.lv, img - 1, false); G.svgB = buildStage(stB, G.lv, img - 1, true);
   applyZ();
   // 等待图片
   const spins = [paneA, paneB].map(p => { const s = document.createElement('div'); s.className = 'spin'; p.appendChild(s); return s; });
@@ -167,11 +184,10 @@ async function startLevel(i) {
   await Promise.all(imgs.map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
   spins.forEach(s => s.remove());
   if (tok !== G.token) return;
-  G.run = true; G.lastTick = performance.now(); try{GT.lv(i+1)}catch(_e){}
+  G.run = true; G.lastTick = performance.now(); try{GT.lv(i+1,{img:img,pool:band+1})}catch(_e){}
   if (i === 0 && !SV.tut && !DBG.bot) showTut();
   if (DBG.bot) runBot(tok);
   // 预载下一关
-  if (i + 1 < LV.length) { loadImg(`assets/lv/${pad(i + 2)}a.webp`); }
 }
 function shade(hex) { const n = parseInt(hex.slice(1), 16); const r = (n >> 16) * .55 | 0, g = ((n >> 8) & 255) * .55 | 0, b = (n & 255) * .55 | 0; return `rgb(${r},${g},${b})`; }
 /* ---------- 教程 ---------- */
@@ -328,18 +344,18 @@ function pauseGame() { if (!G.run || G.pause) return; G.pause = true; try{GT.pau
 function resume() { G.pause = false; $('pause').classList.remove('on'); SND.duck(false); }
 tap($('gPause'), pauseGame);
 tap($('pResume'), resume);
-tap($('pRestart'), () => { resume(); startLevel(G.i); });
+tap($('pRestart'), () => { resume(); startLevel(G.i, true); });
 tap($('pLevels'), () => { try{GT.quit('menu')}catch(_e){} resume(); G.run = false; G.token++; $('game').classList.remove('on'); showLevels(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { pauseGame(); if (SND.ctx) SND.ctx.suspend && SND.ctx.suspend(); } else if (SND.ctx && audioOK) SND.ctx.resume(); });
 /* ---------- 结算 ---------- */
-function starsFor() { const used = TOTAL_T - G.t; let s = 3; if (G.miss >= 2 || used > 150) s = 2; if (G.miss >= 4 || used > 240) s = 1; return s; }
+function starsFor() { const used = TOTAL_T - G.t, B = CHS[G.band || 0]; let s = 3; if (G.miss >= 2 || used > B.s2) s = 2; if (G.miss >= 4 || used > B.s1) s = 1; return s; }
 function winLevel() {
-  const id = G.i + 1, s = starsFor(), used = Math.round(TOTAL_T - G.t); try{GT.win(id,{stars:s,miss:G.miss,hints:G.hintUsed,used:used})}catch(_e){}
+  const id = G.i + 1, s = starsFor(), used = Math.round(TOTAL_T - G.t); try{GT.win(id,{stars:s,miss:G.miss,hints:G.hintUsed,used:used,img:G.img})}catch(_e){}
   const prev = SV.stars[id] || 0; SV.stars[id] = Math.max(prev, s);
   if (!SV.best[id] || used < SV.best[id]) SV.best[id] = used;
   let reward = '';
   if (s === 3 && !SV.h3[id]) { SV.h3[id] = 1; SV.hints++; reward = '三星奖励：提示 +1'; }
-  const newUnlock = id + 1 > SV.unlocked && id < LV.length; if (id + 1 > SV.unlocked) SV.unlocked = Math.min(LV.length, id + 1);
+  const newUnlock = id + 1 > SV.unlocked && id < NSLOT; if (id + 1 > SV.unlocked) SV.unlocked = Math.min(NSLOT, id + 1);
   save();
   zoomTo(1, G.W / 2, G.H / 2, true);
   SND.play('win'); SND.duck(true); setTimeout(() => SND.duck(false), 2600);
@@ -353,21 +369,21 @@ function winLevel() {
   for (let k = 0; k < s; k++) setTimeout(() => { ss[k].className = 'on'; SND.play('star', k); }, 450 + k * 280);
   $('wInfo').innerHTML = `用时 <b>${fmt(used)}</b>　·　失误 <b>${G.miss}</b> 次${prev && s > prev ? '　·　<b>新纪录！</b>' : ''}`;
   const rw = $('wReward'); rw.classList.toggle('on', !!reward); rw.innerHTML = reward ? IC.bulb.replace('<svg', '<svg width="20" height="20"') + reward : '';
-  $('wNext').textContent = id >= LV.length ? '全部通关！' : '下一关';
+  $('wNext').textContent = id >= NSLOT ? '全部通关！' : '下一关';
   if (newUnlock) setTimeout(() => SND.play('unlock'), 1400);
 }
-tap($('wNext'), () => { $('win').classList.remove('on'); if (G.i + 1 >= LV.length) { G.token++; $('game').classList.remove('on'); showLevels(); toast('恭喜！全部 30 关已通关！', 2200); } else startLevel(G.i + 1); });
+tap($('wNext'), () => { $('win').classList.remove('on'); if (G.i + 1 >= NSLOT) { G.token++; $('game').classList.remove('on'); showLevels(); toast(`恭喜！全部 ${NSLOT} 关已通关！`, 2200); } else startLevel(G.i + 1); });
 tap($('wRetry'), () => { $('win').classList.remove('on'); startLevel(G.i); });
 tap($('wLevels'), () => { $('win').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
 function failLevel(why) {
-  G.run = false; clearHint(); try{GT.fail(G.i+1,{r:why,found:G.found.length,miss:G.miss})}catch(_e){}
+  G.run = false; clearHint(); try{GT.fail(G.i+1,{r:why,found:G.found.length,miss:G.miss,img:G.img})}catch(_e){}
   SND.play('fail'); SND.duck(true); setTimeout(() => SND.duck(false), 2400);
   $('fTitle').textContent = why === 'time' ? '时间到！' : '机会用完啦！';
   $('fIco').innerHTML = why === 'time' ? IC.timeup : IC.broken;
   $('fInfo').innerHTML = `已找到 <b>${G.found.length}</b> / 5 处不同<br>${why === 'time' ? '别着急，慢慢看，放大镜能帮你！' : '点错会扣爱心，看准了再点哦～'}`;
   $('fail').classList.add('on');
 }
-tap($('fRetry'), () => { $('fail').classList.remove('on'); startLevel(G.i); });
+tap($('fRetry'), () => { $('fail').classList.remove('on'); startLevel(G.i, true); });
 tap($('fLevels'), () => { $('fail').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { save(); try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
