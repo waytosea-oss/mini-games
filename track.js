@@ -61,8 +61,24 @@
     var ctx = {
       host: cut(L.hostname, 60), page: page, dev: dev, os: os, br: br, wx: wx, lang: cut(N.language || '', 12),
       sw: (W.screen && screen.width) || 0, sh: (W.screen && screen.height) || 0, ref: cut(refHost, 80), utm: utm, from: cut(qs.from || '', 40),
-      sn: sn, test: get(ls, 'gt_test') === '1' ? 1 : 0
+      sn: sn, test: get(ls, 'gt_test') === '1' ? 1 : 0,
+      /* 设备细节：UA 交给服务端解析型号；屏幕 DPR / 触屏 / 核数 / 内存只用于机型分组，不做指纹 */
+      ua: cut(ua, 400), dpr: Math.round((W.devicePixelRatio || 1) * 100) / 100, tch: tp > 0 ? 1 : 0,
+      hc: N.hardwareConcurrency || 0, dm: N.deviceMemory || 0
     };
+    /* Android Chrome 等：通过 UA-CH 取真实型号 / 系统版本（不支持的浏览器忽略；结果在本次会话内缓存） */
+    try {
+      var uch = get(ss, 'gt_uach');
+      if (uch) { uch = JSON.parse(uch); ctx.m = uch.m; ctx.pfv = uch.pfv; ctx.fv = uch.fv; }
+      else if (N.userAgentData && N.userAgentData.getHighEntropyValues) {
+        N.userAgentData.getHighEntropyValues(['model', 'platformVersion', 'fullVersionList']).then(function (h) {
+          var fv = (h.fullVersionList || []).filter(function (b) { return !/Not.?A.?Brand|Chromium/i.test(b.brand); })
+            .map(function (b) { return b.brand + '/' + String(b.version).split('.')[0]; }).join(',');
+          ctx.m = cut(h.model || '', 40); ctx.pfv = cut(h.platformVersion || '', 20); ctx.fv = cut(fv, 80);
+          set(ss, 'gt_uach', JSON.stringify({ m: ctx.m, pfv: ctx.pfv, fv: ctx.fv }));
+        }).catch(noop);
+      }
+    } catch (e) {}
 
     /* 发送：批量、即发即忘 */
     var Q = [], seq = 0, timer = 0, pv = rid(6);
