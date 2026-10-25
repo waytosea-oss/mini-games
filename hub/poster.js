@@ -74,6 +74,10 @@
       { rate: 2.2, max: 9, make: function () { return { k: 'glow', c: pick(['#fffbe0', '#ffffff', '#e8ffb0']), x: R(0, 1), y: R(.4, .95), vx: R(-.01, .01), vy: R(-.05, -.02), s: R(.05, .1), life: R(2.4, 3.6), a: .7, add: 1 }; } },
       { rate: 1.6, max: 5, make: function () { return { k: 'spark', c: '#ffe680', x: R(.2, .8), y: R(.32, .62), s: R(.03, .05), life: R(.7, 1.1), pulse: 1, add: 1 }; } }
     ],
+    stroke: [ // 墨点飘散 + 金粉 + 桃花瓣
+      { rate: 2, max: 7, make: function () { return { k: 'spark', c: pick(['#ffe27a', '#fff3c4', '#f6c86a']), x: R(.25, .75), y: R(.45, .8), s: R(.03, .05), life: R(.7, 1.1), pulse: 1, add: 1 }; } },
+      { rate: .9, max: 4, make: function () { return { k: 'dot', c: '#ffb3c1', x: R(0, 1), y: R(.1, .4), vx: R(.01, .03), vy: R(.03, .06), wob: .04, s: R(.018, .026), life: R(3, 4), tw: .5 }; } }
+    ],
     merge: [ // 星光闪烁 + 星尘上浮
       { rate: 3, max: 9, make: function () { return { k: 'spark', c: pick(['#ffe27a', '#d9ccff', '#ffffff']), x: R(.2, .8), y: R(.35, .8), s: R(.035, .065), life: R(.7, 1.2), pulse: 1, add: 1 }; } },
       { rate: 1.5, max: 6, make: function () { return { k: 'dot', c: '#d8ccff', x: R(.08, .92), y: R(.7, .92), vy: R(-.09, -.05), wob: .03, s: R(.02, .03), life: R(2, 3), tw: .4, add: 1 }; } }

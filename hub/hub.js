@@ -27,10 +27,26 @@
     secs.forEach(function(s){if(s.offsetTop<=y)cur=s.id});
     if(innerHeight+window.scrollY>=document.body.scrollHeight-4)cur='all';setTab(cur)}
   addEventListener('scroll',spy,{passive:true});spy();
+
+  // 分类筛选
+  var chips=document.getElementById('chips');
+  if(chips)chips.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    [].forEach.call(chips.children,function(x){x.classList.toggle('on',x===b)});var c=b.dataset.c,n=0;
+    [].forEach.call(document.querySelectorAll('#all .li'),function(li){var ok=!c||(' '+li.dataset.cat+' ').indexOf(' '+c+' ')>=0;li.classList.toggle('hide',!ok);if(ok)n++});
+    document.getElementById('allN').textContent=n+' 款'});
+  // 最近玩过
+  function ago(t){var m=Math.round((Date.now()-t)/60000);return m<1?'刚刚':m<60?m+' 分钟前':m<1440?Math.round(m/60)+' 小时前':Math.round(m/1440)+' 天前'}
+  try{var rec=JSON.parse(localStorage.getItem('th_recent')||'[]'),rw=document.getElementById('rrow'),k=0;
+    rec.forEach(function(r){var li=r&&document.querySelector('#all .li[href="'+r.g+'/"]');if(!li||k>=8)return;k++;
+      var a=document.createElement('a');a.href=r.g+'/';a.className='rli';
+      a.innerHTML='<img src="hub/icons/'+r.g+'-s.webp" alt="">'+li.querySelector('.name').firstChild.textContent+'<small>'+ago(r.t)+'</small>';rw.appendChild(a)});
+    if(k){document.getElementById('recent').hidden=false;document.getElementById('recentN').textContent=k+' 款'}}catch(e){}
+  function remember(h){var g=(h||'').replace(/\/.*$/,'');if(!/^[a-z0-9]+$/.test(g))return;
+    try{var a=JSON.parse(localStorage.getItem('th_recent')||'[]').filter(function(x){return x&&x.g!==g});a.unshift({g:g,t:Date.now()});localStorage.setItem('th_recent',JSON.stringify(a.slice(0,12)))}catch(e){}}
   // tap -> game, with a short spring press before leaving
   document.addEventListener('click',function(e){
-    var a=e.target.closest('a.story,a.game,a.li');if(!a||e.metaKey||e.ctrlKey||e.shiftKey||e.button)return;
-    e.preventDefault();a.classList.add('tap-zoom');document.body.classList.add('leaving');
+    var a=e.target.closest('a.story,a.game,a.li,a.rli');if(!a||e.metaKey||e.ctrlKey||e.shiftKey||e.button)return;
+    e.preventDefault();remember(a.getAttribute('href'));a.classList.add('tap-zoom');document.body.classList.add('leaving');
     setTimeout(function(){location.href=a.getAttribute('href')},170);
   });
   addEventListener('pageshow',function(){document.body.classList.remove('leaving');

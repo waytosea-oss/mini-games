@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1d3b36">
+<title>新游戏 · 游戏屋</title>
+<link rel="stylesheet" href="../common/kit.css">
+<style>
+/* 主题：改这几个变量即可换肤（完整列表见 common/kit.css 顶部） */
+:root{--k-bg1:#24443e;--k-bg2:#10201d}
+body{background:linear-gradient(var(--k-bg1),var(--k-bg2))}
+#cv{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+.title{font-size:44px;font-weight:900;color:#fff;margin:auto 0 0;text-shadow:0 4px 0 rgba(0,0,0,.25)}
+</style>
+</head><body>
+<canvas id="cv"></canvas>
+<!-- 标题 -->
+<div class="scr dim on" id="menu">
+  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
+  <div class="toggles"><button class="tg" id="tSnd" aria-label="音效">♪</button></div>
+  <div class="title">新游戏</div>
+  <div style="margin:auto 0 calc(env(safe-area-inset-bottom) + 40px);display:flex;flex-direction:column;align-items:center">
+    <button class="btn" id="bPlay">开始游戏</button>
+    <button class="btn teal small" id="bLevels">选择关卡</button>
+  </div>
+  <div class="aiNote">部分美术与动画由 AI 生成</div>
+</div>
+<!-- 选关 -->
+<div class="scr dim lvwrap" id="levels"><h2>选择关卡</h2><div class="lvscroll" id="lvList"></div><button class="btn hub small" id="lvBack">返回</button></div>
+<!-- 过关 -->
+<div class="scr dim" id="win"><div class="panel"><div class="ph gold">过关！</div><div class="stars" id="wStars"><span></span><span></span><span></span></div>
+  <div class="info" id="wInfo"></div><button class="btn" id="wNext">下一关</button><button class="btn hub small" id="wHub">返回游戏屋</button></div></div>
+<div class="toast" id="toast"></div>
+<script src="../track.js?v=20261025" defer></script>
+<script src="../common/kit.js"></script>
+<script src="game.js"></script>
+</body></html>
