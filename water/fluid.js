@@ -8,8 +8,8 @@ import * as THREE from './vendor/three.module.min.js';
 
 const Q = new URLSearchParams(location.search);
 const LEVELS = [
-  { id: 'low', rt: 0.55, dpr: 1, blur: 5, fill: 3 },
-  { id: 'high', rt: 0.85, dpr: 1.5, blur: 8, fill: 4 }
+  { id: 'low', rt: 0.55, dpr: 1, blur: 6, fill: 6 },
+  { id: 'high', rt: 0.85, dpr: 1.5, blur: 8, fill: 5 }
 ];
 
 function deviceQi() {
@@ -243,20 +243,22 @@ function initGL() {
         float t = clamp(th, 0.0, 4.0);
         vec2 ruv = vUv + n.xy * (0.014 + 0.006 * t);
         vec3 refr = texture2D(bg, clamp(ruv, 0.002, 0.998)).rgb;
-        float dye = clamp(0.05 + t * 0.07, 0.0, 0.42);
-        vec3 trans = mix(refr, refr * tint + tint * 0.18, dye);
+        float lum = dot(refr, vec3(0.299, 0.587, 0.114));
+        float dye = mix(0.72, 0.28, smoothstep(0.12, 0.62, lum));
+        dye = clamp(dye + t * 0.04, 0.22, 0.82);
+        vec3 trans = mix(refr, tint, dye);
         float ndv = max(dot(n, viewDir), 0.0);
-        float fres = 0.04 + 0.96 * pow(1.0 - ndv, 4.0);
+        float fres = 0.03 + 0.55 * pow(1.0 - ndv, 4.0);
         vec3 L1 = normalize(vec3(-0.45, 0.82, 0.7));
         vec3 L2 = normalize(vec3(0.6, 0.2, 0.85));
-        float spec = pow(max(dot(n, normalize(L1 + viewDir)), 0.0), 70.0) * 1.5
-                   + pow(max(dot(n, normalize(L2 + viewDir)), 0.0), 28.0) * 0.45
-                   + pow(ndv, 12.0) * 0.18;
-        vec3 env = mix(vec3(0.75, 0.9, 0.98), vec3(1.0, 0.99, 0.94), smoothstep(-0.1, 0.8, reflect(-viewDir, n).y));
-        vec3 col = mix(trans, env, fres * 0.55) + spec * vec3(1.0, 0.99, 0.95);
+        float spec = pow(max(dot(n, normalize(L1 + viewDir)), 0.0), 80.0) * 0.55
+                   + pow(max(dot(n, normalize(L2 + viewDir)), 0.0), 36.0) * 0.22
+                   + pow(ndv, 14.0) * 0.08;
+        vec3 env = mix(vec3(0.62, 0.84, 0.96), vec3(0.96, 0.98, 1.0), smoothstep(-0.1, 0.8, reflect(-viewDir, n).y));
+        vec3 col = mix(trans, env, fres * 0.32) + spec * vec3(1.0, 0.99, 0.95);
         float edge = smoothstep(0.45, 0.06, th) * smoothstep(0.0, 0.05, th);
         col += vec3(0.85, 0.93, 1.0) * edge * 0.28;
-        float a = smoothstep(0.02, 0.22, th) * 0.92;
+        float a = smoothstep(0.012, 0.1, th) * 0.97;
         gl_FragColor = vec4(mix(base, col, a), 1.0);
       }`,
     depthTest: false, depthWrite: false
@@ -342,8 +344,9 @@ const api = {
       cid[m] = P.cid[i]; sz[m] = 1; m++;
       const sp = Math.hypot(P.vx[i], P.vy[i]);
       if (sp > 0.25) {
+        const span = Math.min(0.06, sp * 0.02);
         for (let k = 1; k <= fills && m < MAXP; k++) {
-          const f = k / (fills + 1) * 0.012;
+          const f = k / (fills + 1) * span;
           pos[m * 3] = P.x[i] - P.vx[i] * f;
           pos[m * 3 + 1] = P.y[i] - P.vy[i] * f;
           pos[m * 3 + 2] = P.z[i] || 0.02;
