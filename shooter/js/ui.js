@@ -39,7 +39,7 @@ const UI = {
     setTimeout(() => {
       $('#hud').classList.add('hide');
       const p = $('#scrResult .panel'); p.classList.toggle('lose', !r.win);
-      $('#rTitle').textContent = r.win ? (r.n == 25 ? '最终胜利！' : '任务完成') : '任务失败';
+      $('#rTitle').textContent = r.win ? (r.n == NLV ? '最终胜利！' : '任务完成') : '任务失败';
       $('#rSub').textContent = `STAGE ${((r.n - 1) / 5 | 0) + 1}-${(r.n - 1) % 5 + 1}`;
       $('#rStars').style.display = r.win ? 'flex' : 'none';
       $$('#rStars i').forEach((s, i) => { s.className = ''; if (i < r.stars) setTimeout(() => { s.className = 'on'; Sound.sfx.star(i); }, 450 + i * 300); });
@@ -51,7 +51,7 @@ const UI = {
       const B = $('#rBtns'); B.innerHTML = '';
       const mk = (txt, cls, f) => { const b = document.createElement('button'); b.className = 'btn mid ' + cls; b.textContent = txt; on(b, f); return b; };
       if (r.win) {
-        if (r.n == 25) B.appendChild(mk('观看结局', 'gold', () => { overlay('scrResult', false); showEnding(); }));
+        if (r.n == NLV) B.appendChild(mk('观看结局', 'gold', () => { overlay('scrResult', false); showEnding(); }));
         else B.appendChild(mk('下一关', 'gold', () => go(r.n + 1)));
       } else B.appendChild(mk('再试一次', 'gold', () => go(r.n)));
       const row = document.createElement('div'); row.className = 'row2';
@@ -59,12 +59,13 @@ const UI = {
       row.appendChild(mk('机库', 'green', () => { overlay('scrResult', false); openHangar('map'); }));
       B.appendChild(row);
       { const hb = mk('返回游戏屋', 'hubb', goHub); hb.id = 'rHub'; B.appendChild(hb); }
+      { const old = p.querySelector('.xpromo'); if (old) old.remove(); if (r.win) try { CPL.promo(p, { dark: false }); } catch (_e) { } }
       overlay('scrResult', true);
     }, r.win ? 300 : 500);
   },
 };
 function go(n) { overlay('scrResult', false); STATE = 'play'; startLevel(n); }
-function exitToMenu() { STATE = 'menu'; PAUSED = false; Sound.laser(false); $('#hud').classList.add('hide'); if (LV) menuBg = LV.s + 1; }
+function exitToMenu() { STATE = 'menu'; PAUSED = false; Sound.laser(false); $('#hud').classList.add('hide'); if (LV) menuBg = artOf(LV.s) + 1; }
 
 // ---------- title ----------
 function openTitle() {
@@ -76,14 +77,14 @@ function openTitle() {
 const NODE_POS = [[70, 380], [210, 330], [92, 262], [222, 196], [150, 128]];
 function openMap(sec) {
   exitToMenu(); show('scrMap'); updCoins();
-  mapSector = sec != null ? sec : Math.min(4, (SAVE.maxLevel - 1) / 5 | 0);
+  mapSector = sec != null ? sec : Math.min(NSEC - 1, (SAVE.maxLevel - 1) / 5 | 0);
   renderMap(); Sound.play('menu');
 }
 function renderMap(dir) {
   const s = mapSector, S = SECTORS[s], card = $('#secCard');
   card.style.setProperty('--sc', S.col);
   card.classList.remove('swL', 'swR'); void card.offsetWidth; if (dir) card.classList.add(dir < 0 ? 'swL' : 'swR');
-  card.querySelector('.secBg').style.backgroundImage = `url(assets/bg${s + 1}.jpg)`;
+  card.querySelector('.secBg').style.backgroundImage = `url(assets/bg${artOf(s) + 1}.jpg)`; card.querySelector('.secBg').style.filter = S.hue ? `hue-rotate(${S.hue}deg)` : '';
   card.querySelector('.secNo').textContent = `SECTOR ${s + 1}`;
   card.querySelector('.secName').textContent = S.name;
   card.querySelector('.secEn').textContent = S.en;
@@ -95,18 +96,18 @@ function renderMap(dir) {
     const b = document.createElement('button');
     b.className = 'node' + (i == 4 ? ' boss' : '') + (lock ? ' lock' : '') + (n == SAVE.maxLevel && !SAVE.stars[n] ? ' cur' : '');
     b.style.left = (p[0] / 300 * 100) + '%'; b.style.top = (p[1] / 420 * 100) + '%';
-    b.innerHTML = (i == 4 ? `<img src="assets/boss${s + 1}.png" alt=""><b>BOSS</b>` : (lock ? '' : `${s + 1}-${i + 1}`)) +
+    b.innerHTML = (i == 4 ? `<img src="assets/boss${artOf(s) + 1}.png" alt=""${S.hue ? ` style="filter:hue-rotate(${S.hue}deg)"` : ''}><b>BOSS</b>` : (lock ? '' : `${s + 1}-${i + 1}`)) +
       (lock ? '' : `<div class="st">${[0, 1, 2].map(k => `<span class="${k < st ? 'on' : 'no'}">★</span>`).join('')}</div>`);
     b.addEventListener('click', () => { Sound.unlock(); if (lock) { Sound.sfx.deny(); toast('请先通关前一关卡'); return; } Sound.sfx.click(); startLevel(n); });
     nd.appendChild(b);
   });
   card.querySelector('.secStars').innerHTML = `<span class="sg">★</span> ${tot} / 15`;
-  $('#secPrev').classList.toggle('dim', s == 0); $('#secNext').classList.toggle('dim', s == 4);
+  $('#secPrev').classList.toggle('dim', s == 0); $('#secNext').classList.toggle('dim', s == NSEC - 1);
   $('#secDots').innerHTML = SECTORS.map((_, i) => `<i class="${i == s ? 'on' : ''}"></i>`).join('');
   const sh = SHIPS.find(x => x.id === SAVE.sel), ev = SAVE.ships[sh.id].evo;
   $('#shipChip').innerHTML = `<img src="assets/ship_${sh.id}_${ev}.png" alt=""><div>${sh.name}<em>${EVO_NAMES[ev]}</em></div>`;
 }
-function mapStep(d) { const n = clamp(mapSector + d, 0, 4); if (n === mapSector) return; mapSector = n; Sound.sfx.click(); renderMap(d); }
+function mapStep(d) { const n = clamp(mapSector + d, 0, NSEC - 1); if (n === mapSector) return; mapSector = n; Sound.sfx.click(); renderMap(d); }
 // swipe on map card
 (function () { let sx = null; const c = $('#secCard');
   c.addEventListener('pointerdown', e => sx = e.clientX);
@@ -281,3 +282,4 @@ function loop(now) {
     else openTitle();
   });
 })();
+window.__T = { n: NLV, start: n => startLevel(n), win: () => finishLevel(true) };

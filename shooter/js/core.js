@@ -153,7 +153,7 @@ let SAVE = DEFAULT_SAVE();
 function loadSave() {
   try { if (DEBUG.reset) localStorage.removeItem(SAVE_KEY);
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); if (s) SAVE = Object.assign(DEFAULT_SAVE(), s); } catch (e) {}
-  if (DEBUG.unlock) { SAVE.maxLevel = 25; Object.values(SAVE.ships).forEach(s => s.own = true); }
+  if (DEBUG.unlock) { SAVE.maxLevel = NLV; Object.values(SAVE.ships).forEach(s => s.own = true); }
   if (DEBUG.coins) SAVE.coins = +DEBUG.coins;
   if (DEBUG.ship && SAVE.ships[DEBUG.ship]) { SAVE.sel = DEBUG.ship; SAVE.ships[DEBUG.ship].own = true; }
   if (DEBUG.evo) SAVE.ships[SAVE.sel].evo = clamp(+DEBUG.evo, 0, 2);
@@ -167,7 +167,13 @@ const SECTORS = [
   { name: '冰晶星云', en: 'CRYSTAL NEBULA', boss: '冰晶女王', col: '#6fe3ff', music: ['stageC', 0], dark: 0.22 },
   { name: '钢铁要塞', en: 'IRON FORTRESS', boss: '泰坦要塞', col: '#ffc23c', music: ['stageA', 2], dark: 0.38 },
   { name: '虫巢深渊', en: 'HIVE ABYSS', boss: '虫巢母皇', col: '#ff4b6e', music: ['stageB', -2], dark: 0.12 },
+  // 第 6~8 星区（26–40 关）：沿用前五区美术，art = 借用的星区编号，hue = 整体色相偏移
+  { name: '暗物质回廊', en: 'DARK MATTER', boss: '暗影母舰', col: '#8f86ff', music: ['stageC', 2], dark: 0.3, art: 0, hue: 150 },
+  { name: '熔核星带', en: 'MOLTEN CORE', boss: '熔核巨像', col: '#ff6a3c', music: ['stageB', 3], dark: 0.2, art: 1, hue: -35 },
+  { name: '终焉星门', en: 'FINAL GATE', boss: '星门守护者', col: '#ff5fd8', music: ['stageA', -3], dark: 0.32, art: 3, hue: 110 },
 ];
+const NSEC = SECTORS.length, NLV = NSEC * 5;
+const artOf = s => SECTORS[s].art != null ? SECTORS[s].art : s;
 const SHIPS = [
   { id: 'falcon', name: '疾风号', en: 'FALCON', style: '散射型', col: '#4fd8ff', price: 0, evoCost: [0, 500, 1500],
     desc: '扇形散射弹幕，覆盖面广，攻守兼备的新手首选。', stats: [[2, 4, 4], [3, 5, 4], [4, 6, 5]] },

@@ -84,20 +84,23 @@ let bgY = 0, shake = 0, flash = 0, flashCol = '#fff', hitStop = 0;
 
 // 难度参数（首关 → 第 25 关）：d 波次强度、bs 敌弹速度、fire 射速增幅、hpm 敌机血量倍率（几何插值）
 const CURVE = { d: [0, 5.0], bs: [100, 178], fire: 0.95, hpm: [1, 4.9], bossBump: 0.3 };
+// 26–40 关沿同一曲线外延，但斜率减半（p 从 1 缓升到 1.3），避免第 6 星区断崖
+const progP = n => n <= 25 ? (n - 1) / 24 : 1 + (n - 25) / 15 * 0.3;
+const BGH = {};
 function startLevel(n) {
-  n = clamp(n, 1, 25); try{GT.lv(n)}catch(_e){}
+  n = clamp(n, 1, NLV); try{GT.lv(n)}catch(_e){}
   const s = (n - 1) / 5 | 0, t = (n - 1) % 5;
   const ship = SHIPS.find(x => x.id === SAVE.sel) || SHIPS[0];
   const evo = SAVE.ships[ship.id].evo;
   // 难度曲线：按关卡进度 p 连续插值（原公式按星域重置，每个星域首关敌人血量骤降，形成锯齿）
-  const p = (n - 1) / 24, C = CURVE, boss = t == 4 ? C.bossBump : 0;
+  const p = progP(n), A = artOf(s), C = CURVE, boss = t == 4 ? C.bossBump : 0;
   const d = C.d[0] + (C.d[1] - C.d[0]) * p + boss;
-  LV = { n, s, t, d, tv: Math.min(t, 3), bg: IMG['bg' + (s + 1)],
+  LV = { n, s, t, d, tv: Math.min(t, 3), bg: SECTORS[s].hue ? (BGH[s] || (BGH[s] = recolor(IMG['bg' + (A + 1)], { hue: SECTORS[s].hue }))) : IMG['bg' + (A + 1)],
     bs: C.bs[0] + (C.bs[1] - C.bs[0]) * p, fm: 1 / (1 + C.fire * p),
-    hpm: C.hpm[0] * Math.pow(C.hpm[1] / C.hpm[0], p), cols: [['p', 'v'], ['o', 'y'], ['p', 'w'], ['o', 'r'], ['g', 'y']][s],
+    hpm: C.hpm[0] * Math.pow(C.hpm[1] / C.hpm[0], p), cols: [['p', 'v'], ['o', 'y'], ['p', 'w'], ['o', 'r'], ['g', 'y']][A],
     variants: [], tl: genLevel(n), idx: 0 };
   for (let k = 0; k < 4; k++) {
-    const im = recolor(IMG[`e${s + 1}_${k}`], TIER_FX[LV.tv]);
+    const im = recolor(SECTORS[s].hue ? recolor(IMG[`e${A + 1}_${k}`], { hue: SECTORS[s].hue }) : IMG[`e${A + 1}_${k}`], TIER_FX[LV.tv]);
     const sc = TIER_SCALE[LV.tv] * 1.12;
     LV.variants.push({ img: im, white: whiteOf(im), w: im.width / 2 * sc, h: im.height / 2 * sc });
   }
@@ -249,8 +252,8 @@ const BOSSDEF = [
   { sc: 0.95, ty: 140, parts: [{ x: -123, y: 15, r: 26, f: 0.12 }, { x: 124, y: 15, r: 26, f: 0.12 }, { x: 0, y: -85, r: 18, f: 0.08 }], core: { x: 0, y: -12, r: 30 } },
 ];
 function spawnBoss() {
-  const s = LV.s, D = BOSSDEF[s], img = IMG['boss' + (s + 1)];
-  const total = (800 + 750 * s);
+  const s = artOf(LV.s), D = BOSSDEF[s], img = SECTORS[LV.s].hue ? recolor(IMG['boss' + (s + 1)], { hue: SECTORS[LV.s].hue }) : IMG['boss' + (s + 1)];
+  const total = LV.s < 5 ? (800 + 750 * s) : Math.round(3800 * Math.pow(1.12, LV.s - 4));
   const b = { s, D, img, w: img.width / 2 * D.sc, h: img.height / 2 * D.sc, x: W / 2, y: -img.height / 2 * D.sc, ty: D.ty + safeTop,
     total, phase: 0, t: 0, pt: 0, cd: {}, flash: 0, red: 0, wrecks: [], entering: true, spin: 0, dieT: 0, sway: 0 };
   b.parts = D.parts.map((p, i) => { const e = mkPart(b, p.x, p.y, p.r, total * p.f, false); e.pi = i; return e; });
@@ -506,7 +509,7 @@ function killEnemy(e) {
   }
   const big = e.type >= 2 || e.mini;
   const sz = e.mini ? 120 : [42, 54, 80, 110][e.type];
-  const set = LV.s == 2 ? FX.explBlue : LV.s == 4 ? FX.explGreen : null;
+  const set = artOf(LV.s) == 2 ? FX.explBlue : artOf(LV.s) == 4 ? FX.explGreen : null;
   boom(e.x, e.y, sz, e.type >= 2 ? 2 : (Math.random() * 2) | 0, set);
   if (big) { shockwave(e.x, e.y, sz * 1.1, '#ffd890'); shake = Math.max(shake, e.mini ? 14 : 6 + e.type * 2); Sound.sfx[e.mini ? 'boomL' : 'boomM'](); for (let i = 0; i < 3 + e.type * 3; i++) after(i * 0.07, () => boom(e.x + rnd(-e.w / 3, e.w / 3), e.y + rnd(-e.h / 3, e.h / 3), rnd(30, 55), 1, set)); }
   else Sound.sfx.boomS();
@@ -645,7 +648,7 @@ function finishLevel(win) {
   const bonus = win ? Math.round((60 + n * 18) * (1 + (stars - 1) * 0.25)) : 0;
   const coins = G.coins + bonus;
   SAVE.coins += coins;
-  if (win) { SAVE.stars[n] = Math.max(SAVE.stars[n] || 0, stars); SAVE.maxLevel = Math.max(SAVE.maxLevel, Math.min(25, n + 1)); if (n == 25) SAVE.beat = true; }
+  if (win) { SAVE.stars[n] = Math.max(SAVE.stars[n] || 0, stars); SAVE.maxLevel = Math.max(SAVE.maxLevel, Math.min(NLV, n + 1)); if (n == NLV) SAVE.beat = true; }
   SAVE.best[n] = Math.max(SAVE.best[n] || 0, G.score); SAVE.hi = Math.max(SAVE.hi, G.score);
   writeSave();
   try{win?GT.win(n,{stars:stars,score:G.score,kills:G.kills,deaths:G.deaths}):GT.fail(n,{r:'dead',score:G.score,kills:G.kills})}catch(_e){}
