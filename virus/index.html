@@ -204,7 +204,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <button class="btn big" id="bStart">开始守护</button>
   <div class="row"><button class="btn orange sm" id="bShop1">升级商店</button><button class="ibtn" id="bMus1"></button><button class="ibtn" id="bSfx1"></button><button class="ibtn" id="bVib1" aria-label="震动"></button></div>
  </div>
-<div class="aiNote" style="position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);text-align:center;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,.62);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;z-index:5">部分美术与动画由 AI 生成</div>
 </div>
 
 <div class="scr" id="levels">
@@ -287,7 +286,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 <script src="game.js"></script>
 <script src="mascot.js"></script>
 <script>
-/* 封面主角「健康小卫士」：AI 生成序列帧（24fps · 96 帧无缝循环，透明底）；
+/* 封面主角「健康小卫士」：序列帧（24fps · 96 帧无缝循环，透明底）；
    实时绘制：六边形防护罩泡泡（流光 + 呼吸）、药丸炮口光晕、推进器火花、消毒气泡与医疗十字星光粒子。 */
 (function () {
   const M = {"fw": 243, "fh": 284, "cols": 6, "rows": 4, "n": 96, "fps": 24, "sheets": ["robot_0", "robot_1", "robot_2", "robot_3"], "body": [17, 5, 232, 263], "track": [62, 70, 62, 70, 62, 71, 62, 72, 62, 73, 61, 75, 61, 78, 60, 80, 60, 83, 59, 86, 58, 88, 58, 91, 57, 94, 57, 96, 56, 98, 56, 100, 55, 103, 55, 105, 53, 108, 53, 110, 52, 113, 51, 114, 51, 115, 51, 115, 50, 112, 50, 109, 50, 103, 50, 98, 52, 92, 53, 87, 57, 83, 61, 81, 68, 82, 78, 99, 90, 131, 93, 155, 95, 171, 91, 170, 78, 155, 71, 143, 65, 122, 64, 112, 59, 102, 58, 99, 56, 95, 55, 93, 56, 90, 56, 85, 63, 77, 68, 73, 76, 79, 84, 103, 88, 147, 93, 164, 81, 164, 73, 152, 62, 133, 61, 120, 58, 104, 58, 98, 58, 94, 58, 92, 61, 87, 63, 82, 67, 79, 69, 78, 73, 88, 78, 108, 88, 148, 94, 170, 94, 191, 93, 193, 90, 190, 86, 188, 82, 182, 78, 175, 72, 166, 69, 157, 65, 144, 61, 134, 60, 119, 60, 111, 60, 99, 60, 92, 60, 85, 61, 81, 61, 77, 62, 75, 62, 74, 61, 72, 62, 71, 62, 71, 62, 70, 62, 70, 62, 70, 62, 70]};

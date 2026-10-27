@@ -666,7 +666,7 @@ function tgSfx() { SND.unlock(); save.sfx = !save.sfx; try{GT.sound('sfx',save.s
 $('mMusic').onclick = $('pMusic').onclick = tgMusic; $('mSfx').onclick = $('pSfx').onclick = tgSfx;
 document.addEventListener('pointerdown', () => { SND.unlock(); if (save.music && !SND.playing && G.scr !== 'load') SND.startMusic(); }, { capture: true });
 document.addEventListener('visibilitychange', () => { if (document.hidden && G.scr === 'game' && !G.over && !G.paused) $('hPause').onclick(); });
-/* ---------- 封面蜜蜂：AI 生成的透明底序列帧（24fps · 96 帧无缝循环） ---------- */
+/* ---------- 封面蜜蜂：透明底序列帧（24fps · 96 帧无缝循环） ---------- */
 const BEE = { fw: 436, fh: 477, cols: 6, per: 24, n: 96, fps: 24, body: [56, 63, 380, 451], basket: [305, 350], sheets: [], ok: false, t: 0, petals: [], cd: .6 };
 function loadBee() {
   let left = 4, failed = false;

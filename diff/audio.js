@@ -1,4 +1,4 @@
-/* ===== 火眼金睛 · 原创音频引擎（WebAudio 实时合成，无任何外部音频素材） ===== */
+/* ===== 火眼金睛 · 音频引擎（WebAudio 实时合成，无任何外部音频素材） ===== */
 const SND = (() => {
   let ac = null, master, musicBus, sfxBus, comp, delay, delayFb, delayWet, noiseBuf;
   let musicOn = true, sfxOn = true, musicPlaying = false, schedTimer = null;

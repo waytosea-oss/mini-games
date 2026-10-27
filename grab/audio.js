@@ -1,4 +1,4 @@
-/* ===== 夜市撸串王 · 原创音频引擎（WebAudio 实时合成） ===== */
+/* ===== 夜市撸串王 · 音频引擎（WebAudio 实时合成） ===== */
 const SND = (() => {
   let ac = null, master, musicBus, sfxBus, comp, delay, delayFb, delayWet, noiseBuf;
   let musicOn = true, sfxOn = true, musicPlaying = false, schedTimer = null;

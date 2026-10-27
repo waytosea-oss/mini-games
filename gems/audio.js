@@ -1,4 +1,4 @@
-/* ===== 宝石大盗 · 原创音频引擎（WebAudio 实时合成，无外部音频文件） ===== */
+/* ===== 宝石大盗 · 音频引擎（WebAudio 实时合成，无外部音频文件） ===== */
 const SND = (() => {
   let ac = null, master, musicBus, sfxBus, comp, verb, verbIn, noiseBuf;
   let musicOn = true, sfxOn = true, playing = false, timer = null, nextT = 0, step = 0, loop = 0;

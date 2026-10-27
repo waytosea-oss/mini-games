@@ -1,4 +1,4 @@
-// 星际雷霆 — WebAudio 合成音乐与音效（原创）
+// 星际雷霆 — WebAudio 合成音乐与音效
 'use strict';
 const Sound = (() => {
   let ac = null, master, musicBus, sfxBus, comp, noiseBuf, delayIn;
