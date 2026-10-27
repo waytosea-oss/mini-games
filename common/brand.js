@@ -24,7 +24,7 @@
     '<text x="45.5" y="30" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="17" fill="#fff">+</text>' +
     '<text x="32" y="56" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" letter-spacing=".5" fill="#fff">CADPA</text>' +
     '<text x="32" y="78" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-weight="700" font-size="12.5" fill="#1d1d1d">适龄提示</text></svg>';
-  var CPL = W.CPL = { list: LIST, base: base };
+  var CPL = W.CPL = { list: LIST, base: base, age: AGE };
   CPL.html = function (tone) {
     return '<div class="cpl-row"><span class="cpl-age" role="img" aria-label="CADPA 8+ 适龄提示">' + AGE + '</span>' +
       '<div class="cpl-hn"><b>健康游戏忠告</b><span>抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。</span><span>适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。</span></div></div>' +
