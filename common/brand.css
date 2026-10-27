@@ -1,0 +1,29 @@
+/* 游戏屋 · 标题页合规与公司署名（common/brand.css + brand.js）：适龄提示、健康游戏忠告、公司名与 Trigger 字标；通关页互推横幅 */
+.cpl{position:absolute;left:0;right:0;bottom:0;z-index:6;pointer-events:none;box-sizing:border-box;
+  padding:14px max(10px,env(safe-area-inset-left,0px)) calc(env(safe-area-inset-bottom,0px) + 6px);
+  background:linear-gradient(to top,rgba(8,10,24,.72) 0%,rgba(8,10,24,.55) 60%,rgba(8,10,24,0) 100%);
+  color:#fff;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;text-align:center}
+.cpl *{box-sizing:border-box}
+.cpl-row{display:flex;align-items:center;justify-content:center;gap:8px;max-width:440px;margin:0 auto}
+.cpl-age{flex:0 0 auto;width:30px;height:40px;display:block}
+.cpl-age svg{width:100%;height:100%;display:block}
+.cpl-hn{flex:1 1 auto;min-width:0}
+.cpl-hn b{display:block;font-size:10.5px;font-weight:700;letter-spacing:2px;opacity:.95;margin-bottom:1px}
+.cpl-hn span{display:block;white-space:nowrap;font-size:clamp(8px,2.42vw,10.5px);line-height:1.45;letter-spacing:.2px;opacity:.88}
+.cpl-co{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:5px;font-size:10px;letter-spacing:1px;opacity:.82}
+.cpl-co img{height:13px;width:auto;display:block}
+.cpl-sp{height:var(--cpl-h,82px);flex:0 0 auto;width:1px}
+/* 浅色版（浅色背景游戏可用 data-tone="light"） */
+.cpl.light{background:linear-gradient(to top,rgba(255,255,255,.86) 0%,rgba(255,255,255,.7) 60%,rgba(255,255,255,0) 100%);color:#2b2b33}
+/* 通关页互推横幅 */
+.xpromo{display:flex;align-items:center;gap:10px;margin:10px auto 0;max-width:290px;width:100%;padding:7px 10px 7px 7px;border-radius:14px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:inherit;text-decoration:none;text-align:left;box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-tap-highlight-color:transparent}
+.xpromo img{width:38px;height:38px;border-radius:10px;flex:0 0 auto;display:block;object-fit:cover}
+.xpromo .xt{flex:1 1 auto;min-width:0;line-height:1.3}
+.xpromo .xt small{display:block;font-size:10px;opacity:.7;letter-spacing:1px}
+.xpromo .xt b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xpromo .xt i{display:block;font-style:normal;font-size:10.5px;opacity:.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xpromo .xg{flex:0 0 auto;font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:#ffcf4a;color:#4a2a00}
+.xpromo.dark{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.12)}
+.scr.has-cpl,.has-cpl{padding-bottom:calc(var(--cpl-h,82px) + 4px)!important;box-sizing:border-box}
