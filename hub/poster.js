@@ -74,6 +74,11 @@
       { rate: 2.2, max: 9, make: function () { return { k: 'glow', c: pick(['#fffbe0', '#ffffff', '#e8ffb0']), x: R(0, 1), y: R(.4, .95), vx: R(-.01, .01), vy: R(-.05, -.02), s: R(.05, .1), life: R(2.4, 3.6), a: .7, add: 1 }; } },
       { rate: 1.6, max: 5, make: function () { return { k: 'spark', c: '#ffe680', x: R(.2, .8), y: R(.32, .62), s: R(.03, .05), life: R(.7, 1.1), pulse: 1, add: 1 }; } }
     ],
+    bell: [ // 钟环、铜绿火星、像素雨
+      { rate: 1.1, max: 3, make: function () { return { k: 'ring', c: '#e6a94f', x: R(.34, .66), y: R(.4, .62), s: R(.08, .13), life: 1.7, pop: 1 }; } },
+      { rate: 5, max: 14, make: function () { return { k: 'spark', c: pick(['#5fe0d2', '#e6a94f', '#ffffff', '#b388ff']), x: R(.12, .88), y: R(.32, .8), vx: R(-.012, .012), vy: R(-.07, -.02), s: R(.028, .055), life: R(.9, 1.7), pulse: 1, add: 1 }; } },
+      { rate: 9, max: 20, make: function () { return { k: 'px', c: pick(['#d7e4ff', '#9ec4ff', '#5fe0d2']), x: R(-.02, 1.02), y: -.05, vx: .015, vy: R(.32, .62), s: R(.01, .018), life: R(1.5, 2.4), a: .75 }; } }
+    ],
     stroke: [ // 墨点飘散 + 金粉 + 桃花瓣
       { rate: 2, max: 7, make: function () { return { k: 'spark', c: pick(['#ffe27a', '#fff3c4', '#f6c86a']), x: R(.25, .75), y: R(.45, .8), s: R(.03, .05), life: R(.7, 1.1), pulse: 1, add: 1 }; } },
       { rate: .9, max: 4, make: function () { return { k: 'dot', c: '#ffb3c1', x: R(0, 1), y: R(.1, .4), vx: R(.01, .03), vy: R(.03, .06), wob: .04, s: R(.018, .026), life: R(3, 4), tw: .5 }; } }
