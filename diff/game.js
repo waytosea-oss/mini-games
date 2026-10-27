@@ -6,6 +6,7 @@ const Q = new URLSearchParams(location.search);
 const DBG = { level: +Q.get('level') || 0, bot: Q.has('bot'), unlock: Q.has('unlock') };
 const IW = 1152, IH = 864, MAX_H = 5; let TOTAL_T = 300;
 const LV = window.LEVELS, CHS = window.POOLS;
+const bid = i => (LV[i] && LV[i].b) || i + 1; // 31–60 题复用 1–30 题原图（b=原图编号），只换 5 处更细微的改动
 /* ---------- 星级题库：同档随机抽图，抽完一轮才重复 ---------- */
 const BAND_START = []; { let a = 0; CHS.forEach(b => { BAND_START.push(a); a += b.slots; }); }
 const NSLOT = CHS.reduce((a, b) => a + b.slots, 0);
@@ -73,13 +74,13 @@ const totalStars = () => Object.values(SV.stars).reduce((a, b) => a + b, 0);
 /* ---------- 加载 ---------- */
 function loadImg(src) { return new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(im); im.src = src; }); }
 async function boot() {
-  const list = ['assets/logo.webp', ...LV.map((_, i) => `assets/th/${pad(i + 1)}.webp`)];
+  const list = ['assets/logo.webp', ...LV.map((_, i) => `assets/th/${pad(bid(i))}.webp`)];
   let n = 0;
   await Promise.all(list.map(s => loadImg(s).then(() => { n++; $('lbar').style.width = (n / list.length * 100) + '%'; })));
   // 背景马赛克
   const ms = $('mosaic'); let h = '';
   const order = [3, 18, 25, 9, 14, 0, 21, 27, 6, 12, 23, 29, 1, 16, 19, 10, 28, 4];
-  for (let k = 0; k < 2; k++) for (const i of order) h += `<img src="assets/th/${pad(i + 1)}.webp" alt="">`;
+  for (let k = 0; k < 2; k++) for (const i of order) h += `<img src="assets/th/${pad(bid(i))}.webp" alt="">`;
   ms.innerHTML = h;
   setToggles();
   if (DBG.level) { startLevel(Math.min(NSLOT, DBG.level) - 1); return; }
@@ -105,7 +106,7 @@ function showLevels() {
     h += `<div class="chap"><span class="cb" style="background:linear-gradient(${c.c[0]},${c.c[1]})">${c.n}</span><small>★ ${got}/${c.slots * 3}　·　题库 ${c.ids.length} 张随机出题</small></div><div class="lvgrid">`;
     for (let k = 0; k < c.slots; k++) {
       const i = b0 + k, id = i + 1, lock = id > SV.unlocked, s = SV.stars[id] || 0, pk = SV.pick[id];
-      h += `<div class="lv${lock ? ' lock' : ''}${id === SV.unlocked && !SV.stars[id] ? ' cur' : ''}" data-i="${i}">${pk ? `<img src="assets/th/${pad(pk)}.webp" alt="">` : `<span class="mys" style="background:linear-gradient(${c.c[0]},${c.c[1]})">?</span>`}<span class="no">${id}</span><div class="st">${[0, 1, 2].map(j => `<i class="${j < s ? 'on' : ''}"></i>`).join('')}</div></div>`;
+      h += `<div class="lv${lock ? ' lock' : ''}${id === SV.unlocked && !SV.stars[id] ? ' cur' : ''}" data-i="${i}">${pk ? `<img src="assets/th/${pad(bid(pk - 1))}.webp" alt="">` : `<span class="mys" style="background:linear-gradient(${c.c[0]},${c.c[1]})">?</span>`}<span class="no">${id}</span><div class="st">${[0, 1, 2].map(j => `<i class="${j < s ? 'on' : ''}"></i>`).join('')}</div></div>`;
     }
     h += '</div>';
   });
@@ -133,7 +134,7 @@ function layout() {
 }
 addEventListener('resize', () => { if (curScr === 'game' || $('game').classList.contains('on')) layout(); });
 function buildStage(st, lv, idx, withB) {
-  const L = LV[idx]; let h = `<img class="base" src="assets/lv/${pad(idx + 1)}a.webp" alt="">`;
+  const L = LV[idx]; let h = `<img class="base" src="assets/lv/${pad(bid(idx))}a.webp" alt="">`;
   if (withB) L.d.forEach((d, k) => { h += `<img src="assets/lv/${pad(idx + 1)}p${k}.webp" alt="" style="left:${d.p[0] / IW * 100}%;top:${d.p[1] / IH * 100}%;width:${d.s[0] / IW * 100}%;height:${d.s[1] / IH * 100}%">`; });
   h += `<svg class="ov" viewBox="0 0 ${IW} ${IH}" preserveAspectRatio="none"></svg>`;
   st.innerHTML = h; return st.querySelector('svg');
@@ -450,6 +451,7 @@ function runBot(tok) {
 }
 document.addEventListener('gesturestart', e => e.preventDefault());
 window.__G = G;
+window.__T = { n: NSLOT, start: i => startLevel(i), win: () => { for (let k = 0; k < G.lv.d.length; k++) if (!G.found.includes(k)) found(k); }, img: () => G.img };
 window.__dbg = { hint: () => useHint(true), find: k => found(k), wrong: (u, v) => guess(paneA, G.z.x + u * G.W * G.z.s, G.z.y + v * G.H * G.z.s), zoom: (s, u, v) => zoomTo(s, u * G.W, v * G.H, false) };
 boot();
 })();

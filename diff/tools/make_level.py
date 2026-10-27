@@ -9,7 +9,9 @@ import argparse,json,os,re,random,colorsys
 from PIL import Image, ImageFilter, ImageOps, ImageEnhance, ImageDraw
 H=os.path.dirname(os.path.abspath(__file__)); ROOT=os.path.join(H,'..')
 IW,IH=1152,864
-BAND={1:dict(size=(110,170),strength=1.0),2:dict(size=(80,125),strength=0.7),3:dict(size=(55,95),strength=0.45)}
+BAND={1:dict(size=(110,170),strength=1.0),2:dict(size=(80,125),strength=0.7),3:dict(size=(55,95),strength=0.45),
+      # 4–6 星：第 31–60 关用（同一批原图重新取 5 处更小、更淡的改动）
+      4:dict(size=(52,86),strength=0.42),5:dict(size=(48,78),strength=0.38),6:dict(size=(44,70),strength=0.34)}
 def saliency(img):
     e=img.convert('L').filter(ImageFilter.FIND_EDGES).filter(ImageFilter.BoxBlur(18))
     return e

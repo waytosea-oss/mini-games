@@ -1,4 +1,4 @@
-# 测量 30 张找茬图的难度：每处不同的面积、对比度，输出 tools/difficulty.json
+# 测量全部找茬题（1–30 原题 + 31–60 再探题）的难度：每处不同的面积、对比度，输出 tools/difficulty.json
 import json,re,os
 from PIL import Image, ImageChops, ImageStat
 H=os.path.dirname(os.path.abspath(__file__)); A=os.path.join(H,'..','assets','lv')
@@ -6,7 +6,7 @@ src=open(os.path.join(H,'..','levels.js'),encoding='utf8').read()
 LV=json.loads(re.search(r'window.LEVELS=(\[.*\]);',src,re.S).group(1))
 out=[]
 for i,L in enumerate(LV):
-    base=Image.open(f'{A}/{i+1:02d}a.webp').convert('RGB')
+    base=Image.open(f'{A}/{L.get("b",i+1):02d}a.webp').convert('RGB')
     ds=[]
     for k,d in enumerate(L['d']):
         p=Image.open(f'{A}/{i+1:02d}p{k}.webp').convert('RGBA')
