@@ -19,7 +19,7 @@ if(DBG.up){const a=DBG.up.split(',').map(Number);S.up={pow:a[0]||0,rate:a[1]||0,
 if(Q.get('pc')){S.pc=Q.get('pc').split(',').map(Number).concat([0,0,0,0,0]).slice(0,5);if(!S.pc[0])S.pc[0]=1;}
 if(Q.has('cur'))S.cur=+Q.get('cur')||0;
 if(Q.has('notip'))S.tip=1;
-if(DBG.level)S.unlocked=Math.max(S.unlocked,Math.min(30,DBG.level));
+if(DBG.level)S.unlocked=Math.max(S.unlocked,Math.min(NLV,DBG.level));
 if(DBG.mute){S.music=false;S.sfx=false;}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
 
@@ -47,8 +47,15 @@ const WORLDS=[
  {n:'显微镜下',s:'第三章 · 会冲刺的急速病毒出现了',bg:'bg3',tint:'#1a1440'},
  {n:'血管急救',s:'第四章 · 病毒在血液里横冲直撞',bg:'bg4',tint:'#3a0c14'},
  {n:'终极实验室',s:'第五章 · 与病毒大王的最终决战',bg:'bg5',tint:'#0a1630'},
+ // 第六~十章（31–60 关）：沿用五张场景图，换色调区分
+ {n:'冰封药柜',s:'第六章 · 病毒卷土重来，药柜结了冰',bg:'bg1',tint:'#0a2c4a'},
+ {n:'菌落迷宫',s:'第七章 · 铁甲病毒成群结队',bg:'bg2',tint:'#25360f'},
+ {n:'细胞深处',s:'第八章 · 急速病毒更多更快',bg:'bg3',tint:'#2a0f40'},
+ {n:'心脏要塞',s:'第九章 · 守住心脏的最后防线',bg:'bg4',tint:'#40100a'},
+ {n:'病毒母巢',s:'第十章 · 捣毁病毒母巢，彻底治愈',bg:'bg5',tint:'#061028'},
 ];
-const BOSSN=['病毒大王·初','铁甲大王','急速大王','血魔大王','病毒大王·终极'];
+const NW=WORLDS.length, NLV=NW*6;
+const BOSSN=['病毒大王·初','铁甲大王','急速大王','血魔大王','病毒大王·终极','寒霜大王','菌落女王','疾影大王','心魔大王','病毒母巢之主'];
 const UPS=[
  {k:'pow',n:'火力',d:l=>`每颗药丸伤害 ${pdmg(l)} → ${pdmg(l+1)}`,max:40,cost:l=>Math.round(30*Math.pow(1.2,l)),icon:'pow'},
  {k:'rate',n:'射速',d:l=>`每秒发射 ${prate(l).toFixed(1)} → ${prate(l+1).toFixed(1)} 颗`,max:15,cost:l=>Math.round(50*Math.pow(1.33,l)),icon:'rate'},
@@ -73,25 +80,26 @@ const ICONS={
 // 病毒血量（H0 = 本关最大号病毒血量）：100 起步，每关 ×1.13，取整到 10
 const TIERM=[0.3,0.5,0.75,1];
 function r10(v){return Math.max(10,Math.round(v/10)*10)}
+// 31–60 关：每关血量 ×1.04（玩家升级在后期放缓，继续 ×1.13 会断崖），难度改由数量、铁甲/急速占比、速度递进
 function levelInfo(L){
- const w=Math.min(4,Math.floor((L-1)/6)), i=(L-1)%6, boss=i===5;
- const H0=r10(100*Math.pow(1.13,L-1));
+ const w=Math.min(NW-1,Math.floor((L-1)/6)), i=(L-1)%6, boss=i===5;
+ const H0=r10(L<=30?100*Math.pow(1.13,L-1):100*Math.pow(1.13,29)*Math.pow(1.04,L-30));
  const R=mulberry(L*7919+13);
  const q=[];
- const drift=24+L*1.3, side=38+L*1.6;
+ const drift=L<=30?24+L*1.3:63+(L-30)*0.55, side=L<=30?38+L*1.6:86+(L-30)*0.6;
  if(!boss){
-  const n=5+Math.floor(i*0.9)+w;
+  const n=5+Math.floor(i*0.9)+Math.min(w,4)+(w>4?Math.ceil((w-4)/2):0);
   for(let k=0;k<n;k++){
-   let tier=R()<0.18+i*0.08+w*0.05?3:R()<0.6?2:1;
+   let tier=R()<Math.min(0.6,0.18+i*0.08+w*0.05)?3:R()<0.6?2:1;
    if(L<=2)tier=k<2?1:2;
    let kind='n';
-   if(w>=1&&R()<0.12+w*0.05)kind='armor';
-   else if(w>=2&&R()<0.18)kind='fast';
+   if(w>=1&&R()<Math.min(0.36,0.12+w*0.05))kind='armor';
+   else if(w>=2&&R()<(w>4?0.24:0.18))kind='fast';
    const hp=r10(H0*TIERM[tier]*(0.85+R()*0.3)*(kind==='fast'?0.7:1));
-   q.push({delay:k===0?0.6:Math.max(1.1,3.4-L*0.05+R()*1.8-w*0.2),tier,hp,c:Math.floor(R()*3),kind});
+   q.push({delay:k===0?0.6:Math.max(1.1,3.4-Math.min(L,46)*0.05+R()*1.8-Math.min(w,4)*0.2),tier,hp,c:Math.floor(R()*3),kind});
   }
  }
- return {L,w,i,boss,H0,q,drift,side,bossHp:boss?r10(H0*32*(1+w*0.15)):0};
+ return {L,w,i,boss,H0,q,drift,side,bossHp:boss?r10(H0*32*(1+Math.min(w,4)*0.15+Math.max(0,w-4)*0.04)):0};
 }
 
 // ================= assets =================
@@ -296,12 +304,12 @@ let shakeT=0,shakeA=0,flashT=0,flashCol='255,60,60';
 let bgDrift=0;
 const ambient=[];
 function stats(){const c=G?G.color:S.cur,sp=pcSpec(c,S.pc[c]);const base=pdmg(S.up.pow),r=prate(S.up.rate);return{dmg:base*sp.dmg,rate:r*sp.rate,coin:1+S.up.coin*0.2,sp,c};}
-function songFor(info){return info.boss?['boss',0]:[['bright',0],['funky',0],['bright',-3],['funky',2],['funky',-2]][info.w];}
+function songFor(info){return info.boss?['boss',0]:[['bright',0],['funky',0],['bright',-3],['funky',2],['funky',-2],['bright',2],['funky',-3],['bright',-2],['funky',3],['funky',-1]][info.w];}
 function grantColors(){const got=[];for(let i=1;i<5;i++)if(!S.pc[i]&&S.unlocked>=COLORS[i].unlock){S.pc[i]=1;got.push(i);}if(got.length)save();return got;}
 function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
 
 function startLevel(L){
- L=clamp(L,1,30);try{GT.lv(L)}catch(_e){}
+ L=clamp(L,1,NLV);try{GT.lv(L)}catch(_e){}
  const info=levelInfo(L);
  const nu=grantColors();
  if(!S.pc[S.cur])S.cur=0;
@@ -712,18 +720,18 @@ function updHud(){
 const SCREENS=['title','levels','shop','tip','pause','win','lose','ending'];
 function showScreen(id){SCREENS.forEach(s=>$(s).classList.toggle('on',s===id));if(id&&id!=='pause')$('hud').classList.remove('on');document.querySelectorAll('.cval').forEach(e=>e.textContent=fmt(S.coins));}
 function goTitle(){state='menu';G=null;menuWorld=0;showScreen('title');Music.play('menu');}
-function goLevels(w){state='menu';G=null;if(w==null)w=Math.min(4,Math.floor((Math.min(S.unlocked,30)-1)/6));menuWorld=w;renderLevels();showScreen('levels');Music.play('menu');}
+function goLevels(w){state='menu';G=null;if(w==null)w=Math.min(NW-1,Math.floor((Math.min(S.unlocked,NLV)-1)/6));menuWorld=w;renderLevels();showScreen('levels');Music.play('menu');}
 function renderLevels(){
  const w=menuWorld;$('wName').textContent=WORLDS[w].n;$('wSub').textContent=WORLDS[w].s;$('lvBossN').textContent='本章BOSS · 第'+(w*6+6)+'关';
- $('wPrev').disabled=w===0;$('wNext').disabled=w===4;
+ $('wPrev').disabled=w===0;$('wNext').disabled=w===NW-1;
  let h='';for(let i=0;i<6;i++){const L=w*6+i+1;const lock=L>S.unlocked;const st=S.stars[L]||0;const boss=i===5;
   h+=`<button class="lv${boss?' boss':''}${lock?' lock':''}" data-l="${L}">${lock?'<svg viewBox="0 0 24 24" width="30" height="30"><rect x="5" y="11" width="14" height="10" rx="2" fill="rgba(255,255,255,.5)"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="rgba(255,255,255,.5)" stroke-width="2.5" fill="none"/></svg>':L}${!lock?`<span class="st">${[0,1,2].map(k=>k<st?'★':'<i>★</i>').join('')}</span>`:''}${boss?'<span class="bt">BOSS</span>':''}</button>`;}
  $('wGrid').innerHTML=h;
- $('wDots').innerHTML=[0,1,2,3,4].map(k=>`<b class="${k===w?'on':''}"></b>`).join('');
+ $('wDots').innerHTML=WORLDS.map((_,k)=>`<b class="${k===w?'on':''}"></b>`).join('');
  $('wGrid').querySelectorAll('.lv').forEach(b=>b.onclick=()=>{const L=+b.dataset.l;if(L>S.unlocked){sfx('deny');toast('先通过前面的关卡吧');return;}sfx('click');startLevel(L);});
 }
 let shopNext=1;
-function goShop(next){shopNext=next||Math.min(S.unlocked,30);state='menu';G=null;grantColors();renderShop();showScreen('shop');$('shop').scrollTop=0;Music.play('menu');}
+function goShop(next){shopNext=next||Math.min(S.unlocked,NLV);state='menu';G=null;grantColors();renderShop();showScreen('shop');$('shop').scrollTop=0;Music.play('menu');}
 function refreshCoins(){document.querySelectorAll('.cval').forEach(e=>e.textContent=fmt(S.coins));}
 function renderShop(){
  let h='';for(const u of UPS){const l=S.up[u.k];const mx=l>=u.max;const c=mx?0:u.cost(l);const can=!mx&&S.coins>=c;
@@ -750,10 +758,10 @@ function togglePause(){if(state!=='play'||$('tip').classList.contains('on'))retu
 function winLevel(){
  state='end';const L=G.L;const stars=G.hurt===0&&G.esc===0?3:G.hurt<=1&&G.esc<=2?2:1;try{GT.win(L,{stars:stars,coins:G.earned,boss:G.info.boss?1:0,hurt:G.hurt,esc:G.esc,c:G.color})}catch(_e){}
  const bonus=Math.round((30+L*15)*stats().coin*(G.info.boss?2:1));S.coins+=bonus;G.earned+=bonus;
- S.stars[L]=Math.max(S.stars[L]||0,stars);S.unlocked=Math.max(S.unlocked,Math.min(30,L+1));save();
+ S.stars[L]=Math.max(S.stars[L]||0,stars);S.unlocked=Math.max(S.unlocked,Math.min(NLV,L+1));save();
  $('hud').classList.remove('on');
  Music.stinger('win');Music.play('menu');
- if(L===30){showScreen('ending');return;}
+ if(L===NLV){showScreen('ending');return;}
  const nu=COLORS.findIndex((c,i)=>i>0&&!S.pc[i]&&c.unlock===L+1);
  $('wSubT').textContent=G.info.boss?`击败了 ${BOSSN[G.info.w]}！新世界已解锁`:nu>0?`第 ${L} 关 完成！下一关解锁${COLORS[nu].n}色药丸·${COLORS[nu].k}`:`第 ${L} 关 完成！${G.esc?'漏网病毒 '+G.esc+' 个':''}`;$('wEarn').textContent=fmt(G.earned);
  $('wRib').textContent=G.info.boss?'BOSS 击败！':stars===3?'完美守护！':'守护成功！';
@@ -765,7 +773,7 @@ function loseLevel(why){
  state='end';G.lost=true;try{GT.fail(G.L,{r:why||'virus',revived:G.revived?1:0,c:G.color})}catch(_e){}$('hud').classList.remove('on');Music.stinger('lose');Music.play('menu');
  const cost=reviveCost();$('bRevive').innerHTML=`<span class="coin" style="width:22px;height:22px;font-size:13px;vertical-align:-4px">¥</span> ${fmt(cost)} 立即复活`;
  $('bRevive').style.display=G.revived?'none':'';
- $('lSub').textContent=['防护罩被病毒撞破了……','培养皿失守了……','显微镜下一片混乱……','血管告急！','实验室沦陷了……'][G.info.w]+' 升级火力和射速再来！';
+ $('lSub').textContent=['防护罩被病毒撞破了……','培养皿失守了……','显微镜下一片混乱……','血管告急！','实验室沦陷了……','药柜被冻住了……','菌落蔓延开了……','细胞失守了……','心脏要塞告急！','母巢又扩张了……'][G.info.w]+' 升级火力和射速再来！';
  showScreen('lose');
 }
 function reviveCost(){return Math.round(80+G.L*25);}
@@ -782,7 +790,7 @@ on('bStart',()=>{sfx('click');try{GT.title()}catch(_e){}goLevels();});
 on('bShop1',()=>{sfx('click');goShop();});on('bShop2',()=>{sfx('click');goShop();});
 on('bBack1',()=>{sfx('click');goTitle();});on('bBack2',()=>{sfx('click');goLevels();});
 on('bShopGo',()=>{sfx('click');startLevel(shopNext);});
-on('wPrev',()=>{if(menuWorld>0){menuWorld--;renderLevels();sfx('click');}});on('wNext',()=>{if(menuWorld<4){menuWorld++;renderLevels();sfx('click');}});
+on('wPrev',()=>{if(menuWorld>0){menuWorld--;renderLevels();sfx('click');}});on('wNext',()=>{if(menuWorld<NW-1){menuWorld++;renderLevels();sfx('click');}});
 ['bMus1','bMus2'].forEach(id=>on(id,()=>{setMusic(!S.music);sfx('click');try{GT.sound('music',S.music)}catch(_e){}}));
 ['bSfx1','bSfx2'].forEach(id=>on(id,()=>{setSfx(!S.sfx);sfx('click');try{GT.sound('sfx',S.sfx)}catch(_e){}}));
 ['bVib1','bVib2'].forEach(id=>on(id,()=>{S.vib=!S.vib;save();refreshToggles();sfx('click');if(S.vib)vibrate(25);try{GT.sound('vib',S.vib)}catch(_e){}}));
@@ -792,7 +800,7 @@ $('bPause').addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefa
 on('bResume',()=>togglePause());
 on('bRestart',()=>{sfx('click');startLevel(G.L);});
 on('bQuit',()=>{sfx('click');try{GT.quit('menu')}catch(_e){}goLevels();});
-on('bNext',()=>{sfx('click');startLevel(Math.min(30,G.L+1));});
+on('bNext',()=>{sfx('click');startLevel(Math.min(NLV,G.L+1));});
 on('bWinShop',()=>{sfx('click');goShop(Math.min(30,G.L+1));});
 on('bWinMenu',()=>{sfx('click');goLevels();});
 on('bRetry',()=>{sfx('click');startLevel(G.L);});
@@ -804,7 +812,7 @@ on('bEndOk',()=>{sfx('click');goLevels(4);});
 function goHub(e){if(e)e.stopPropagation();save();try{sfx('click');}catch(_){}try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){}location.href='../';}
 ['bHub0','bHubP','bHubW','bHubL','bHubE'].forEach(id=>on(id,goHub));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='play'&&!paused)togglePause();if(AU.ctx)AU.ctx.suspend();}else if(AU.ctx)AU.ctx.resume();});
-(()=>{let sx=null;const el=$('levels');el.addEventListener('pointerdown',e=>{sx=e.clientX;});el.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>60){if(d<0&&menuWorld<4)menuWorld++;else if(d>0&&menuWorld>0)menuWorld--;else return;renderLevels();sfx('click');}});})();
+(()=>{let sx=null;const el=$('levels');el.addEventListener('pointerdown',e=>{sx=e.clientX;});el.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>60){if(d<0&&menuWorld<NW-1)menuWorld++;else if(d>0&&menuWorld>0)menuWorld--;else return;renderLevels();sfx('click');}});})();
 
 // ================= loop =================
 let last=performance.now();
@@ -814,6 +822,7 @@ function frame(now){
  const steps=dt>0.034?3:dt>0.02?2:1;for(let i=0;i<steps;i++)update(dt/steps);
  updFx(dt);render();requestAnimationFrame(frame);
 }
+window.__T={n:NLV,start:L=>startLevel(L),win:()=>winLevel()};
 window.__dbg={get state(){return state},get G(){return G},S,doc,start:startLevel,setColor,UPS,save,levelInfo,pcSpec,stats,closeTip,get W(){return W},get FY(){return FY},spawnVirus:(e,x,y,vx,vy)=>spawnVirus(e,x,y,vx,vy)};
 loadAll(()=>{
  for(const k of['v_red','v_yellow','v_blue']){const im=IMG[k];VS.push({img:im,white:tinted(im,'#fff',1),ice:tinted(im,'#bfefff',0.55)});}
