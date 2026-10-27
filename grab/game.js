@@ -21,23 +21,24 @@ const TYPES = [
 const LAMB = TYPES.length - 1;
 const IMG = {};
 const R_WALL = 160; // 世界坐标：烤架内半径
-const MAXL = 9, WALLCAT = 1 << 15;
+const NLV = 60, MAXL = 9, WALLCAT = 1 << 15;
 
 /* ---------- 存档 ---------- */
 const SKEY = 'yeshi_luchuan_v1';
 let save = { unlocked: 1, stars: {}, best: {}, props: { out: 3, mag: 3, shuf: 3 }, music: true, sfx: true, lambs: 0, lambDone: {}, star3Done: {}, money: 0 };
 try { const s = JSON.parse(localStorage.getItem(SKEY)); if (s && s.props) save = Object.assign(save, s); } catch (e) { }
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (e) { } };
-if (DEBUG.unlock) save.unlocked = 30;
+if (DEBUG.unlock) save.unlocked = NLV;
 
 /* ---------- 关卡 ---------- */
 function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function levelCfg(n) {
   const nTypes = Math.min(13, 2 + n);
-  const triples = n === 1 ? 3 : Math.min(36, Math.round(3 + n * 1.12));
-  const lambT = n < 2 ? 0 : n >= 15 ? 2 : 1;
+  // 31–60（第二季）：烤架放不下更多串，数量只缓升到 40 组；难度改由每件限时收紧、小羊增多来推
+  const triples = n === 1 ? 3 : n <= 30 ? Math.min(36, Math.round(3 + n * 1.12)) : Math.min(40, 36 + Math.floor((n - 30) / 8));
+  const lambT = n < 2 ? 0 : n >= 45 ? 3 : n >= 15 ? 2 : 1;
   const items = triples * 3 + lambT * 3;
-  const perItem = Math.max(2.15, 2.9 - n * 0.025);
+  const perItem = n <= 30 ? Math.max(2.15, 2.9 - n * 0.025) : 2.15 - (n - 30) * 0.012;
   const time = Math.round((25 + items * perItem) / 5) * 5;
   const S = items <= 24 ? 96 : items <= 45 ? 90 : items <= 70 ? 84 : items <= 95 ? 78 : 74;
   return { n, nTypes, triples, lambT, items, time, S, newType: n >= 2 && nTypes <= 13 && Math.min(13, 1 + n) < nTypes ? TYPES[nTypes - 1] : null };
@@ -222,7 +223,7 @@ const G = window.G = {
 function topLayer() { let m = 0; for (const it of G.items) if (it.layer > m) m = it.layer; return m; }
 
 function startLevel(n) {
-  n = clamp(n | 0, 1, 30); try{GT.lv(n)}catch(_e){}
+  n = clamp(n | 0, 1, NLV); try{GT.lv(n)}catch(_e){}
   const cfg = levelCfg(n); G.cfg = cfg; G.level = n;
   newEngine(); spriteCache = {};
   G.items = []; G.tray = []; G.flyers = []; G.parts = []; G.texts = []; G.banner = null;
@@ -429,14 +430,14 @@ function endWin() {
   save.lambs = (save.lambs || 0) + G.lambs;
   persist();
   SND.play('win');
-  $('wTitle').textContent = n === 30 ? '夜市撸串王！' : ['收摊大吉！', '生意兴隆！', '卖爆啦！'][st - 1];
+  $('wTitle').textContent = n === NLV ? '夜市撸串王！' : ['收摊大吉！', '生意兴隆！', '卖爆啦！'][st - 1];
   const sp = $('wStars').children; for (let i = 0; i < 3; i++) { sp[i].className = ''; }
   for (let i = 0; i < st; i++) setTimeout(() => { sp[i].className = 'on'; SND.play('star', i); }, 380 + i * 280);
   $('wScore').textContent = '¥ ' + G.score;
   const tl = Math.ceil(G.time);
   $('wInfo').innerHTML = `剩余时间 <b>${Math.floor(tl / 60)}:${String(tl % 60).padStart(2, '0')}</b>` + (G.lambsTotal ? `　小羊 <b>${G.lambs}/${G.lambsTotal}</b>` : '');
   $('wReward').innerHTML = rewards.length ? rewards.map(k => `<span class="reward"><img src="assets/ic_${k === 'out' ? 'out' : k === 'mag' ? 'magnet' : 'shuffle'}.webp">${PROP_NAMES[k]} +1</span>`).join(' ') : '';
-  $('wNext').style.display = n < 30 ? '' : 'none';
+  $('wNext').style.display = n < NLV ? '' : 'none';
   confetti();
   setTimeout(() => showScreen('win'), 250);
 }
@@ -511,7 +512,7 @@ function toggleSfx() { save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(
 function openMenu() {
   G.state = 'menu'; SND.duck(false);
   const tot = Object.values(save.stars).reduce((a, b) => a + b, 0);
-  $('mStat').textContent = `已解锁 ${save.unlocked}/30 关 · ★${tot} · 累计营收 ¥${save.money || 0}`;
+  $('mStat').textContent = `已解锁 ${save.unlocked}/${NLV} 关 · ★${tot} · 累计营收 ¥${save.money || 0}`;
   $('bPlay').textContent = save.unlocked > 1 ? `继续营业 · 第${save.unlocked}关` : '开始营业';
   demoPile(); showScreen('menu');
 }
@@ -520,7 +521,7 @@ function openLevels() {
   const g = $('grid'); g.innerHTML = '';
   const tot = Object.values(save.stars).reduce((a, b) => a + b, 0);
   $('lvTot').textContent = `★ ${tot} / 90　　小羊收集 🐑 ${save.lambs || 0}`;
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= NLV; i++) {
     const b = document.createElement('button'); const lock = i > save.unlocked; const s = save.stars[i] || 0;
     b.className = 'lv' + (lock ? ' lock' : '') + (i === save.unlocked ? ' cur' : '');
     b.innerHTML = lock ? '<svg width="22" height="26" viewBox="0 0 22 26"><rect x="2" y="11" width="18" height="14" rx="3" fill="#a8957f"/><path d="M6 11V8a5 5 0 0 1 10 0v3" stroke="#a8957f" stroke-width="3" fill="none"/></svg>' : `${i}<div class="s">${[0, 1, 2].map(k => k < s ? '<i>★</i>' : '☆').join('')}</div>`;
@@ -876,5 +877,6 @@ load().then(() => {
   $('ltxt').textContent = '开张啦！';
   if (DEBUG.level) { startLevel(DEBUG.level); } else openMenu();
 });
+window.__T = { n: NLV, start: n => startLevel(n), win: () => endWin() };
 window.__dbg = { cands: () => visibleCands().map(c => ({ t: c.it.t, x: c.p[0], y: c.p[1] })), L: () => L, startLevel, useProp, pickItem, hitTest, openLevels, openMenu, pauseGame, levelCfg, save: () => save, endWin, endFail };
 })();
