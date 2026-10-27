@@ -532,7 +532,7 @@ function toLevels() {
     b.onclick = () => { if (lock) { SND.play('locked'); toast('先通过前面的关卡吧'); return; } SND.play('click'); startLevel(i); };
     g.appendChild(b);
   }
-  showScr('levels');
+  showScr('levels'); const cur = g.querySelector('.lv.cur'); if (cur) setTimeout(() => cur.scrollIntoView({ block: 'center' }), 30);
 }
 $('bPlay').onclick = () => { SND.play('click'); try{GT.title('play')}catch(_e){} startLevel(save.unlocked); };
 $('bLevels').onclick = () => { SND.play('click'); try{GT.title('levels')}catch(_e){} toLevels(); };
@@ -568,7 +568,7 @@ function frame(t) {
   let dt = Math.min(.05, (t - last) / 1000); last = t; fpsAcc += dt; fpsN++; if (fpsAcc > 1) { G.fps = Math.round(fpsN / fpsAcc); fpsAcc = 0; fpsN = 0; }
   dt *= DEBUG.speed; update(dt); draw(); requestAnimationFrame(frame);
 }
-window.__dbg = {
+window.__T = window.__dbg = {
   L: () => L, movable: () => G.cars.filter(movable).map(v => { const [x, y] = vScreen(v); return { id: v.id, x, y }; }),
   blocked: () => G.cars.filter(v => v.state === 'park' && !movable(v) && v.clamp <= 0).map(v => { const [x, y] = vScreen(v); return { id: v.id, x, y }; }),
   cars: () => G.cars.filter(v => v.state === 'park').map(v => { const [x, y] = vScreen(v); return { id: v.id, x, y, clamp: v.clamp, rev: v.rev, kind: v.kind }; }),
