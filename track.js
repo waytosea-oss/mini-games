@@ -62,6 +62,8 @@
     var refHost = '', refPage = '';
     try { if (D.referrer) { var a = D.createElement('a'); a.href = D.referrer; refHost = a.hostname || ''; if (refHost === L.hostname) { var rs = a.pathname.replace(/index\.html?$/, '').split('/').filter(Boolean), rl = rs[rs.length - 1] || ''; refPage = GAMES.indexOf(rl) >= 0 ? rl : 'hub'; refHost = ''; } } } catch (e) {}
     var utm = cut([qs.utm_source, qs.utm_medium, qs.utm_campaign].filter(function (x) { return x; }).join('/'), 80);
+    /* v2 版本标记：写进 utm 字段（服务端原样保存），便于在统计里区分 games-v2 */
+    utm = cut('v2' + (utm ? '|' + utm : ''), 80);
     var ctx = {
       host: cut(L.hostname, 60), page: page, dev: dev, os: os, br: br, wx: wx, lang: cut(N.language || '', 12),
       sw: (W.screen && screen.width) || 0, sh: (W.screen && screen.height) || 0, ref: cut(refHost, 80), utm: utm, from: cut(qs.from || '', 40),
