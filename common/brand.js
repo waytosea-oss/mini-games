@@ -5,7 +5,7 @@
 (function (W) {
   'use strict';
   var D = document, me = D.currentScript, base = (me && me.src) ? me.src.replace(/[^\/]*$/, '') : '../common/';
-  var GAME = (me && me.getAttribute('data-game')) || '', SCR = (me && me.getAttribute('data-screen')) || 'menu', TONE = (me && me.getAttribute('data-tone')) || '';
+  var WIN = (me && me.getAttribute('data-win')) || '', GAME = (me && me.getAttribute('data-game')) || '', SCR = (me && me.getAttribute('data-screen')) || 'menu', TONE = (me && me.getAttribute('data-tone')) || '';
   var LIST = [
     ['shooter', '星际雷霆', '驾驶战机，闯 8 大星域'],
     ['gems', '宝石大盗', '妙手神偷，撬开宝库'],
@@ -52,12 +52,21 @@
     opt = opt || {}; if (typeof host === 'string') host = D.getElementById(host); if (!host) return;
     var old = host.querySelector('.xpromo'); if (old) old.remove();
     var g = CPL.pick(), a = D.createElement('a');
-    a.className = 'xpromo' + (opt.dark ? ' dark' : ''); a.href = '../' + g[0] + '/';
+    a.className = 'xpromo'; a.href = '../' + g[0] + '/';
     a.innerHTML = '<img src="../hub/icons/' + g[0] + '-s.webp" alt=""><span class="xt"><small>游戏屋 · 再玩一款</small><b>' + g[1] + '</b><i>' + g[2] + '</i></span><span class="xg">去玩</span>';
     a.addEventListener('click', function (e) { e.stopPropagation(); try { W.GT && W.GT.ev('xpromo', { to: g[0] }); } catch (_) { } try { W.KIT && W.KIT.saveFn && W.KIT.saveFn(); } catch (_) { } try { if (W.CPL.onLeave) W.CPL.onLeave(); } catch (_) { } });
+    if (opt.dark == null) opt.dark = isDark(host); if (opt.dark) a.classList.add('dark');
     if (opt.before) host.insertBefore(a, opt.before); else host.appendChild(a);
     return a;
   };
-  var boot = function () { if (SCR) CPL.mount(SCR, TONE); };
+  var isDark = function (el) { var m = getComputedStyle(el).color.match(/\d+/g); if (!m) return false; return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) < 128; };
+  /* 通关页自动挂互推：data-win 指定通关屏 id，屏幕每次出现换一款 */
+  CPL.watchWin = function (id) {
+    var s = D.getElementById(id); if (!s) return; var panel = s.querySelector('.panel') || s, was = false;
+    var vis = function () { var cs = getComputedStyle(s); return cs.display !== 'none' && cs.visibility !== 'hidden' && s.getClientRects().length > 0; };
+    var chk = function () { var v = vis(); if (v && !was) CPL.promo(panel, { dark: isDark(panel) }); was = v; };
+    new MutationObserver(chk).observe(s, { attributes: true, attributeFilter: ['class', 'style'] }); chk();
+  };
+  var boot = function () { if (SCR) CPL.mount(SCR, TONE); if (WIN) CPL.watchWin(WIN); };
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', boot); else boot();
 })(window);

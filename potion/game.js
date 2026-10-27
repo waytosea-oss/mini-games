@@ -987,7 +987,7 @@ function openWin() {
   showScreen('win'); SND.play('win');
   for (let k = 0; k < st; k++) setTimeout(() => { sp[k].classList.add('on'); SND.play('star', k); }, 500 + k * 280);
   $('wNext').style.display = G.idx < LEVELS.length - 1 ? '' : 'none';
-  if (G.idx === LEVELS.length - 1) $('wInfo').innerHTML += '<br><b>全部 30 关通关！你是最棒的魔药师！</b>';
+  if (G.idx === LEVELS.length - 1) $('wInfo').innerHTML += `<br><b>全部 ${LEVELS.length} 关通关！你是最棒的魔药师！</b>`;
   for (let k = 0; k < 40; k++) PARTS.push({ x: rnd(0, W), y: rnd(-40, H * .3), vx: rnd(-40, 40), vy: rnd(40, 160), g: 60, life: rnd(1.5, 2.5), t: 0, s: rnd(4, 9), col: PAL[k % 9][1], type: 'spark' });
   if (DBG.bot) setTimeout(() => { if (mode === 'play' && G && G.idx < LEVELS.length - 1) startLevel(G.idx + 1); }, 1500 / DBG.speed);
 }
@@ -1081,4 +1081,6 @@ boot().then(() => {
   }, 250);
 });
 window.__potion = { get G() { return G; }, get S() { return S; }, startLevel, useProp, tap, doMove, LY, openMenu, openLevels, PARTS };
+/* 自动化自检钩子（仅 ?selftest 时挂出） */
+if (Q.has('selftest')) window.__T = { win: () => { if (G) { G.ended = true; G.winShown = true; openWin(); } }, start: i => startLevel(i), n: () => LEVELS.length };
 })();
