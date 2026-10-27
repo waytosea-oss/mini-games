@@ -865,6 +865,7 @@ function frame(t) {
 window.addEventListener('resize', () => { layout(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { SND.stopMusic(); if (G.mode === 'play') pause(); } else if (save.music && G.mode !== 'load') SND.startMusic(); });
 window.__G = G; window.__LG = LG; window.__L = () => L; window.__dbg = { pause: () => pause(), openRank: () => openRank(), doMerge: () => doMerge(), doDeal: () => doDeal(), showFail: () => showFail() }; window.__save = () => save;
+window.__T = { n: 1, start: () => startPlay(true), win: () => showWin() };
 
 /* ---------- 加载 ---------- */
 function load() {
