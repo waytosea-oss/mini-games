@@ -42,16 +42,17 @@ function polyArea(P) { let s = 0; for (let i = 0, j = P.length - 1; i < P.length
 function polysOverlap(A, B, ba, bb) { if (ba[2] < bb[0] || bb[2] < ba[0] || ba[3] < bb[1] || bb[3] < ba[1]) return 0; let n = 0, k = 0; for (let x = Math.max(ba[0], bb[0]); x < Math.min(ba[2], bb[2]); x += 8) for (let y = Math.max(ba[1], bb[1]); y < Math.min(ba[3], bb[3]); y += 8) { if (pip(x, y, A) && pip(x, y, B)) n++; k++; } return n * 64; }
 /* ---------- 难度曲线 ---------- */
 function cfg(n) {
-  const C = [2, 3, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18][n - 1];
-  const K = Math.min(9, [2, 2, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9][n - 1]);
+  // 31–60（第二季）：宝箱数在 16~20 之间缓升（板面放不下更多），难度主要来自打乱幅度、遮挡层数与托盘余量
+  const C = n <= 30 ? [2, 3, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18][n - 1] : Math.min(20, 16 + Math.floor((n - 31) / 7));
+  const K = Math.min(9, [2, 2, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9][Math.min(30, n) - 1]);
   const G = C * 3;
   const GR = G <= 27 ? 17 : G <= 36 ? 16 : G <= 45 ? 15 : 14.2;
   const per = n <= 2 ? 2 : n <= 6 ? 2.3 : n <= 14 ? 2.45 : 2.6;
   const P = Math.max(3, Math.round(G / per));
   const cap = 5;
   const peak = n <= 1 ? 1 : n <= 3 ? 2 : n <= 8 ? 3 : 4; // 求解器最大托盘占用上限（留余量）
-  const swaps = n <= 1 ? 0 : Math.round(4 + n * 2.2);
-  const win = n <= 3 ? 4 : n <= 10 ? 7 : n <= 20 ? 10 : 13;
+  const swaps = n <= 1 ? 0 : n <= 30 ? Math.round(4 + n * 2.2) : Math.round(70 + (n - 30) * 2.6);
+  const win = n <= 3 ? 4 : n <= 10 ? 7 : n <= 20 ? 10 : n <= 30 ? 13 : n <= 45 ? 15 : 17;
   const mats = n <= 2 ? ['wood', 'gold'] : n <= 5 ? ['wood', 'gold', 'marble'] : n <= 9 ? ['wood', 'gold', 'marble', 'jade'] : MATS;
   return { n, C, K, G, GR, P, cap, peak, swaps, win, mats };
 }
@@ -165,7 +166,9 @@ function simulate(lv, cap, opt = {}) {
   }
   return { ok: tray.length === 0, peak, order };
 }
-function genLevel(n, salt = 0) {
+// 每关种子偏移：由 tools/pick_salt.js 按「带噪声玩家通关率」平滑目标曲线挑选（1–30 关仅改动偏离过大的 6 关）
+const SALT = [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,6,7,0,0,0,5,11,0,1,8,12,11,13,7,2,0,1,5,5,3,7,3,6,0,6,8,9,5,3,0,13,8,0,0,2,0,0,0,0];
+function genLevel(n, salt = SALT[n - 1] || 0) {
   const c = cfg(n);
   for (let attempt = 0; attempt < 400; attempt++) {
     const rnd = mulberry(n * 9973 + attempt * 131 + salt * 7 + 17);
@@ -201,6 +204,6 @@ function genLevel(n, salt = 0) {
   }
   return null;
 }
-return { BW, BH, cfg, genLevel, simulate, pip, circleHits, edgeDist, bbox, MATS };
+return { COUNT: SALT.length, BW, BH, cfg, genLevel, simulate, pip, circleHits, edgeDist, bbox, MATS };
 })();
 if (typeof module !== 'undefined') module.exports = GEN;

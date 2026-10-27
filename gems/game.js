@@ -38,7 +38,7 @@ const SKEY = 'gem_thief_v1';
 let save = { unlocked: 1, stars: {}, props: { slot: 2, clear: 2, bomb: 2 }, music: true, sfx: true, tut: {}, cleared: {} };
 try { const s = JSON.parse(localStorage.getItem(SKEY)); if (s && s.props) save = Object.assign(save, s); } catch (e) { }
 const persist = () => { try { localStorage.setItem(SKEY, JSON.stringify(save)); } catch (e) { } };
-if (DEBUG.unlock) save.unlocked = 30;
+if (DEBUG.unlock) save.unlocked = GEN.COUNT;
 const PROPS = [
   { k: 'slot', name: '加宝位', img: 'ic_slot', tip: '托盘多一个宝位' },
   { k: 'clear', name: '清空托盘', img: 'ic_clear', tip: '托盘宝石收进口袋' },
@@ -229,7 +229,7 @@ function drawLid(x0, y0, w, h, ci, t) { // t:0 开 → 1 合
 const G = { state: 'menu', t: 0, n: 1, parts: [], texts: [], fly: [], tools: [], pouch: [] };
 window.G = G;
 function startLevel(n) {
-  n = clamp(n, 1, 30); try{GT.lv(n)}catch(_e){}
+  n = clamp(n, 1, GEN.COUNT); try{GT.lv(n)}catch(_e){}
   const lv = GEN.genLevel(n);
   G.n = n; G.lv = lv; G.state = 'play'; G.t = 0; G.over = false;
   G.panels = lv.panels.map(p => Object.assign({}, p, { gems: p.gems.slice(), left: p.gems.length, alive: true, fall: null, spr: null, intro: 0.12 + p.id * 0.045, flash: 0, wob: 0 }));
@@ -725,7 +725,7 @@ function win() {
   const stars = G.used === 0 ? 3 : G.used <= 2 ? 2 : 1; try{GT.win(G.n,{stars:stars,props:G.used,gems:G.total})}catch(_e){}
   const first = !save.cleared[G.n];
   save.stars[G.n] = Math.max(save.stars[G.n] || 0, stars); save.cleared[G.n] = 1;
-  if (G.n >= save.unlocked && G.n < 30) save.unlocked = G.n + 1;
+  if (G.n >= save.unlocked && G.n < GEN.COUNT) save.unlocked = G.n + 1;
   let reward = null;
   if (first) { reward = PROPS[(G.n - 1) % 3]; save.props[reward.k]++; }
   persist();
@@ -738,8 +738,8 @@ function win() {
     for (let i = 0; i < stars; i++) setTimeout(() => { ss[i].className = 'on'; SND.play('star', i); }, 250 + i * 260);
     $('wInfo').innerHTML = `第 <b>${G.n}</b> 关 · 撬出 <b>${G.total}</b> 颗宝石<br>${G.used ? `使用道具 <b>${G.used}</b> 次` : '<b>零道具</b>完美通关！'}`;
     $('wReward').innerHTML = reward ? `<div class="reward"><img src="assets/${reward.img}.webp" alt="">首通奖励：${reward.name} +1</div>` : '';
-    $('wNext').style.display = G.n < 30 ? '' : 'none';
-    if (G.n >= 30) $('wInfo').innerHTML += '<br>🏆 恭喜！你已洗劫整座宝库！';
+    $('wNext').style.display = G.n < GEN.COUNT ? '' : 'none';
+    if (G.n >= GEN.COUNT) $('wInfo').innerHTML += '<br>🏆 恭喜！你已洗劫整座宝库！';
   }, 1200);
 }
 function fail() {
@@ -766,20 +766,21 @@ function toggleSfx() { save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(
 function menu() {
   G.state = 'menu'; G.panels = null; showScr('menu'); SND.duck(false);
   const tot = Object.values(save.stars).reduce((a, b) => a + b, 0);
-  $('mStat').textContent = `已解锁 ${save.unlocked}/30 关 · ★${tot}/90`;
+  $('mStat').textContent = `已解锁 ${save.unlocked}/${GEN.COUNT} 关 · ★${tot}/${GEN.COUNT * 3}`;
   $('bPlay').textContent = save.unlocked > 1 ? `继续行动 · 第${save.unlocked}关` : '开始行动';
   syncToggles();
 }
 function levels() {
   showScr('levels'); const gr = $('grid'); gr.innerHTML = '';
-  const tot = Object.values(save.stars).reduce((a, b) => a + b, 0); $('lvTot').textContent = `★ ${tot} / 90`;
-  for (let i = 1; i <= 30; i++) {
+  const tot = Object.values(save.stars).reduce((a, b) => a + b, 0); $('lvTot').textContent = `★ ${tot} / ${GEN.COUNT * 3}`;
+  for (let i = 1; i <= GEN.COUNT; i++) {
     const b = document.createElement('button'); const lock = i > save.unlocked; const s = save.stars[i] || 0;
     b.className = 'lv' + (lock ? ' lock' : '') + (i === save.unlocked ? ' cur' : '');
     b.innerHTML = lock ? '🔒' : `${i}<span class="s">${'★'.repeat(s)}${'☆'.repeat(3 - s)}</span>`;
     b.onclick = () => { if (lock) { SND.play('deny'); toast('先通过前面的关卡'); return; } SND.play('click'); startLevel(i); };
     gr.appendChild(b);
   }
+  const cur = gr.querySelector('.lv.cur'); if (cur) setTimeout(() => cur.scrollIntoView({ block: 'center' }), 30);
 }
 $('bPlay').onclick = () => { SND.play('click'); try{GT.title('play')}catch(_e){} startLevel(save.unlocked); };
 $('bLevels').onclick = () => { SND.play('click'); try{GT.title('levels')}catch(_e){} levels(); };
@@ -829,6 +830,7 @@ load().then(() => {
   if (DEBUG.level) startLevel(DEBUG.level); else menu();
   requestAnimationFrame(frame);
 });
+window.__T = { n: GEN.COUNT, start: startLevel, win: () => win() };
 window.__dbg = {
   G, L: () => L, save: () => save,
   gemScreen: id => { const g = G.gems[id]; return b2s(g.x, g.y); },
