@@ -765,4 +765,5 @@ loadAll(() => {
 });
 requestAnimationFrame(frame);
 window.__G = G; window.__SIM = SIM; window.__pos = { q: (ci) => { const p = qPos(ci, 0); return { x: p.x, y: p.y - p.sz * .5 }; }, slot: (i) => { const p = slotPos(i); return { x: p.x, y: p.y - p.sz * .5 }; } };
+window.__T = { n: LEVELS.length, start: n => startLevel(n - 1), win: () => onWin() };
 })();
