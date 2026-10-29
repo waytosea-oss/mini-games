@@ -1,6 +1,6 @@
 /* 游戏屋 · 标题页合规块与公司署名 + 通关互推（common/brand.js）
    用法：<link rel="stylesheet" href="../common/brand.css"><script src="../common/brand.js" data-screen="menu" data-game="gems"></script>
-   - 在 data-screen 指定的标题页底部挂「适龄提示 8+ · 健康游戏忠告 · 上海启格广告有限公司 + Trigger 字标」
+   - 在 data-screen 指定的标题页底部挂「适龄提示 8+ · 健康游戏忠告 · 上海启格 + 启格印章」
    - CPL.promo(host) 在通关面板里放一条其他游戏的小横幅（轮换） */
 (function (W) {
   'use strict';
@@ -28,7 +28,7 @@
   CPL.html = function (tone) {
     return '<div class="cpl-row"><span class="cpl-age" role="img" aria-label="CADPA 8+ 适龄提示">' + AGE + '</span>' +
       '<div class="cpl-hn"><b>健康游戏忠告</b><span>抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。</span><span>适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。</span></div></div>' +
-      '<div class="cpl-co"><img src="' + base + (tone === 'light' ? 'logo-trigger-dot.png' : 'logo-trigger-dot-white.png') + '" alt="Trigger"><span>上海启格广告有限公司</span></div>';
+      '<div class="cpl-co"><img src="' + base + 'qige-seal.svg" alt="启格 Trigger 印章"><span>上海启格</span></div>';
   };
   CPL.mount = function (host, tone) {
     if (typeof host === 'string') host = D.getElementById(host); if (!host || host.querySelector('.cpl')) return;
