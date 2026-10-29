@@ -19,7 +19,7 @@ if(DBG.up){const a=DBG.up.split(',').map(Number);S.up={pow:a[0]||0,rate:a[1]||0,
 if(Q.get('pc')){S.pc=Q.get('pc').split(',').map(Number).concat([0,0,0,0,0]).slice(0,5);if(!S.pc[0])S.pc[0]=1;}
 if(Q.has('cur'))S.cur=+Q.get('cur')||0;
 if(Q.has('notip'))S.tip=1;
-if(DBG.level)S.unlocked=Math.max(S.unlocked,Math.min(NLV,DBG.level));
+if(DBG.level)S.unlocked=Math.max(S.unlocked,DBG.level|0);
 if(DBG.mute){S.music=false;S.sfx=false;}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
 
