@@ -549,7 +549,7 @@ $('fRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('fMenu').onclick = () => { SND.play('click'); toLevels(); G.state = 'menu'; $('hud').classList.remove('on'); $('props').classList.remove('on'); };
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 function showFeat(f) {
   G.state = 'feat'; $('ftTitle').textContent = f.t; $('ftInfo').innerHTML = f.d;
   $('ftImgs').innerHTML = f.rev ? `<img src="assets/sedan.webp" style="transform:rotate(180deg);height:96px"><svg width="60" height="60" viewBox="0 0 60 60"><path d="M30 8l20 22H38v22H22V30H10z" fill="#ff9a1a" stroke="#7a2e00" stroke-width="4" stroke-linejoin="round"/></svg>` : f.imgs.map(n => `<img src="assets/${n}.webp" style="${n.startsWith('ic_') ? 'height:62px' : 'height:100px'}">`).join('');

@@ -86,7 +86,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
 .btn.hub:active{box-shadow:0 2px 0 #1a0830,0 4px 8px rgba(0,0,0,.5),inset 0 0 0 2px #e8b44a}
 @media (max-height:720px){.aiNote{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 16px)!important;bottom:auto!important;font-size:10px!important;margin:0!important}}
 </style>
-<link rel="stylesheet" href="../common/brand.css?v=20261028">
+<link rel="stylesheet" href="../common/brand.css?v=20261029b">
 </head>
 <body>
 <canvas id="cv"></canvas>
@@ -99,7 +99,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
 </div>
 
 <div id="menu" class="scr">
-  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
+  
   <div class="toggles"><button class="tg" id="tMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button><button class="tg" id="tSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="宝石大盗">
   <div class="sub">妙 手 神 偷 · 60 座 宝 库</div>
@@ -127,7 +127,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
     </div>
     <button class="btn green" id="pResume">继续行动</button><br>
     <div class="row"><button class="btn small" id="pRestart">重新开始</button><button class="btn small red" id="pQuit">返回地图</button></div>
-    <button class="btn small hub" id="pHub">返回游戏屋</button>
+    
     <div class="help">① 点<b>没被挡住</b>的宝石，把它撬出来<br>② 飞进<b>同色宝箱</b>，凑满 3 颗就带走<br>③ 不同色的先进<b>丝绒托盘</b>，塞满就失手<br>④ 板子上的宝石撬光，板子会掉落</div>
   </div>
 </div>
@@ -139,8 +139,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
     <div class="info" id="wInfo"></div>
     <div id="wReward"></div>
     <div class="row" style="margin-top:6px"><button class="btn small" id="wRetry">再来一次</button><button class="btn small purple" id="wMenu">地图</button></div>
-    <button class="btn green" id="wNext">下一关</button><br>
-    <button class="btn small hub" id="wHub">返回游戏屋</button>
+    <button class="btn green" id="wNext">下一关</button>
   </div>
 </div>
 
@@ -151,12 +150,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
     <div class="info" id="fInfo"></div>
     <button class="btn green" id="fRevive" style="display:none">使用道具继续</button>
     <div class="row"><button class="btn small" id="fRetry">再来一次</button><button class="btn small red" id="fMenu">返回地图</button></div>
-    <button class="btn small hub" id="fHub">返回游戏屋</button>
+    
   </div>
 </div>
 
 <div id="toast"></div>
-<script src="../track.js?v=20261024b"></script>
+<script src="../track.js?v=20261029b"></script>
 <script src="audio.js"></script>
 <script src="gen.js"></script>
 <script src="game.js"></script>
@@ -198,6 +197,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120a1c;font-family:
     } });
 })();
 </script>
-<script src="../common/brand.js?v=20261028" data-screen="menu" data-game="gems" data-win="win"></script>
+<script src="../common/brand.js?v=20261029b" data-screen="menu" data-game="gems" data-win="win"></script>
 </body>
 </html>

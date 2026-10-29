@@ -175,7 +175,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .cb.lock::after{content:'🔒';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:18px}
 @media (max-height:720px){.aiNote{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 16px)!important;bottom:auto!important;font-size:10px!important;margin:0!important}}
 </style>
-<link rel="stylesheet" href="../common/brand.css?v=20261028">
+<link rel="stylesheet" href="../common/brand.css?v=20261029b">
 </head>
 <body>
 <div id="app">
@@ -193,7 +193,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 <div id="banner"><div class="b1" id="ban1"></div><div class="b2" id="ban2"></div></div>
 
 <div class="scr on" id="title">
- <button class="hubPill" id="bHub0" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
+ 
  <div class="logo"><img id="tLogo" src="assets/logo.png" alt="健康小卫士·彩丸出击"></div>
  <div class="hero">
   <img class="v" src="assets/v_red.png" style="left:6%;top:8%;animation-delay:-1s" alt="">
@@ -247,7 +247,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 
 <div class="scr dim" id="pause">
  <div class="panel"><h2>暂停</h2><div class="sub" id="pSub">第 1 关</div>
-  <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button><button class="btn hub" id="bHubP">返回游戏屋</button></div>
+  <div class="col"><button class="btn" id="bResume">继续</button><button class="btn blue" id="bRestart">重新开始</button><button class="btn gray" id="bQuit">返回选关</button></div>
   <div class="togs"><button class="ibtn" id="bMus2"></button><button class="ibtn" id="bSfx2"></button><button class="ibtn" id="bVib2" aria-label="震动"></button></div>
  </div>
 </div>
@@ -257,7 +257,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <div class="stars" id="wStars" style="margin-top:12px"></div>
   <div class="sub" id="wSubT">第 1 关 完成！</div>
   <div class="earn"><span class="coin" style="width:32px;height:32px;font-size:18px">¥</span>+<span id="wEarn">0</span></div>
-  <div class="col"><button class="btn" id="bNext">下一关</button><div class="row"><button class="btn orange sm" id="bWinShop" style="flex:1">升级</button><button class="btn gray sm" id="bWinMenu" style="flex:1">选关</button></div><button class="btn hub sm" id="bHubW">返回游戏屋</button></div>
+  <div class="col"><button class="btn" id="bNext">下一关</button><div class="row"><button class="btn orange sm" id="bWinShop" style="flex:1">升级</button><button class="btn gray sm" id="bWinMenu" style="flex:1">选关</button></div></div>
  </div>
 </div>
 
@@ -266,7 +266,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <div style="height:14px"></div>
   <img src="assets/v_red.png" style="width:110px;animation:float 2s ease-in-out infinite" alt="">
   <div class="sub" id="lSub">病毒占领了培养皿……</div>
-  <div class="col"><button class="btn orange" id="bRevive"></button><button class="btn" id="bRetry">再试一次</button><div class="row"><button class="btn blue sm" id="bLoseShop" style="flex:1">升级</button><button class="btn gray sm" id="bLoseMenu" style="flex:1">选关</button></div><button class="btn hub sm" id="bHubL">返回游戏屋</button></div>
+  <div class="col"><button class="btn orange" id="bRevive"></button><button class="btn" id="bRetry">再试一次</button><div class="row"><button class="btn blue sm" id="bLoseShop" style="flex:1">升级</button><button class="btn gray sm" id="bLoseMenu" style="flex:1">选关</button></div></div>
  </div>
 </div>
 
@@ -276,14 +276,14 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   <img src="assets/robot.png" id="endDoc" style="height:120px" alt="">
   <h2 style="font-size:26px;margin-top:8px">恭喜你，健康小卫士！</h2>
   <div class="sub">病毒大王被彻底击败，世界恢复了健康。<br>试试把每一关都拿到三颗星吧！</div>
-  <div class="col"><button class="btn" id="bEndOk">返回选关</button><button class="btn hub sm" id="bHubE">返回游戏屋</button></div>
+  <div class="col"><button class="btn" id="bEndOk">返回选关</button></div>
  </div>
 </div>
 
 <div id="toast"></div>
 <div id="loading"><img src="assets/logo.png" alt="健康小卫士" style="width:min(82vw,340px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div style="font-size:15px;opacity:.8">加载中…</div><div class="lb"><i id="ldBar"></i></div></div>
 </div>
-<script src="../track.js?v=20261024b"></script>
+<script src="../track.js?v=20261029b"></script>
 <script src="game.js"></script>
 <script src="mascot.js"></script>
 <script>
@@ -340,6 +340,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
     } });
 })();
 </script>
-<script src="../common/brand.js?v=20261028" data-screen="title" data-game="virus" data-win="win"></script>
+<script src="../common/brand.js?v=20261029b" data-screen="title" data-game="virus" data-win="win"></script>
 </body>
 </html>

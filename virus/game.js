@@ -810,7 +810,7 @@ on('bLoseMenu',()=>{sfx('click');goLevels();});
 on('bEndOk',()=>{sfx('click');goLevels(4);});
 // back to hub (Tilo 游戏屋): save, then leave
 function goHub(e){if(e)e.stopPropagation();save();try{sfx('click');}catch(_){}try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){}location.href='../';}
-['bHub0','bHubP','bHubW','bHubL','bHubE'].forEach(id=>on(id,goHub));
+/* 北京时间交付版：无返回游戏屋 */
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state==='play'&&!paused)togglePause();if(AU.ctx)AU.ctx.suspend();}else if(AU.ctx)AU.ctx.resume();});
 (()=>{let sx=null;const el=$('levels');el.addEventListener('pointerdown',e=>{sx=e.clientX;});el.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>60){if(d<0&&menuWorld<NW-1)menuWorld++;else if(d>0&&menuWorld>0)menuWorld--;else return;renderLevels();sfx('click');}});})();
 

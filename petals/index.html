@@ -147,7 +147,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
 .btn.hub:active{box-shadow:0 2px 0 #e7a6c3,inset 0 0 0 2px #ffc2da}
 @media (max-height:720px){.aiNote{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 16px)!important;bottom:auto!important;font-size:10px!important;margin:0!important}}
 </style>
-<link rel="stylesheet" href="../common/brand.css?v=20261028">
+<link rel="stylesheet" href="../common/brand.css?v=20261029b">
 <style id="cplfit">/* 标题页底部合规块让位 */@media (max-height:700px){.logo{width:min(84vw,360px,46vh)!important}.mascot{width:min(38vw,150px,22vh)!important}}</style>
 </head>
 <body>
@@ -160,7 +160,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
 </div>
 
 <div id="menu" class="scr">
-  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
+  
   <div class="toggles"><button class="tg" id="mMusic" aria-label="音乐"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V7.1L9 8.6z"/></svg></button><button class="tg" id="mSfx" aria-label="音效"><svg viewBox="0 0 24 24"><path fill="#fff" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>
   <div style="flex:.5;min-height:calc(env(safe-area-inset-top) + 52px)"></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="花瓣消消">
@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     </div>
     <button class="btn green" id="pResume">继续采花</button>
     <div class="row"><button class="btn small gold" id="pRestart">重新开始</button><button class="btn small" id="pQuit">返回选关</button></div>
-    <button class="btn small hub" id="pHub">返回游戏屋</button>
+    
     <div class="help">点击最前排的花篮，送上<b>传送带</b><br>花篮会自动收集画面<b>最底层</b>的同色花瓣<br><b>三个同色</b>花篮会合并成大花篮<br>传送带篮位满了又收不到花瓣就失败</div>
   </div>
 </div>
@@ -221,8 +221,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     <div class="info" id="wInfo"></div>
     <div id="wReward"></div>
     <div class="row" style="margin-top:4px"><button class="btn small gold" id="wRetry">再来一次</button><button class="btn small green" id="wMenu">收藏馆</button></div>
-    <button class="btn" id="wNext">下一关</button><br>
-    <button class="btn small hub" id="wHub">返回游戏屋</button>
+    <button class="btn" id="wNext">下一关</button>
   </div>
 </div>
 
@@ -233,7 +232,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
     <div class="info" id="fInfo"></div>
     <button class="btn green" id="fRevive" style="display:none"></button>
     <div class="row"><button class="btn small gold" id="fRetry">再来一次</button><button class="btn small" id="fMenu">返回选关</button></div>
-    <button class="btn small hub" id="fHub">返回游戏屋</button>
+    
   </div>
 </div>
 
@@ -247,11 +246,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f7d6e0;font-family:
 </div>
 
 <div id="toast"></div>
-<script src="../track.js?v=20261024b"></script>
+<script src="../track.js?v=20261029b"></script>
 <script src="sim.js"></script>
 <script src="levels.js"></script>
 <script src="audio.js"></script>
 <script src="game.js"></script>
-<script src="../common/brand.js?v=20261028" data-screen="menu" data-game="petals" data-win="win"></script>
+<script src="../common/brand.js?v=20261029b" data-screen="menu" data-game="petals" data-win="win"></script>
 </body>
 </html>

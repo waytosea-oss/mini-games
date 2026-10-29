@@ -797,7 +797,7 @@ $('fRetry').onclick = () => { SND.play('click'); startLevel(G.n); };
 $('fMenu').onclick = () => { SND.play('click'); G.panels = null; G.state = 'menu'; levels(); };
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 
 /* ---------- 音频解锁 ---------- */
 let unlocked = false;

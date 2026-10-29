@@ -553,7 +553,7 @@ $('fRetry').onclick = () => { SND.play('click'); SND.duck(false); startLevel(G.l
 $('fMenu').onclick = () => { SND.play('click'); SND.duck(false); openLevels(); };
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 
 /* ---------- 渲染 ---------- */
 let smokeImg, glowImg, coinImg;

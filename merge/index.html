@@ -85,7 +85,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
 .aiNote{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 8px);left:0;right:0;text-align:center;font-size:11px;color:rgba(221,212,255,.6);letter-spacing:1px;pointer-events:none}
 @media (max-height:720px){.aiNote{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 16px)!important;bottom:auto!important;font-size:10px!important;margin:0!important}}
 </style>
-<link rel="stylesheet" href="../common/brand.css?v=20261028">
+<link rel="stylesheet" href="../common/brand.css?v=20261029b">
 <style id="cplfit">/* 标题页底部合规块让位 */@media (max-height:820px){#menu .hero{height:calc(min(29vh,250px) - 24px)!important}}@media (max-height:740px){#menu{padding-top:calc(env(safe-area-inset-top) + 52px)!important}#menu .hero{height:calc(26vh - 56px)!important}#menu .logo{width:min(76vw,280px,34vh)!important}#menu .menuBtns{margin-top:10px!important}}</style>
 </head>
 <body>
@@ -99,7 +99,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
 </div>
 
 <div id="menu" class="scr">
-  <button class="hubPill" id="mHub" aria-label="返回游戏屋"><b>‹</b>游戏屋</button>
+  
   <div class="toggles"><button class="tg" id="tMusic" aria-label="音乐"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#fff"/><circle cx="17.5" cy="16" r="2.8" fill="#fff"/></svg></button><button class="tg" id="tSfx" aria-label="音效"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
   <img class="logo" id="mLogo" src="assets/logo.webp" alt="摘星合合">
   <div class="sub" id="mSub">八 颗 一 合 · 摘 到 银 河</div>
@@ -122,7 +122,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
     </div>
     <button class="btn" id="pResume">继续游戏</button>
     <div class="row" style="margin-top:4px"><button class="btn small gold" id="pRestart">重开本关</button><button class="btn small red" id="pQuit">返回首页</button></div>
-    <button class="btn small hub" id="pHub">返回游戏屋</button>
+    
     <div class="help">① 点一条星轨，选中<b>最右边一串同样的星</b><br>② 再点另一条：<b>空星轨</b>或<b>末尾是同样的星</b>就能放过去<br>③ 一条凑满 <b>8 颗同样的星</b>，点「合成」变成 2 颗更高阶的星<br>④ 星星不够就点「补星」；星盘全满就输了<br>⑤ 星尘 → 星星 → 彗星 → 行星 → 星系，最终<b>摘下银河</b>！</div>
   </div>
 </div>
@@ -133,8 +133,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
     <div class="tilebox" id="wTiles"></div>
     <div class="info" id="wInfo"></div>
     <div id="wReward"></div>
-    <button class="btn gold" id="wNext">下一关</button><br>
-    <button class="btn small hub" id="wHub">返回游戏屋</button>
+    <button class="btn gold" id="wNext">下一关</button>
   </div>
 </div>
 
@@ -145,7 +144,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
     <button class="btn" id="fClear">消除最小的星<span class="cost" id="fClearCost"></span></button>
     <button class="btn gold" id="fTemp" style="display:none">临时解锁一条星轨<span class="cost" id="fTempCost"></span></button>
     <div class="row" style="margin-top:4px"><button class="btn small blue" id="fRetry">重开本关</button><button class="btn small red" id="fMenu">返回首页</button></div>
-    <button class="btn small hub" id="fHub">返回游戏屋</button>
+    
   </div>
 </div>
 
@@ -168,11 +167,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#140c3a;font-family:
 </div>
 
 <div id="toast"></div>
-<script src="../track.js?v=20261024b"></script>
+<script src="../track.js?v=20261029b"></script>
 <script src="audio.js"></script>
-<script src="logic.js?v=20261024b"></script>
-<script src="game.js?v=20261024b"></script>
-<script src="hero.js?v=20261024"></script>
-<script src="../common/brand.js?v=20261028" data-screen="menu" data-game="merge" data-win="win"></script>
+<script src="logic.js?v=20261029b"></script>
+<script src="game.js?v=20261029b"></script>
+<script src="hero.js?v=20261029b"></script>
+<script src="../common/brand.js?v=20261029b" data-screen="menu" data-game="merge" data-win="win"></script>
 </body>
 </html>

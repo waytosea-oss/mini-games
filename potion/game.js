@@ -1043,7 +1043,7 @@ $('fRetry').onclick = () => { SND.play('click'); startLevel(G.idx); };
 $('fMenu').onclick = () => { SND.play('click'); openLevels(); };
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { if (e) e.stopPropagation(); save(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 $('fUndo').onclick = () => { try{GT.revive('undo')}catch(_e){} paused = false; showScreen(null); G.failShown = false; useProp('undo'); if (!G.undo.length || G.failShown) { } };
 $('fAdd').onclick = () => { try{GT.revive('add')}catch(_e){} paused = false; showScreen(null); G.failShown = false; useProp('add'); };
 

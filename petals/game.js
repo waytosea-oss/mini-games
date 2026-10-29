@@ -659,7 +659,7 @@ $('bLevels').onclick = () => { SND.unlock(); SND.play('click'); try{GT.title('le
 $('lvBack').onclick = () => { SND.play('click'); showScr('menu'); };
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { if (e) e.stopPropagation(); persist(); try { SND.play('click'); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 function syncTg() { for (const id of ['mMusic', 'pMusic']) $(id).classList.toggle('off', !save.music); for (const id of ['mSfx', 'pSfx']) $(id).classList.toggle('off', !save.sfx); }
 function tgMusic() { SND.unlock(); save.music = !save.music; try{GT.sound('music',save.music)}catch(_e){} SND.setMusic(save.music); if (save.music) SND.startMusic(); persist(); syncTg(); }
 function tgSfx() { SND.unlock(); save.sfx = !save.sfx; try{GT.sound('sfx',save.sfx)}catch(_e){} SND.setSfx(save.sfx); persist(); syncTg(); SND.play('click'); }

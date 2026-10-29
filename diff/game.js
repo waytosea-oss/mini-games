@@ -364,7 +364,7 @@ function winLevel() {
   $('win').classList.add('on');
   // 图片
   const w = $('wImgs'); w.innerHTML = '<div class="wp"><div class="stage" id="wA"></div></div><div class="wp"><div class="stage" id="wB"></div></div>';
-  const sa = buildStage($('wA'), G.lv, G.i, false), sb = buildStage($('wB'), G.lv, G.i, true);
+  const sa = buildStage($('wA'), G.lv, G.img - 1, false), sb = buildStage($('wB'), G.lv, G.img - 1, true);
   G.lv.d.forEach(d => { drawRing(sa, d, false); drawRing(sb, d, false); });
   const ss = $('wStars').children; for (let k = 0; k < 3; k++) { ss[k].className = ''; }
   for (let k = 0; k < s; k++) setTimeout(() => { ss[k].className = 'on'; SND.play('star', k); }, 450 + k * 280);
@@ -388,7 +388,7 @@ tap($('fRetry'), () => { $('fail').classList.remove('on'); startLevel(G.i, true)
 tap($('fLevels'), () => { $('fail').classList.remove('on'); G.token++; $('game').classList.remove('on'); showLevels(); });
 // 返回 Tilo 游戏屋：先存档再离开
 function goHub(e) { save(); try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../'; }
-['mHub', 'pHub', 'wHub', 'fHub'].forEach(i => tap($(i), goHub));
+/* 北京时间交付版：无返回游戏屋 */
 /* ---------- 特效 ---------- */
 const FX = []; const fxEl = $('fx');
 function burst(x, y, n, cols) {

@@ -817,7 +817,7 @@ function goHub(e) {
   } catch (_) { }
   persist(); try { SND.tap(); } catch (_) { } try{GT.hub(e&&e.currentTarget&&e.currentTarget.id)}catch(_e){} location.href = '../';
 }
-for (const id of ['mHub', 'pHub', 'wHub', 'fHub']) $(id).onclick = goHub;
+/* 北京时间交付版：无返回游戏屋 */
 function openRank() {
   if (G.mode !== 'play') return; G.mode = 'rank'; recordRun(); persist();
   const tb = $('rankTbl'); tb.innerHTML = '';

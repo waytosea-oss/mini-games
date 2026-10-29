@@ -61,7 +61,7 @@
   };
   var isDark = function (el) { var m = getComputedStyle(el).color.match(/\d+/g); if (!m) return false; return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) < 128; };
   /* 通关页自动挂互推：data-win 指定通关屏 id，屏幕每次出现换一款 */
-  CPL.watchWin = function (id) {
+  CPL.watchWin = function (id) { return; /* 北京时间交付版：不挂互推 */
     var s = D.getElementById(id); if (!s) return; var panel = s.querySelector('.panel') || s, was = false;
     var vis = function () { var cs = getComputedStyle(s); return cs.display !== 'none' && cs.visibility !== 'hidden' && s.getClientRects().length > 0; };
     var chk = function () { var v = vis(); if (v && !was) CPL.promo(panel, { dark: isDark(panel) }); was = v; };

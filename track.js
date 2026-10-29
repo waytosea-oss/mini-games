@@ -12,7 +12,7 @@
   var GT = W.GT = { _v: 1, ev: noop, title: noop, lv: noop, win: noop, fail: noop, quit: noop, revive: noop, pause: noop, hub: noop, sound: noop, flush: noop };
   try {
     var EP = 'https://trigger-tech.fun/games/api/collect.php';
-    var GAMES = ['shooter', 'virus', 'grab', 'gems', 'parking', 'diff', 'petals', 'potion', 'merge', 'stroke'];
+    var GAMES = ['shooter', 'virus', 'grab', 'gems', 'parking', 'diff', 'petals', 'potion', 'merge', 'stroke', 'bell'];
     var IDLE = 60000, SESSION = 30 * 60000;
     if (N.doNotTrack === '1' || W.doNotTrack === '1' || N.globalPrivacyControl === true) return;   // 尊重“请勿跟踪”/GPC
     var lsOff = null; try { lsOff = W.localStorage && W.localStorage.getItem('gt_off'); } catch (e) {}
@@ -63,7 +63,7 @@
     try { if (D.referrer) { var a = D.createElement('a'); a.href = D.referrer; refHost = a.hostname || ''; if (refHost === L.hostname) { var rs = a.pathname.replace(/index\.html?$/, '').split('/').filter(Boolean), rl = rs[rs.length - 1] || ''; refPage = GAMES.indexOf(rl) >= 0 ? rl : 'hub'; refHost = ''; } } } catch (e) {}
     var utm = cut([qs.utm_source, qs.utm_medium, qs.utm_campaign].filter(function (x) { return x; }).join('/'), 80);
     /* v2 版本标记：写进 utm 字段（服务端原样保存），便于在统计里区分 games-v2 */
-    utm = cut('v2' + (utm ? '|' + utm : ''), 80);
+    utm = cut('bjsj' + (utm ? '|' + utm : ''), 80);
     var ctx = {
       host: cut(L.hostname, 60), page: page, dev: dev, os: os, br: br, wx: wx, lang: cut(N.language || '', 12),
       sw: (W.screen && screen.width) || 0, sh: (W.screen && screen.height) || 0, ref: cut(refHost, 80), utm: utm, from: cut(qs.from || '', 40),
