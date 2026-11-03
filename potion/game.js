@@ -55,8 +55,8 @@ function profile(shape) {
   const ell = (y0, h0, y1, h1, n) => { for (let k = 1; k <= n; k++) { const a = k / n * Math.PI / 2; P.push([y0 + (y1 - y0) * Math.sin(a), h1 + (h0 - h1) * Math.cos(a)]); } };
   if (shape === 'tube') {
     const r = .4; for (let k = 0; k <= 10; k++) { const a = k / 10 * Math.PI / 2; P.push([r - r * Math.cos(a), r * Math.sin(a)]); }
-    P.push([2.44, .4], [2.52, .42], [2.57, .47], [2.66, .47]);
-    return { P, fillY: 2.3, top: 2.66, lipHW: .47, bodyTop: 2.3, neck: 0 };
+    P.push([2.5, .4], [2.56, .41], [2.6, .44], [2.66, .44]);
+    return { P, fillY: 2.3, top: 2.66, lipHW: .44, bodyTop: 2.3, neck: 2.36, rB: r };
   }
   if (shape === 'vial') {
     P.push([0, .38], [.012, .43], [.035, .46], [.08, .48], [1.8, .48]); ell(1.8, .48, 2.16, .2, 7);
@@ -94,7 +94,9 @@ function getGeo(shape, fw, cap) {
   const pr = PROF[shape], P = pr.P, gl = fw * (shape === 'cau' ? .07 : .06);
   const right = P.map(([y, h]) => [h * fw, -y * fw]);
   const poly = right.concat(right.slice().reverse().map(([x, y]) => [-x, y]));
-  const oR = P.map(([y, h], i) => [h * fw + gl, -y * fw + (i === 0 ? gl : 0)]);
+  // 试管：外壁沿法线外扩，圆底保持同心半圆（无尖点）
+  const oR = pr.rB ? P.map(([y, h]) => { if (y <= pr.rB + 1e-6) { const R = pr.rB * fw, dx = h * fw, dy = y * fw - R, L = Math.hypot(dx, dy) || 1; return [dx + dx / L * gl, -(R + dy + dy / L * gl)]; } return [h * fw + gl, -y * fw]; })
+    : P.map(([y, h], i) => [h * fw + gl, -y * fw + (i === 0 ? gl : 0)]);
   const outer = oR.concat(oR.slice().reverse().map(([x, y]) => [-x, y]));
   const capA = polyArea(below(poly, 0, pr.fillY * fw));
   const maxHW = Math.max(...P.map(q => q[1])) * fw;
@@ -239,7 +241,7 @@ function drawFlask(c, g, layers, o = {}) {
     // 金色瓶口/瓶颈环
     const lw = g.lipHW + g.gl + fw * .03, lh = fw * .12;
     c.fillStyle = goldGrad(c, -lw, 0, lw, 0); rr(c, -lw, -g.top - lh * .3, lw * 2, lh, lh * .4); c.fill(); c.strokeStyle = '#5a3200'; c.lineWidth = 1; c.stroke();
-    if (g.neck) { const nw = g.lipHW * .8 + g.gl + fw * .03; c.fillStyle = goldGrad(c, -nw, 0, nw, 0); rr(c, -nw, -g.neck - fw * .1, nw * 2, fw * .09, fw * .04); c.fill(); }
+    if (g.neck) { const nw = g.shape === 'tube' ? g.maxHW + g.gl + fw * .03 : g.lipHW * .8 + g.gl + fw * .03; c.fillStyle = goldGrad(c, -nw, 0, nw, 0); rr(c, -nw, -g.neck - fw * .1, nw * 2, fw * .09, fw * .04); c.fill(); }
     if (g.shape === 'vial') { c.fillStyle = goldGrad(c, -g.maxHW, 0, g.maxHW, 0); rr(c, -g.maxHW - g.gl - 1, -fw * .07, (g.maxHW + g.gl + 1) * 2, fw * .09, fw * .04); c.fill(); }
     if (g.shape === 'pear') { c.save(); c.translate(0, -fw * .15); c.fillStyle = goldGrad(c, -fw * .1, 0, fw * .1, 0); star(c, 0, 0, fw * .09, fw * .04); c.fill(); c.restore(); }
   } else drawCauldronFront(c, g);
@@ -282,7 +284,7 @@ const LY = { counterY: 200, st: 0 };
 const PARTS = [], FLOATS = [], MOTES = [];
 for (let i = 0; i < 26; i++) MOTES.push({ x: Math.random(), y: Math.random(), s: rnd(.6, 1.8), v: rnd(.008, .025), ph: rnd(0, 7), c: Math.random() < .5 ? '#c9a0ff' : '#7ff6ea' });
 function seeded(n) { let s = n * 9301 + 49297; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
-const SHAPES = ['vial', 'tube', 'pear'];
+const SHAPES = ['tube', 'tube', 'tube'];
 function newVT(i, t, lvIdx) {
   return { x: 0, y: 0, tx: 0, ty: 0, init: false, lift: 0, sel: false, shake: 0, phi: 0, vphi: 0, cork: t.seal ? 1 : -1, busy: false, bub: [], rev: null, pop: 1, appear: -i * .045,
     shape: t.kind === 1 ? 'cau' : SHAPES[(i * 7 + lvIdx * 3) % 3], iceFlash: 0, glow: 0 };
