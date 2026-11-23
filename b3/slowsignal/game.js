@@ -213,11 +213,19 @@
     A.setEnabled(state.music);
   }
 
+  var coverLock = '';
+  function showCoverClip(name) {
+    coverSprite.play(name, true);
+    var el = $('cover-mascot');
+    el.setAttribute('data-clip', name);
+    el.setAttribute('aria-label', name === 'signal' ? '琥珀窗亮起' : (name === 'listen' ? '侧耳倾听' : '靛蓝毛毡电台在调频'));
+  }
   function showCover() {
     $('screen-play').hidden = true;
     $('screen-cover').hidden = false;
     $('btn-continue').hidden = !hasProgress(state);
-    coverSprite.play('tune', true);
+    coverLock = '';
+    showCoverClip('tune');
     syncOrient();
     coverSprite.draw();
     state.screen = 'cover';
@@ -647,6 +655,26 @@
     $('overlay-ending').hidden = true;
     $('overlay-tree').hidden = false;
   }
+
+  var coverMascot = $('cover-mascot');
+  coverMascot.addEventListener('pointerenter', function () {
+    if (coverLock) return;
+    showCoverClip('signal');
+  });
+  coverMascot.addEventListener('pointerleave', function () {
+    if (coverLock) return;
+    showCoverClip('tune');
+  });
+  coverMascot.addEventListener('click', function () {
+    coverLock = coverLock === 'listen' ? 'signal' : 'listen';
+    showCoverClip(coverLock);
+  });
+  coverMascot.addEventListener('keydown', function (event) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    coverLock = coverLock === 'listen' ? 'signal' : 'listen';
+    showCoverClip(coverLock);
+  });
 
   document.getElementById('btn-start').addEventListener('click', function () {
     A.arm();

@@ -33,6 +33,7 @@ button {
 .screen[hidden] { display: none !important; }
 .cover-bg, .scene-bg {
   position: absolute;
+  z-index: 0;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -107,8 +108,9 @@ h1 {
   position: absolute;
   z-index: 2;
   overflow: hidden;
-  pointer-events: none;
 }
+.play-mascot { pointer-events: none; }
+.cover-mascot { pointer-events: auto; cursor: pointer; }
 .sheet {
   position: absolute;
   background-repeat: no-repeat;
@@ -259,21 +261,22 @@ html.land .cover-actions { left: 4%; right: auto; top: auto; bottom: 46%; }
   height: 17%;
   bottom: calc(12% + 10px + env(safe-area-inset-bottom));
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow: hidden;
   align-items: stretch;
-  padding-bottom: 2px;
 }
 .reply {
-  flex: 0 0 auto;
-  width: min(210px, 70%);
+  flex: 1 1 0;
+  width: auto;
+  min-width: 44px;
+  max-width: 220px;
   min-height: 44px;
   border-radius: 16px;
   border: 0;
   color: var(--paper);
   text-align: left;
-  padding: 10px 12px 8px;
+  padding: 8px 8px 6px;
   background: #1b2a4a center / 100% 100% no-repeat;
   display: flex;
   flex-direction: column;
@@ -403,6 +406,5 @@ html.land #fx { left: 18%; top: 18%; }
 }
 @media (max-width: 420px) {
   .subtitle, .coach, .pip b { font-size: 12px; }
-  .reply { width: min(180px, 78%); }
   .reply-text { font-size: 13px; }
 }
