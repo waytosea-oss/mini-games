@@ -452,11 +452,14 @@
   function layoutPort(W, H, narrow) {
     var m = narrow ? Math.round(W * 0.12) : Math.round(W * 0.07);
     var edge = 10;
-    place(playMusic, W - edge - 44, 8, 44, 36);
+    var musicX = W - edge - 44;
+    place(playMusic, musicX, 8, 44, 44);
     var filmW = Math.max(108, Math.min(168, W * 0.34));
     place(filmEl, m, 50, filmW, 28);
     var behW = narrow ? Math.min(156, W - m - filmW - 16) : 210;
-    place(behaviors, W - m - behW, 46, behW, 50);
+    var behRight = Math.min(W - m, musicX - 6);
+    if (behRight - behW < m) behW = Math.max(96, behRight - m);
+    place(behaviors, behRight - behW, 46, behW, 50);
     var vfTop = 102;
     var vfH = Math.round(H * (narrow ? 0.4 : 0.44));
     var vf = { x: m, y: vfTop, w: W - m * 2, h: vfH };
@@ -497,23 +500,41 @@
     layout.vf = vf;
     var rx = Math.round(W * 0.72);
     var rw = Math.round(W * 0.97) - rx;
-    place(playMusic, rx + rw - 44, 8, 44, 36);
+    place(playMusic, rx + rw - 44, 4, 44, 44);
     place(filmEl, rx, 50, rw, 32);
     place(behaviors, rx, 88, rw, 52);
     place(phaseChip, rx, 142, rw, 20);
     var photoTop = 166;
     var photoH = Math.round(H * 0.26);
-    place(photos, rx, photoTop, rw, photoH);
+    var toolsH = 54;
     var toolsTop = photoTop + photoH + 8;
-    place($('tools'), rx, toolsTop, rw, 54);
     var shut = Math.min(108, H * 0.18);
     var shutTop = toolsTop + 62;
-    if (shutTop + shut + 78 > H - 8) {
-      shut = Math.max(72, H - 86 - shutTop);
-    }
-    place(shutterBtn, rx + (rw - shut) / 2, shutTop, shut, shut);
     var dist = Math.min(70, rw * 0.36);
-    place($('distance'), rx + (rw - dist) / 2, Math.min(H - dist - 8, shutTop + shut + 6), dist, dist);
+    var stackedBottom = shutTop + shut + 6 + dist;
+    if (stackedBottom <= H - 8) {
+      place(photos, rx, photoTop, rw, photoH);
+      place($('tools'), rx, toolsTop, rw, toolsH);
+      place(shutterBtn, rx + (rw - shut) / 2, shutTop, shut, shut);
+      place($('distance'), rx + (rw - dist) / 2, shutTop + shut + 6, dist, dist);
+      return;
+    }
+    shut = Math.max(72, shut);
+    var row = Math.max(shut, dist);
+    var rowTop = H - 8 - row;
+    var room = rowTop - 8 - toolsH - 6 - photoTop;
+    photoH = Math.max(36, Math.min(photoH, room));
+    toolsTop = photoTop + photoH + 6;
+    if (toolsTop + toolsH + 6 > rowTop) {
+      photoH = Math.max(36, rowTop - 6 - toolsH - 6 - photoTop);
+      toolsTop = photoTop + photoH + 6;
+    }
+    var pair = shut + 8 + dist;
+    var x0 = rx + Math.max(0, (rw - pair) / 2);
+    place(photos, rx, photoTop, rw, photoH);
+    place($('tools'), rx, toolsTop, rw, toolsH);
+    place(shutterBtn, x0, rowTop + (row - shut) / 2, shut, shut);
+    place($('distance'), x0 + shut + 8, rowTop + (row - dist) / 2, dist, dist);
   }
 
   function paintFilm() {
