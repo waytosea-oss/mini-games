@@ -1,0 +1,63 @@
+{
+  "fw": 290,
+  "fh": 412,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b08-mascot-sheet-gleam.webp"
+  ],
+  "fallback": "b08-mascot-sheet-gleam.png",
+  "still": "b08-mascot-still-gleam.png",
+  "body": {
+    "crop_from_video": [
+      91,
+      103,
+      381,
+      515
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b08-anim-02-gleam.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      152.10112051228765,
+      234.77231752640301
+    ],
+    "anchor_norm": [
+      0.5244866224561643,
+      0.5698357221514636
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}
