@@ -939,13 +939,21 @@
       return;
     }
     var node = pickNode(w, Math.max(0.7, 28 / ppm()));
-    if (tool === 'move' && node && !node.fixed) {
-      drag = { type: 'move', id: node.id, x: node.x, y: node.y };
-      $('board').setPointerCapture(ev.pointerId);
-      ev.preventDefault();
-      return;
-    }
-    if (node) {
+    if (tool === 'move') {
+      if (node && node.fixed) {
+        say('岸上的锚不能拖走。只能挪你放下的节点。');
+        selected = null;
+        updateInspect();
+        ev.preventDefault();
+        return;
+      }
+      if (node) {
+        drag = { type: 'move', id: node.id, x: node.x, y: node.y };
+        $('board').setPointerCapture(ev.pointerId);
+        ev.preventDefault();
+        return;
+      }
+    } else if (node) {
       drag = { type: 'link', id: node.id, x: w.x, y: w.y, label: '' };
       $('board').setPointerCapture(ev.pointerId);
       ev.preventDefault();
