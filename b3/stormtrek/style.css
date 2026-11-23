@@ -197,7 +197,7 @@ html.land .panel-page { --plate: url("assets/bg/b06-bg-1920x1080.webp"); }
 }
 html.land #screen-battle .zone-hud { left: 63%; top: 1.6%; width: 14%; height: 7%; flex-direction: row; align-items: center; justify-content: flex-end; }
 html.land .zone-badge { left: 3%; top: 1.5%; width: 19%; height: 8%; }
-html.land .zone-track { left: 24%; top: 1.5%; width: 38%; height: 8%; }
+html.land .zone-track { left: 24%; top: 1.5%; width: 38%; height: max(8%, 44px); }
 html.land .zone-intent { left: 78%; top: 1.5%; width: 19%; height: 14.5%; flex-direction: column; align-items: flex-end; justify-content: center; }
 html.land .zone-hp { left: 78%; top: 16%; width: 19%; height: 6%; }
 html.land .zone-hand { left: 4%; top: 78%; width: 68%; height: 20%; }

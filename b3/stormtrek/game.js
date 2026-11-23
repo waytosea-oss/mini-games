@@ -990,6 +990,19 @@
   var selected = -1;
   var pointer = null;
   var suppressClick = false;
+  var endBusy = false;
+
+  function noteCoach(step) {
+    if (!save.meta) return;
+    if ((save.meta.coach || 0) < step) save.meta.coach = step;
+  }
+
+  function releaseEndLock(btn) {
+    setTimeout(function () {
+      endBusy = false;
+      if (btn) btn.disabled = false;
+    }, 400);
+  }
   var codexReturn = 'cover';
   var sprites = [];
   var coverVideoScale = 0.45;
@@ -1291,6 +1304,7 @@
     var pips = '';
     for (var i = 0; i < 3; i++) pips += '<i class="' + (i < b.ap ? 'on' : '') + '"></i>';
     $('piles').innerHTML = '行动 <span class="pips">' + pips + '</span><br>牌库 ' + b.draw.length + ' · 弃牌 ' + b.discard.length;
+    var coachStep = (save.meta && save.meta.coach) || 0;
     var coach = '';
     if (b.tutorial) {
       var lines = [
@@ -1299,14 +1313,13 @@
         '按住牌拖到目标上再松开。天气牌拖到气候轨，攻击牌拖到敌人身上。',
         '出完想出的牌，点结束回合。没用掉的牌会进入弃牌堆。'
       ];
-      var step = save.meta.coach || 0;
-      if (step < lines.length) coach = lines[step];
+      if (coachStep < lines.length) coach = lines[coachStep];
       if (b.turn >= 3 && b.enemyHp === b.enemyMax) coach = '车轮可以拖到岩狼身上。';
     }
-    var opening = !!(run.log && run.log.indexOf('右上角是岩狼') === 0);
-    $('battle-log').hidden = !run.log || opening;
+    var openingLog = b.tutorial && coachStep === 0 && !!(run.log && run.log.indexOf('右上角是岩狼') === 0);
+    $('battle-log').hidden = !run.log || openingLog;
     $('battle-log').textContent = run.log || '';
-    $('coach').hidden = !coach || !opening;
+    $('coach').hidden = !coach;
     $('coach').textContent = coach;
     var inspect = $('inspect');
     if (selected >= 0 && b.hand[selected]) {
@@ -1507,8 +1520,8 @@
     clearTargets();
     if (!p.moved) {
       selected = selected === p.index ? -1 : p.index;
+      if (selected >= 0) noteCoach(2);
       renderBattle();
-      if (selected >= 0 && (save.meta.coach || 0) < 2) save.meta.coach = 2;
       return;
     }
     suppressClick = true;
@@ -1523,7 +1536,7 @@
         return;
       }
       selected = -1;
-      if ((save.meta.coach || 0) < 4) save.meta.coach += 1;
+      noteCoach(3);
       persist();
       render();
       juice(res);
@@ -1544,7 +1557,7 @@
       return;
     }
     selected = -1;
-    if ((save.meta.coach || 0) < 4) save.meta.coach += 1;
+    noteCoach(3);
     persist();
     render();
     juice(res);
@@ -1738,17 +1751,22 @@
       render();
     });
     $('btn-end').addEventListener('click', function () {
+      if (endBusy) return;
       if (!save.run || save.run.phase !== 'battle') return;
+      endBusy = true;
+      var btn = $('btn-end');
+      btn.disabled = true;
       var preview = shownIntent(save.run.battle);
       var res = endTurn(save.meta, save.run);
       if (res.ok && res.playerDmg == null && preview && save.run.lastHit && save.run.lastHit.n !== preview.n && save.run.phase === 'battle') {
         save.run.log = '预告和结算没有对上。';
       }
       selected = -1;
-      if ((save.meta.coach || 0) < 4) save.meta.coach += 1;
+      noteCoach(4);
       persist();
       render();
       juice(res);
+      releaseEndLock(btn);
     });
     $('enemy-hit').addEventListener('click', function () { tryPlaySelected('enemy'); });
     $('caravan-hit').addEventListener('click', function () { tryPlaySelected('caravan'); });
