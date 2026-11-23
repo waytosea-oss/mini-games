@@ -41,6 +41,7 @@
     a.card + a.card { margin-top: 14px; }
     a.card:focus-visible { outline: 2px solid #e7c98a; outline-offset: 3px; }
     .sprite.lantern { aspect-ratio: 443 / 420; }
+    .sprite.jelly { aspect-ratio: 404 / 412; }
     .sprite {
       width: 112px;
       aspect-ratio: 382 / 374;
@@ -69,6 +70,14 @@
       <div>
         <h2>风暴牌旅</h2>
         <p>用天气牌改写下一场遭遇，护送商队穿过六个气候节点。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="softbridge/index.html">
+      <div class="sprite jelly" id="soft-sprite" role="img" aria-label="胶仔动画封面"></div>
+      <div>
+        <h2>软桥救援</h2>
+        <p>用有限的软胶和拉索，把三只小兽送过峡谷。</p>
         <p class="go">进入试玩</p>
       </div>
     </a>
@@ -106,6 +115,45 @@
       var fw = 443, fh = 420, cols = 6, n = 24, ax = 238.8, ay = 238.6, frame = 0;
       var sheet = "stormtrek/assets/anim/b06-mascot-sheet-flame-sway.webp";
       var still = "stormtrek/assets/anim/b06-mascot-still-flame-sway.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("soft-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 404, fh = 412, cols = 6, n = 24, ax = 206.675, ay = 214.287, frame = 0;
+      var sheet = "softbridge/assets/anim/b04-mascot-sheet-squash.webp";
+      var still = "softbridge/assets/anim/b04-mascot-still-squash.png";
       function tick() {
         var w = el.clientWidth || 112;
         var scale = (w * 0.92) / fw;
