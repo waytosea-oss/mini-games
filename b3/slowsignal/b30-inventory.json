@@ -1,0 +1,814 @@
+[
+  {
+    "file": "README.md",
+    "bytes": 7038,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-anim-01-tune.mp4",
+    "bytes": 1314290,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-anim-02-signal.mp4",
+    "bytes": 933936,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-anim-03-listen.mp4",
+    "bytes": 1180483,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-listen.json",
+    "bytes": 1068,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-listen.png",
+    "bytes": 3666483,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-listen.webp",
+    "bytes": 324204,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-signal.json",
+    "bytes": 1068,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-signal.png",
+    "bytes": 4606021,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-signal.webp",
+    "bytes": 519552,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-tune.json",
+    "bytes": 1061,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-tune.png",
+    "bytes": 3759063,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-sheet-tune.webp",
+    "bytes": 327968,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-still-listen.png",
+    "bytes": 151477,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-still-signal.png",
+    "bytes": 154314,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "anim/b30-mascot-still-tune.png",
+    "bytes": 151153,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-16x9-bg.png",
+    "bytes": 2053160,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-16x9-bg.webp",
+    "bytes": 173522,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-16x9.png",
+    "bytes": 2223949,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-16x9.webp",
+    "bytes": 197116,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-3x4-bg.png",
+    "bytes": 1306922,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-3x4-bg.webp",
+    "bytes": 94810,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-3x4.png",
+    "bytes": 1458346,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-cover-3x4.webp",
+    "bytes": 122736,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-inventory.json",
+    "bytes": 14144,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "b30-meta.json",
+    "bytes": 27514,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-00.png",
+    "bytes": 1757,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-01.png",
+    "bytes": 1955,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-02.png",
+    "bytes": 2512,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-03.png",
+    "bytes": 2655,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-04.png",
+    "bytes": 2860,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-05.png",
+    "bytes": 3054,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-06.png",
+    "bytes": 3254,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-07.png",
+    "bytes": 3574,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-close-sheet.png",
+    "bytes": 23342,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-00.png",
+    "bytes": 1547,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-01.png",
+    "bytes": 1558,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-02.png",
+    "bytes": 1556,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-03.png",
+    "bytes": 1549,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-04.png",
+    "bytes": 1557,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-05.png",
+    "bytes": 1547,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-06.png",
+    "bytes": 1554,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-07.png",
+    "bytes": 1521,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-dispatch-sheet.png",
+    "bytes": 8028,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-00.png",
+    "bytes": 1904,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-01.png",
+    "bytes": 2264,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-02.png",
+    "bytes": 2482,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-03.png",
+    "bytes": 2762,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-04.png",
+    "bytes": 3084,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-05.png",
+    "bytes": 3298,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-06.png",
+    "bytes": 3642,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-07.png",
+    "bytes": 3927,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-lock-sheet.png",
+    "bytes": 36934,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-00.png",
+    "bytes": 2191,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-01.png",
+    "bytes": 2332,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-02.png",
+    "bytes": 2457,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-03.png",
+    "bytes": 2620,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-04.png",
+    "bytes": 2714,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-05.png",
+    "bytes": 2913,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-06.png",
+    "bytes": 3082,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-07.png",
+    "bytes": 3261,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "fx/b30-fx-uncertain-sheet.png",
+    "bytes": 26266,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "mascot/README.md",
+    "bytes": 5418,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "mascot/b30-mascot-chroma-720x960.png",
+    "bytes": 425821,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "mascot/b30-mascot-hero.png",
+    "bytes": 1298926,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-dial.png",
+    "bytes": 224258,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-knob.png",
+    "bytes": 39768,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-landmark-bridge.png",
+    "bytes": 207431,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-landmark-dock.png",
+    "bytes": 154870,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-landmark-lighthouse.png",
+    "bytes": 213295,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-pin-range.png",
+    "bytes": 3356,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-pin-unverified.png",
+    "bytes": 2260,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-pin-verified.png",
+    "bytes": 2559,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-route-long.png",
+    "bytes": 2532,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-route-mid.png",
+    "bytes": 2057,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-route-short.png",
+    "bytes": 1813,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-boat-depart.png",
+    "bytes": 103362,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-boat-idle.png",
+    "bytes": 102933,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-boat-return.png",
+    "bytes": 103525,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-boat-route.png",
+    "bytes": 102994,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-cart-depart.png",
+    "bytes": 152608,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-cart-idle.png",
+    "bytes": 152078,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-cart-return.png",
+    "bytes": 152319,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "props/b30-team-cart-route.png",
+    "bytes": 152157,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-map.png",
+    "bytes": 4121250,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-map.webp",
+    "bytes": 537550,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-scene-landscape.png",
+    "bytes": 2797254,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-scene-landscape.webp",
+    "bytes": 213890,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-scene-portrait.png",
+    "bytes": 2975265,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "scene/b30-scene-portrait.webp",
+    "bytes": 243262,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-card-ask.png",
+    "bytes": 2106,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-card-dispatch.png",
+    "bytes": 2103,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-clock-face.png",
+    "bytes": 5309,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-clock-hand-long.png",
+    "bytes": 1552,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-clock-hand-short.png",
+    "bytes": 1489,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-cost-1.png",
+    "bytes": 1351,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-cost-2.png",
+    "bytes": 1398,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-cost-3.png",
+    "bytes": 1437,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-icon-confirm.png",
+    "bytes": 3109,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-icon-jumpback.png",
+    "bytes": 2148,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-icon-pause.png",
+    "bytes": 1561,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-mark-action.png",
+    "bytes": 2943,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-mark-log.png",
+    "bytes": 1693,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-node-chosen.png",
+    "bytes": 1636,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-node-current.png",
+    "bytes": 1704,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-node-empty.png",
+    "bytes": 1601,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-node-untraveled.png",
+    "bytes": 1511,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-team-busy.png",
+    "bytes": 1831,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-team-idle.png",
+    "bytes": 2136,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-time-fill-full.png",
+    "bytes": 1824,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-time-fill-low.png",
+    "bytes": 1481,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-time-fill-mid.png",
+    "bytes": 1588,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-time-frame.png",
+    "bytes": 1760,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-wave-lock.png",
+    "bytes": 3025,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-wave-noisy.png",
+    "bytes": 3067,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  },
+  {
+    "file": "ui/b30-ui-wave-silent.png",
+    "bytes": 2455,
+    "size": null,
+    "mode": null,
+    "alpha": null
+  }
+]
