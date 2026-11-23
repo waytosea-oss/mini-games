@@ -1,0 +1,888 @@
+{
+  "id": "B3-03",
+  "slug": "mirrortown",
+  "title": "倒影街区",
+  "mascot": {
+    "name": "笺仔",
+    "letter_name": "信笺",
+    "pick": "B",
+    "reason": "两头身布偶体量最稳，纸船帽沿便于点头对位，十字针脚五官在背侧与侧身仍可读，信笺收在胁下，举起信笺动作从静姿态出发。",
+    "chroma": "#FF00AA",
+    "hero": "mascot/b03-mascot-hero.png",
+    "chroma_file": "mascot/b03-mascot-chroma-720x960.png",
+    "rejects": [
+      "mascot A 瘦长、双手持信、经典小帽",
+      "mascot C 静姿已举起信笺"
+    ]
+  },
+  "palette": {
+    "coral": "#E07A6A",
+    "coral_dk": "#C45C52",
+    "ivory": "#F3E6D4",
+    "ivory_dk": "#E8D5C0",
+    "lake": "#5BA4B8",
+    "lake_dk": "#3D8A9E",
+    "navy": "#1A2A44",
+    "navy_dk": "#0E1A2E",
+    "paper": "#F0D9A0",
+    "chroma": "#FF00AA"
+  },
+  "views": {
+    "stops": [
+      "front",
+      "right",
+      "left"
+    ],
+    "notes": "三档定点机位，约一百二十度一档。正面为玩法主构图：前拱完整、后路有缺口、左闸右箱、水下有倒影街区。右侧信箱前移、水闸退到左缘。左侧水闸近前、信箱在对岸远处。左侧天空与水色已向正面靠色，横图两侧天水接缝已羽化。三视图均不可左右翻转，否则水闸与信箱左右对调。",
+    "alignment": {
+      "front-portrait": {
+        "waterline_px": 1108,
+        "waterline_norm": 0.5771,
+        "size": [
+          1080,
+          1920
+        ]
+      },
+      "front-landscape": {
+        "waterline_px": 669,
+        "waterline_norm": 0.6194,
+        "size": [
+          1920,
+          1080
+        ]
+      },
+      "left-portrait": {
+        "waterline_px": 851,
+        "waterline_norm": 0.4432,
+        "size": [
+          1080,
+          1920
+        ]
+      },
+      "left-landscape": {
+        "waterline_px": 648,
+        "waterline_norm": 0.6,
+        "size": [
+          1920,
+          1080
+        ]
+      },
+      "right-portrait": {
+        "waterline_px": 1072,
+        "waterline_norm": 0.5583,
+        "size": [
+          1080,
+          1920
+        ]
+      },
+      "right-landscape": {
+        "waterline_px": 669,
+        "waterline_norm": 0.6194,
+        "size": [
+          1920,
+          1080
+        ]
+      }
+    }
+  },
+  "tide": {
+    "rule": "叠在完整街区底图之上。高潮水面抬升并半透明覆盖较低步道；低潮水面下降并露出湿石带。另附正面低潮整图替换件。岸上、水下街区、水面三层可单独开关。",
+    "stack_order": [
+      "town",
+      "under",
+      "shore",
+      "water",
+      "tide-high|tide-low",
+      "glow"
+    ]
+  },
+  "glow": {
+    "open": "overlays/b03-glow-open-strip.png",
+    "broken": "overlays/b03-glow-broken-strip.png",
+    "cap": "overlays/b03-glow-cap.png",
+    "corner": "overlays/b03-glow-corner.png",
+    "note": "可平铺的湖蓝加象牙描边。连通态连续发光，断开态中段留缺口。端帽与转角单独叠放。"
+  },
+  "zones": {
+    "origin": "top-left",
+    "normalized": true,
+    "portrait_1080x1920": {
+      "hud": [
+        0.0,
+        0.0,
+        1.0,
+        0.12
+      ],
+      "letter_status": [
+        0.03,
+        0.018,
+        0.36,
+        0.105
+      ],
+      "tide_status": [
+        0.64,
+        0.018,
+        0.97,
+        0.105
+      ],
+      "town": [
+        0.0,
+        0.12,
+        1.0,
+        0.8
+      ],
+      "compass": [
+        0.03,
+        0.7,
+        0.28,
+        0.86
+      ],
+      "buttons": [
+        0.04,
+        0.86,
+        0.96,
+        0.99
+      ]
+    },
+    "landscape_1920x1080": {
+      "hud": [
+        0.72,
+        0.0,
+        1.0,
+        0.14
+      ],
+      "letter_status": [
+        0.74,
+        0.03,
+        0.97,
+        0.13
+      ],
+      "tide_status": [
+        0.74,
+        0.14,
+        0.97,
+        0.24
+      ],
+      "town": [
+        0.0,
+        0.0,
+        0.72,
+        1.0
+      ],
+      "compass": [
+        0.74,
+        0.28,
+        0.97,
+        0.62
+      ],
+      "buttons": [
+        0.74,
+        0.68,
+        0.97,
+        0.97
+      ]
+    },
+    "viewport_390x844": "竖图安全区按同一归一化坐标使用。竖图画布本身为九点一六，三九零乘八四四视口按高度或宽度等比落入安全区即可。"
+  },
+  "props": [
+    {
+      "id": "mailbox-idle",
+      "file": "props/b03-mailbox-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        477.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "mailbox-waiting",
+      "file": "props/b03-mailbox-waiting.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        477.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "mailbox-delivered",
+      "file": "props/b03-mailbox-delivered.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        477.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "letter-coral",
+      "file": "props/b03-letter-coral.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        261.1,
+        253.4
+      ],
+      "mode": "center"
+    },
+    {
+      "id": "letter-lake",
+      "file": "props/b03-letter-lake.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        259.8,
+        253.0
+      ],
+      "mode": "center"
+    },
+    {
+      "id": "postcard",
+      "file": "props/b03-postcard.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        261.0,
+        253.1
+      ],
+      "mode": "center"
+    },
+    {
+      "id": "tide-gate",
+      "file": "props/b03-tide-gate.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        486.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "checkpoint",
+      "file": "props/b03-checkpoint.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        486.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "lamp-bridge-off",
+      "file": "props/b03-lamp-bridge-off.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        486.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "lamp-bridge-on",
+      "file": "props/b03-lamp-bridge-on.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        485.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "bridge-broken-a",
+      "file": "props/b03-bridge-broken-a.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        483.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "bridge-broken-b",
+      "file": "props/b03-bridge-broken-b.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        483.0
+      ],
+      "mode": "bottom"
+    },
+    {
+      "id": "bridge-complete",
+      "file": "props/b03-bridge-complete.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        487.0
+      ],
+      "mode": "bottom"
+    }
+  ],
+  "tiles": [
+    {
+      "id": "house",
+      "file": "tiles/b03-tile-house.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        484.0
+      ]
+    },
+    {
+      "id": "tower",
+      "file": "tiles/b03-tile-tower.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        486.0
+      ]
+    },
+    {
+      "id": "path",
+      "file": "tiles/b03-tile-path.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        485.0
+      ]
+    },
+    {
+      "id": "path-curve",
+      "file": "tiles/b03-tile-path-curve.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        485.0
+      ]
+    },
+    {
+      "id": "water",
+      "file": "tiles/b03-tile-water.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        486.0
+      ]
+    },
+    {
+      "id": "dock",
+      "file": "tiles/b03-tile-dock.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        486.0
+      ]
+    },
+    {
+      "id": "tree",
+      "file": "tiles/b03-tile-tree.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        485.0
+      ]
+    },
+    {
+      "id": "stairs",
+      "file": "tiles/b03-tile-stairs.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.0,
+        485.0
+      ]
+    }
+  ],
+  "iso_mascot": [
+    {
+      "id": "iso-front",
+      "file": "mascot/b03-mascot-iso-front.png",
+      "size": [
+        768,
+        768
+      ],
+      "feet_anchor": [
+        384.5,
+        737.0
+      ]
+    },
+    {
+      "id": "iso-back",
+      "file": "mascot/b03-mascot-iso-back.png",
+      "size": [
+        768,
+        768
+      ],
+      "feet_anchor": [
+        384.0,
+        737.0
+      ]
+    },
+    {
+      "id": "iso-side",
+      "file": "mascot/b03-mascot-iso-side.png",
+      "size": [
+        768,
+        768
+      ],
+      "feet_anchor": [
+        385.0,
+        737.0
+      ]
+    }
+  ],
+  "ui": [
+    {
+      "id": "compass-front",
+      "file": "ui/b03-compass-front.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ]
+    },
+    {
+      "id": "compass-right",
+      "file": "ui/b03-compass-right.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ]
+    },
+    {
+      "id": "compass-left",
+      "file": "ui/b03-compass-left.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ]
+    },
+    {
+      "id": "btn-undo",
+      "file": "ui/b03-btn-undo.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "btn-letter",
+      "file": "ui/b03-btn-letter.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "btn-tide",
+      "file": "ui/b03-btn-tide.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "btn-tide-open",
+      "file": "ui/b03-btn-tide-open.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-delivered",
+      "file": "ui/b03-icon-delivered.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-postcard",
+      "file": "ui/b03-icon-postcard.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    }
+  ],
+  "fx": [
+    {
+      "id": "fx-stamp",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b03-fx-stamp-sheet.png",
+      "pattern": "fx/b03-fx-stamp-{i:02d}.png"
+    },
+    {
+      "id": "fx-ripple",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b03-fx-ripple-sheet.png",
+      "pattern": "fx/b03-fx-ripple-{i:02d}.png"
+    }
+  ],
+  "covers": {
+    "cover_3x4": {
+      "size": [
+        1080,
+        1440
+      ],
+      "mascot_box": [
+        40,
+        820,
+        660,
+        1440
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        1.0,
+        0.36
+      ]
+    },
+    "cover_16x9": {
+      "size": [
+        1920,
+        1080
+      ],
+      "mascot_box": [
+        40,
+        300,
+        560,
+        1080
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        0.42,
+        0.4
+      ]
+    }
+  },
+  "animation": {
+    "clips": [
+      "hat-nod",
+      "letter-show",
+      "ripple"
+    ],
+    "sheet": "6x4",
+    "fps_src": 24,
+    "chroma": "#FF00AA",
+    "optional_walk": "未做循环走步，已交付等距正面、背面、侧面静帧。",
+    "clips_meta": {
+      "hat-nod": {
+        "fw": 306,
+        "fh": 426,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b03-mascot-sheet-hat-nod.webp"
+        ],
+        "fallback": "b03-mascot-sheet-hat-nod.png",
+        "still": "b03-mascot-still-hat-nod.png",
+        "body": {
+          "crop_from_video": [
+            87,
+            125,
+            393,
+            551
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b03-anim-01-hat-nod.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            156.96735749394742,
+            215.51806752437028
+          ],
+          "anchor_norm": [
+            0.5129652205684556,
+            0.5059109566299772
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "letter-show": {
+        "fw": 286,
+        "fh": 420,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b03-mascot-sheet-letter-show.webp"
+        ],
+        "fallback": "b03-mascot-sheet-letter-show.png",
+        "still": "b03-mascot-still-letter-show.png",
+        "body": {
+          "crop_from_video": [
+            97,
+            125,
+            383,
+            545
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b03-anim-02-letter-show.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            147.0028965925456,
+            215.5093434047062
+          ],
+          "anchor_norm": [
+            0.5139961419319776,
+            0.5131174842969195
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "ripple": {
+        "fw": 420,
+        "fh": 478,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b03-mascot-sheet-ripple.webp"
+        ],
+        "fallback": "b03-mascot-sheet-ripple.png",
+        "still": "b03-mascot-still-ripple.png",
+        "body": {
+          "crop_from_video": [
+            39,
+            125,
+            459,
+            603
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b03-anim-03-ripple.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            204.96904480344708,
+            215.50503274053676
+          ],
+          "anchor_norm": [
+            0.48802153524630254,
+            0.45084734882957483
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      }
+    }
+  },
+  "anchors": {
+    "hero_canvas": [
+      1360,
+      1360
+    ],
+    "iso_feet": "mascot iso 脚底中点",
+    "prop_mailbox": "512 画布底部居中",
+    "fx": [
+      256,
+      256
+    ],
+    "ui": "按钮与罗盘中心"
+  },
+  "props_note": "检查点为象牙圆台与湖蓝灯笼合一件。近景交互信箱用毛绒立式信箱三态，街区内的珊瑚色柱式信箱已画在三视图场景中。"
+}
