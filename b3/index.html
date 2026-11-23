@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="第三批预览目录，只列出本批已完成的试玩。">
+  <title>第三批预览</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%23e7c98a' stroke-width='2'/%3E%3C/svg%3E">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      color: #f6f1e6;
+      background:
+        linear-gradient(180deg, rgba(5,10,18,.45), rgba(5,10,18,.82)),
+        url("starlock/assets/cover-bg-3x4.webp") center / cover no-repeat fixed,
+        #071018;
+    }
+    main { width: min(560px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
+    .eyebrow { letter-spacing: .18em; color: #8fd8cc; font-size: 13px; margin: 0 0 8px; }
+    h1 {
+      font-family: "Songti SC", "STSong", "PingFang SC", "WenQuanYi Micro Hei", serif;
+      font-weight: 600; letter-spacing: .12em; font-size: 36px; margin: 0 0 8px;
+    }
+    p { line-height: 1.6; color: #c5cec8; }
+    a.card {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 14px;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(231,201,138,.4);
+      background: rgba(8,16,28,.72);
+    }
+    a.card:focus-visible { outline: 2px solid #e7c98a; outline-offset: 3px; }
+    .sprite {
+      width: 112px;
+      aspect-ratio: 382 / 374;
+      background-repeat: no-repeat;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));
+    }
+    h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: .08em; }
+    .go { color: #e7c98a; margin: 8px 0 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">第三批 · 预览目录</p>
+    <h1>试玩预览</h1>
+    <p>这里只列出本批已经做好的试玩。进度存在这台设备上。</p>
+    <a class="card" href="starlock/index.html">
+      <div class="sprite" id="cover-sprite" role="img" aria-label="星核动画封面"></div>
+      <div>
+        <h2>九环星锁</h2>
+        <p>转动带缺口的星环，让星核逐层脱锁。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+  </main>
+  <script>
+    (function () {
+      var el = document.getElementById("cover-sprite");
+      var img = new Image();
+      var fw = 382, fh = 374, cols = 6, n = 24, frame = 0;
+      img.onload = function () {
+        var tick = function () {
+          var w = el.clientWidth || 112;
+          var scale = w / fw;
+          var col = frame % cols;
+          var row = Math.floor(frame / cols);
+          el.style.backgroundImage = "url('" + img.src + "')";
+          el.style.backgroundSize = (fw * cols * scale) + "px " + (fh * 4 * scale) + "px";
+          el.style.backgroundPosition = (-col * fw * scale) + "px " + (-row * fh * scale) + "px";
+        };
+        tick();
+        setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        img.src = "starlock/assets/mascot/ring-turn.png";
+      };
+      img.src = "starlock/assets/mascot/ring-turn.webp";
+    })();
+  </script>
+</body>
+</html>
