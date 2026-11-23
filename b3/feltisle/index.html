@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="方寸生态：在十五片平顶六角里，让连通和多样性一起站住。">
+  <title>方寸生态</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon points='8,1 14,4.5 14,11.5 8,15 2,11.5 2,4.5' fill='none' stroke='%232F6B3A' stroke-width='1.6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <section id="screen-cover" class="screen">
+      <img id="cover-bg" class="fill" alt="">
+      <canvas id="cover-actor" class="fill" aria-label="毛毡岛灵"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="cover-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div class="cover-copy">
+        <p class="eyebrow">毛毡桌面 · 平顶六角</p>
+        <h1>方寸生态</h1>
+        <p class="sub">在十五片里，让连通和多样性一起站住。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-tutor">先走教学</button>
+          <button type="button" id="btn-main">直接铺岛</button>
+          <button type="button" id="btn-continue" hidden>继续铺岛</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-play" class="screen" hidden>
+      <img id="scene" class="fill" alt="">
+      <a class="back" href="../index.html">返回预览</a>
+      <div class="top-icons">
+        <button type="button" class="music" id="play-music" aria-label="音乐" aria-pressed="true">乐</button>
+        <button type="button" class="imgbtn" id="btn-pause" aria-label="暂停"><img id="icon-pause" alt=""></button>
+        <button type="button" class="imgbtn" id="btn-replay" aria-label="复盘"><img id="icon-replay" alt=""></button>
+      </div>
+      <p class="hud-title" id="hud-title">方寸生态</p>
+      <div class="zone-board">
+        <canvas id="board"></canvas>
+        <p class="banner" id="banner" aria-live="polite"></p>
+      </div>
+      <div class="zone-cards" id="cards"></div>
+      <div class="zone-meters">
+        <div class="gauge">
+          <canvas id="gauge-connect" width="256" height="160"></canvas>
+          <span>连通</span>
+        </div>
+        <div class="gauge">
+          <canvas id="gauge-diverse" width="256" height="160"></canvas>
+          <span>多样性</span>
+        </div>
+      </div>
+      <div class="zone-species" id="species-dock"></div>
+      <div class="zone-assist">
+        <button type="button" class="imgbtn" id="btn-rotate" aria-label="旋转"><img id="icon-rotate" alt=""></button>
+        <button type="button" class="textbtn primary" id="btn-confirm">确认放下</button>
+        <button type="button" class="textbtn" id="btn-undo">撤回</button>
+        <button type="button" class="textbtn" id="btn-live" hidden>回到当前</button>
+      </div>
+      <div class="demand" id="demand" hidden>
+        <img class="demand-bg" id="demand-bg" alt="">
+        <img class="demand-icon" id="demand-icon" alt="">
+        <p id="demand-copy"></p>
+        <button type="button" id="btn-demand-close">知道了</button>
+      </div>
+      <div class="veil" id="pause-veil" hidden>
+        <p>先停一停。</p>
+        <button type="button" class="primary" id="btn-resume">继续铺</button>
+      </div>
+      <div class="result" id="result" hidden>
+        <canvas id="result-actor" width="280" height="320" aria-hidden="true"></canvas>
+        <h2 id="result-title"></h2>
+        <p id="result-copy"></p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-replay-result">复盘每一步</button>
+          <button type="button" id="btn-retry">再试一次</button>
+          <button type="button" id="btn-next" hidden>进入正式岛</button>
+          <button type="button" id="btn-cover">回到封面</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="audio.js"></script>
+  <script src="rules.js"></script>
+  <script src="game.js"></script>
+  <script>
+    (function () {
+      var land = document.documentElement.classList.contains('land');
+      document.getElementById('cover-bg').src = land
+        ? 'assets/cover/b29-cover-16x9-bg.webp'
+        : 'assets/cover/b29-cover-3x4-bg.webp';
+    })();
+  </script>
+</body>
+</html>
