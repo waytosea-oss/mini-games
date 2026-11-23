@@ -1,0 +1,63 @@
+{
+  "fw": 358,
+  "fh": 422,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b08-mascot-sheet-wind.webp"
+  ],
+  "fallback": "b08-mascot-sheet-wind.png",
+  "still": "b08-mascot-still-wind.png",
+  "body": {
+    "crop_from_video": [
+      97,
+      95,
+      455,
+      517
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b08-anim-01-wind.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      146.1309831718613,
+      242.74373035020875
+    ],
+    "anchor_norm": [
+      0.4081871038320148,
+      0.5752221098346179
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}
