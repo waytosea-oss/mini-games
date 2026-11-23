@@ -1,0 +1,63 @@
+{
+  "fw": 443,
+  "fh": 420,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b06-mascot-sheet-flame-sway.webp"
+  ],
+  "fallback": "b06-mascot-sheet-flame-sway.png",
+  "still": "b06-mascot-still-flame-sway.png",
+  "body": {
+    "crop_from_video": [
+      37,
+      143,
+      480,
+      563
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b06-anim-01-flame-sway.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      238.8,
+      238.6
+    ],
+    "anchor_norm": [
+      0.5391,
+      0.5682
+    ],
+    "anchor_note": "rest-pose lantern body (largest component), not including the floating card; origin top-left"
+  }
+}

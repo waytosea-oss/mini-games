@@ -1,0 +1,63 @@
+{
+  "fw": 322,
+  "fh": 408,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b05-mascot-sheet-brake.webp"
+  ],
+  "fallback": "b05-mascot-sheet-brake.png",
+  "still": "b05-mascot-still-brake.png",
+  "body": {
+    "crop_from_video": [
+      81,
+      108,
+      403,
+      516
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b05-anim-03-brake.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      157.66591798860952,
+      234.9130173635227
+    ],
+    "anchor_norm": [
+      0.48964570803916,
+      0.5757671994203988
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

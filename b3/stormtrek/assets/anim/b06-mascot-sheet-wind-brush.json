@@ -1,0 +1,63 @@
+{
+  "fw": 480,
+  "fh": 418,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b06-mascot-sheet-wind-brush.webp"
+  ],
+  "fallback": "b06-mascot-sheet-wind-brush.png",
+  "still": "b06-mascot-still-wind-brush.png",
+  "body": {
+    "crop_from_video": [
+      0,
+      179,
+      480,
+      597
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b06-anim-03-wind-brush.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      275.8,
+      202.7
+    ],
+    "anchor_norm": [
+      0.5746,
+      0.4848
+    ],
+    "anchor_note": "rest-pose lantern body (largest component), not including the floating card; origin top-left"
+  }
+}
