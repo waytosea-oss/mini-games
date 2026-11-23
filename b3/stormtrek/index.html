@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="风暴牌旅：用天气牌改写下一场遭遇，护送商队穿过六个气候节点。">
+  <title>风暴牌旅</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5c2.2 2 3.2 3.8 3.2 6.1A3.2 3.2 0 1 1 4.8 7.6C4.8 5.3 5.8 3.5 8 1.5z' fill='%23F4F7FF'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <section id="screen-cover" class="screen">
+    <div class="cover-stage" id="cover-stage">
+      <img class="plate" id="cover-bg" alt="" src="assets/cover/b06-cover-bg-3x4.webp">
+      <div id="cover-anchor" class="anchor" aria-hidden="true"></div>
+      <div class="topbar">
+        <a class="text-link" href="../index.html">返回预览</a>
+        <span style="flex:1"></span>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+      <div class="cover-copy">
+        <p class="eyebrow">商队 · 气候牌</p>
+        <h1>风暴牌旅</h1>
+        <p class="sub">你手里的每张牌，都在改写下一场天气。</p>
+        <div class="cover-actions" id="cover-actions"></div>
+        <div class="starter-pick" id="starter-pick" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-map" class="screen panel-page" hidden>
+    <div class="page">
+      <div class="topbar">
+        <a class="text-link" href="../index.html">返回预览</a>
+        <span style="flex:1"></span>
+        <button type="button" class="icon-btn" id="btn-map-cover" aria-label="回封面">封</button>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+      <p class="eyebrow">六个气候节点</p>
+      <h1>风暴牌旅</h1>
+      <p class="sub" id="map-seed"></p>
+      <div class="hp-inline" id="map-hp"></div>
+      <div class="route" id="map-nodes"></div>
+      <div class="sheet">
+        <p id="map-log"></p>
+        <p class="muted">雨路靠降雨、雨囊和雨灭压住点火。晴风路靠火把与风帆，晴天记得留护盾。</p>
+      </div>
+      <div class="cover-actions" style="margin-top:14px">
+        <button type="button" class="btn-gold" id="btn-enter">进入节点</button>
+        <button type="button" class="btn" id="btn-deck">牌组</button>
+        <button type="button" class="btn" id="btn-map-codex">图鉴</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-battle" class="screen" hidden>
+    <div class="bg-layer">
+      <img id="battle-bg" alt="">
+      <img id="battle-overlay" alt="">
+    </div>
+    <div class="zone zone-hud">
+      <a class="text-link" href="../index.html">返回</a>
+      <span style="flex:1"></span>
+      <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+    </div>
+    <div class="zone zone-badge" id="weather-badge"></div>
+    <div class="zone zone-intent" id="intent-zone">
+      <img class="intent-icon" id="intent-icon" alt="">
+      <div class="intent-copy">
+        <b id="intent-num">0</b>
+        <span id="intent-name">意图</span>
+      </div>
+    </div>
+    <div class="zone zone-hp" id="hp-zone"></div>
+    <div class="units-layer" id="units"></div>
+    <div class="hit" id="caravan-hit"></div>
+    <div class="hit" id="enemy-hit"></div>
+    <div class="enemy-plate" id="enemy-plate"></div>
+    <div class="float-copy">
+      <p class="bubble" id="battle-log" aria-live="polite"></p>
+      <p class="bubble preview" id="preview-banner" hidden></p>
+      <p class="bubble" id="coach" hidden></p>
+      <div class="bubble" id="inspect" hidden></div>
+    </div>
+    <div class="zone zone-track">
+      <div class="track" id="track">
+        <img class="track-art" data-src="assets/ui/b06-ui-weather-track.png" alt="">
+        <div class="slot" data-slot="sun" style="left:22%"></div>
+        <div class="slot" data-slot="rain" style="left:50%"></div>
+        <div class="slot" data-slot="wind" style="left:78%"></div>
+      </div>
+    </div>
+    <div class="zone zone-hand hand" id="hand"></div>
+    <div class="zone zone-buttons">
+      <div class="pile" id="piles"></div>
+      <button type="button" class="img-btn" id="btn-end">
+        <img data-src="assets/ui/b06-ui-end-turn.png" alt="">
+        <span>结束回合</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="screen-reward" class="screen panel-page" hidden>
+    <div class="page">
+      <div class="topbar">
+        <a class="text-link" href="../index.html">返回预览</a>
+        <span style="flex:1"></span>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+      <p class="eyebrow">战后</p>
+      <h2>三选一</h2>
+      <p class="sub">选一张带走，也可以跳过。点牌可以先读效果。</p>
+      <div class="reward-row" id="reward-row"></div>
+      <div class="sheet" id="reward-copy" style="margin-top:12px"></div>
+      <div class="cover-actions" style="margin-top:14px">
+        <button type="button" class="btn-gold" id="btn-take" disabled>带走这张</button>
+        <button type="button" class="img-btn" id="btn-skip">
+          <img data-src="assets/ui/b06-ui-skip-reward.png" alt="">
+          <span>跳过奖励</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-camp" class="screen panel-page" hidden>
+    <div class="page">
+      <div class="topbar">
+        <a class="text-link" href="../index.html">返回预览</a>
+        <span style="flex:1"></span>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+      <p class="eyebrow">营地</p>
+      <h2>修篷或删牌</h2>
+      <p class="sub" id="camp-log">两件只能确认一件。</p>
+      <div class="choice-row">
+        <button type="button" class="choice" id="camp-repair">
+          <img data-src="assets/ui/b06-ui-repair.png" alt="">
+          <strong>修车</strong>
+          <small>恢复 10 点耐久</small>
+        </button>
+        <button type="button" class="choice" id="camp-delete">
+          <img data-src="assets/ui/b06-ui-discard.png" alt="">
+          <strong>删一张牌</strong>
+          <small>从牌组移出一张</small>
+        </button>
+      </div>
+      <div class="deck-grid" id="camp-deck"></div>
+      <div class="cover-actions" style="margin-top:14px">
+        <button type="button" class="btn-gold" id="btn-camp-ok" disabled>确认这一件</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-result" class="screen panel-page" hidden>
+    <div class="page">
+      <div class="topbar">
+        <a class="text-link" href="../index.html">返回预览</a>
+        <span style="flex:1"></span>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+      <div class="result-layout">
+        <div id="result-box"><div id="result-anchor"></div></div>
+        <div>
+          <p class="eyebrow" id="result-kicker"></p>
+          <h1 id="result-title"></h1>
+          <p class="sub" id="result-copy"></p>
+          <div class="cover-actions" style="margin-top:12px">
+            <button type="button" class="btn-gold" id="btn-retry-seed">同种子再走</button>
+            <button type="button" class="btn" id="btn-new-run">新的一程</button>
+            <button type="button" class="btn" id="btn-result-codex">图鉴</button>
+          </div>
+          <div class="starter-pick" id="result-starters" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-codex" class="screen panel-page" hidden>
+    <div class="page">
+      <div class="topbar">
+        <button type="button" class="icon-btn" id="btn-codex-back" aria-label="返回">返</button>
+        <span style="flex:1"></span>
+        <a class="text-link" href="../index.html">返回预览</a>
+      </div>
+      <p class="eyebrow">图鉴</p>
+      <h2>这一路上见过的牌</h2>
+      <div class="sheet">
+        <p>雨路：用降雨压低点火，雨囊和护盾扛下迅猛，雨灭浇掉火种，雷暴补上伤害。车轮在雨里较慢。</p>
+        <p>晴风路：晴天让火把变亮，风天让风帆同时推进和挡伤。劫匪在晴天会点得很疼，先留护盾再打。</p>
+        <p class="muted">失败只留下图鉴。下一程从起始牌组出发，攻击不会越积越高。</p>
+      </div>
+      <div class="codex-grid" id="codex-grid"></div>
+      <div class="sheet" id="codex-copy" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <div id="modal-deck" class="screen" hidden style="position:fixed;inset:0;z-index:40;background:rgba(5,10,20,.72);overflow:auto">
+    <div class="page">
+      <div class="topbar">
+        <button type="button" class="icon-btn" id="btn-deck-close" aria-label="关闭">关</button>
+        <strong>当前牌组</strong>
+      </div>
+      <div class="deck-grid" id="deck-list"></div>
+    </div>
+  </div>
+  <div id="autotest" hidden></div>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "fw": 368,
+  "fh": 382,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b05-mascot-sheet-tilt.webp"
+  ],
+  "fallback": "b05-mascot-sheet-tilt.png",
+  "still": "b05-mascot-still-tilt.png",
+  "body": {
+    "crop_from_video": [
+      67,
+      135,
+      435,
+      517
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b05-anim-01-tilt.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      171.66665818398113,
+      207.90467419125326
+    ],
+    "anchor_norm": [
+      0.4664854841956009,
+      0.5442530737990923
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

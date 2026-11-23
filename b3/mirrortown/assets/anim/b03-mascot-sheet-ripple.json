@@ -1,0 +1,63 @@
+{
+  "fw": 420,
+  "fh": 478,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b03-mascot-sheet-ripple.webp"
+  ],
+  "fallback": "b03-mascot-sheet-ripple.png",
+  "still": "b03-mascot-still-ripple.png",
+  "body": {
+    "crop_from_video": [
+      39,
+      125,
+      459,
+      603
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b03-anim-03-ripple.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      204.96904480344708,
+      215.50503274053676
+    ],
+    "anchor_norm": [
+      0.48802153524630254,
+      0.45084734882957483
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

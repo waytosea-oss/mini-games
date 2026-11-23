@@ -1,0 +1,63 @@
+{
+  "fw": 382,
+  "fh": 460,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b07-mascot-sheet-glow-pulse.webp"
+  ],
+  "fallback": "b07-mascot-sheet-glow-pulse.png",
+  "still": "b07-mascot-still-glow-pulse.png",
+  "body": {
+    "crop_from_video": [
+      51,
+      157,
+      433,
+      617
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b07-anim-01-glow-pulse.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      187.8747077177767,
+      262.6752218692243
+    ],
+    "anchor_norm": [
+      0.49181860659103843,
+      0.5710330910200528
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}
