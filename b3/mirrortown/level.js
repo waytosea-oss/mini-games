@@ -185,6 +185,22 @@
     return false;
   }
 
+  /*
+   * 行走中途锁定新机位后，按新机位的亮线、潮位和连通重看剩余路径。
+   * index 是当前平台（这一步还没走完）。后面任一节点不可走，就停在这个平台，
+   * 不跨过没有亮线的缺口。整段剩余路径仍然可走时，返回路径终点下标。
+   */
+  function haltIndexAfterView(nodes, index, view, tide) {
+    var at = index | 0;
+    if (!nodes || !nodes.length) return at;
+    if (at < 0) at = 0;
+    if (at >= nodes.length) return nodes.length - 1;
+    for (var i = at; i < nodes.length - 1; i++) {
+      if (!edgeOpen(nodes[i], nodes[i + 1], view, tide)) return at;
+    }
+    return nodes.length - 1;
+  }
+
   function breakCopy(edge, view, tide) {
     if (!edge) return '亮线在这里断开，笺仔停在断口前。';
     if (edge.role === 'reflect' && view !== 'left') return '正面拱桥中间断开，倒影两端还没对齐。';
@@ -321,6 +337,7 @@
     glowEdges: glowEdges,
     planRoute: planRoute,
     edgeOpen: edgeOpen,
+    haltIndexAfterView: haltIndexAfterView,
     breakCopy: breakCopy,
     coach: coach,
     hintTarget: hintTarget,

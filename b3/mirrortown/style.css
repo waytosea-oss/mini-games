@@ -260,6 +260,7 @@ h1 { font-size: clamp(34px, 7vw, 64px); color: var(--navy); }
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
 }
+.clear { z-index: 9; overflow: auto; }
 .closeup-card, .clear-card {
   width: min(420px, 100%);
   background: var(--ivory);
@@ -267,6 +268,23 @@ h1 { font-size: clamp(34px, 7vw, 64px); color: var(--navy); }
   border-radius: 22px;
   padding: 16px 16px 18px;
   box-shadow: var(--shadow);
+}
+.clear-card { position: relative; }
+.clear-mascot {
+  position: relative;
+  width: 100%;
+  height: 168px;
+  overflow: hidden;
+  pointer-events: none;
+  margin: 0 0 4px;
+}
+#clear-anchor.clear-mascot {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: 168px;
+  z-index: 1;
 }
 .closeup-card h2, .clear-card h2 { font-size: 28px; }
 .closeup-art {
@@ -304,6 +322,91 @@ h1 { font-size: clamp(34px, 7vw, 64px); color: var(--navy); }
     flex-wrap: wrap;
   }
   .hud-side { flex-wrap: wrap; }
+}
+
+/* 矮横屏右侧栏改成网格分行，避免状态、信笺、音乐和罗盘叠在一起。 */
+@media (orientation: landscape) and (max-height: 520px) {
+  .play {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    grid-template-rows: auto auto auto minmax(72px, 1fr) auto auto;
+    grid-template-areas:
+      "town nav"
+      "town chips"
+      "town status"
+      "town compass"
+      "town coach"
+      "town tools";
+    column-gap: 8px;
+    row-gap: 4px;
+    padding: 8px;
+    height: 100dvh;
+  }
+  .zone-town {
+    grid-area: town;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+  .zone-hud { display: contents; }
+  .hud-side:first-child {
+    grid-area: nav;
+    align-self: start;
+    flex-wrap: nowrap;
+  }
+  .hud-side:last-child {
+    grid-area: chips;
+    align-self: start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+  }
+  #meta-line {
+    grid-area: status;
+    position: static;
+    left: auto;
+    top: auto;
+    right: auto;
+    margin: 0;
+    align-self: center;
+    white-space: normal;
+    line-height: 1.35;
+  }
+  .zone-compass {
+    grid-area: compass;
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    min-height: 72px;
+    align-self: center;
+    justify-content: flex-start;
+  }
+  #compass { width: 84px; min-width: 72px; min-height: 72px; }
+  .coach {
+    grid-area: coach;
+    position: static;
+    left: auto;
+    top: auto;
+    right: auto;
+    max-height: 4.4em;
+  }
+  .zone-buttons {
+    grid-area: tools;
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    height: auto;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .tool { min-height: 52px; max-width: none; padding: 2px; }
+  .tool img { width: 32px; height: 32px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

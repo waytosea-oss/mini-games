@@ -80,7 +80,7 @@
   };
   var gctx = el.glow.getContext('2d');
   var coverPlayer = makePlayer(el.coverAnchor);
-  var clearPlayer = makePlayer(el.clearAnchor);
+  var clearPlayer = makePlayer(el.clearAnchor, { slot: true });
 
   function fresh(best) {
     return {
@@ -178,27 +178,51 @@
     persist();
   }
 
-  function makePlayer(anchor) {
+  function makePlayer(anchor, opts) {
     var node = document.createElement('div');
     node.className = 'sprite-sheet';
     anchor.appendChild(node);
-    return { anchor: anchor, el: node, clip: 'nod', frame: 0, acc: 0, once: null, playing: true };
+    return {
+      anchor: anchor,
+      el: node,
+      clip: 'nod',
+      frame: 0,
+      acc: 0,
+      once: null,
+      playing: true,
+      slot: !!(opts && opts.slot)
+    };
   }
 
-  function spriteHeight() {
+  function spriteHeight(player) {
+    if (player && player.slot) {
+      var short = ori() === 'l' && window.innerHeight <= 520;
+      return Math.round(Math.max(96, Math.min(132, window.innerHeight * (short ? 0.24 : 0.16))));
+    }
     return Math.round(Math.max(200, Math.min(460, window.innerHeight * (ori() === 'l' ? 0.62 : 0.46))));
   }
 
   function drawSheet(player) {
     var spec = SHEETS[player.clip];
-    var h = spriteHeight();
+    var h = spriteHeight(player);
     var scale = h / spec.fh;
     var dw = spec.fw * scale;
     var dh = spec.fh * scale;
     player.el.style.width = dw + 'px';
     player.el.style.height = dh + 'px';
-    player.el.style.left = (-spec.ax * scale) + 'px';
-    player.el.style.top = (-spec.ay * scale) + 'px';
+    if (player.slot) {
+      var slotH = Math.round(h * 1.28);
+      var anchorY = Math.round(slotH * 0.46);
+      player.anchor.style.height = slotH + 'px';
+      player.el.style.left = '50%';
+      player.el.style.top = anchorY + 'px';
+      player.el.style.transform = 'translate(' + (-spec.ax * scale) + 'px, ' + (-spec.ay * scale) + 'px)';
+      player.el.style.pointerEvents = 'none';
+    } else {
+      player.el.style.left = (-spec.ax * scale) + 'px';
+      player.el.style.top = (-spec.ay * scale) + 'px';
+      player.el.style.transform = '';
+    }
     if (reduceMotion) {
       player.el.style.backgroundImage = "url('" + spec.still + "')";
       player.el.style.backgroundSize = dw + 'px ' + dh + 'px';
@@ -530,6 +554,7 @@
     else el.coach.textContent = sayText;
     el.clear.hidden = state.phase !== 'clear';
     if (state.phase === 'clear') {
+      el.closeup.hidden = true;
       if (!clearPlayed) {
         clearPlayed = true;
         clearPlayer.playing = true;
@@ -633,14 +658,17 @@
     state.seenLane = ev.seenLane;
     if (ev.event === 'coral' || ev.event === 'lake') {
       playFx('stamp', to);
-      openLetter(ev.event, true);
-      lockUntil = performance.now() + 680;
+      if (!ev.cleared) {
+        openLetter(ev.event, true);
+        lockUntil = performance.now() + 680;
+      }
     } else if (ev.event === 'postcard') {
       playFx('ripple', to);
       say('空白明信片收进怀里。绕一下也不耽误送信。');
     }
     if (ev.cleared) {
       state.phase = 'clear';
+      el.closeup.hidden = true;
       if (state.best == null || state.steps < state.best) state.best = state.steps;
       say('两封信笺都放到信箱里了。');
     } else if (br) {
@@ -683,9 +711,8 @@
       turn.locked = true;
       state.view = turn.next;
       if (walk) {
-        var a = walk.nodes[walk.index];
-        var b = walk.nodes[walk.index + 1];
-        if (!(b && L.edgeOpen(a, b, state.view, state.tide))) {
+        var haltAt = L.haltIndexAfterView(walk.nodes, walk.index, state.view, state.tide);
+        if (haltAt <= walk.index) {
           walk = null;
           say('机位变了，这一步停在平台上。');
         } else sayUntil = 0;
@@ -736,13 +763,14 @@
     paint();
   }
 
-  function doReset() {
-    if (Date.now() - resetArm > 2400) {
+  function doReset(force) {
+    if (force !== true && Date.now() - resetArm > 2400) {
       resetArm = Date.now();
       say('再点一次重开，这一程从头送信。最少步数会留着。');
       return;
     }
     resetArm = 0;
+    lockUntil = 0;
     var best = state.best;
     state = fresh(best);
     state.phase = 'play';
@@ -750,6 +778,8 @@
     walk = null;
     turn = null;
     plateKey = '';
+    clearPlayed = false;
+    clearPlayer.playing = false;
     el.closeup.hidden = true;
     persist();
     paint();
@@ -906,8 +936,7 @@
     showCover();
   });
   document.getElementById('btn-again').addEventListener('click', function () {
-    doReset();
-    resetArm = 0;
+    doReset(true);
   });
   document.querySelectorAll('[data-music]').forEach(function (btn) {
     btn.addEventListener('click', onMusic);
@@ -937,6 +966,7 @@
       paint();
     } else layoutCover();
     drawSheet(coverPlayer);
+    drawSheet(clearPlayer);
   });
 
   function frame(now) {

@@ -45,6 +45,20 @@ assert.strictEqual(L.edgeOpen('wharf', 'lip', 'front', 'low'), true);
 assert.strictEqual(L.edgeOpen('lip', 'gap1', 'front', 'high'), false);
 assert.strictEqual(L.edgeOpen('lip', 'gap1', 'left', 'high'), true);
 
+/* 左侧高潮已规划西码头 → 中转平台，走到半路改锁右侧：码头这一步仍开放，桥心没有亮线，必须停在当前平台。 */
+var midNodes = left.nodes;
+assert.deepStrictEqual(midNodes, ['wharf', 'lip', 'gap1', 'gap2']);
+assert.strictEqual(L.edgeOpen('wharf', 'lip', 'right', 'high'), true);
+assert.strictEqual(L.edgeOpen('lip', 'gap1', 'right', 'high'), false);
+assert.strictEqual(L.haltIndexAfterView(midNodes, 0, 'right', 'high'), 0);
+assert.strictEqual(L.haltIndexAfterView(midNodes, 0, 'front', 'high'), 0);
+assert.strictEqual(L.haltIndexAfterView(midNodes, 0, 'left', 'low'), 0);
+assert.strictEqual(L.haltIndexAfterView(midNodes, 1, 'right', 'high'), 1);
+assert.strictEqual(L.haltIndexAfterView(midNodes, 0, 'left', 'high'), midNodes.length - 1);
+assert.strictEqual(L.haltIndexAfterView(['wharf', 'lip'], 0, 'right', 'high'), 1);
+assert.strictEqual(L.haltIndexAfterView(right.nodes, 0, 'right', 'high'), right.nodes.length - 1);
+assert.strictEqual(L.haltIndexAfterView(right.nodes, 0, 'front', 'high'), 0);
+
 var arrived = L.applyArrival({ coral: false, lake: false, postcard: false, seenLane: false }, 'prom');
 assert.strictEqual(arrived.coral, true);
 assert.strictEqual(arrived.lake, false);
