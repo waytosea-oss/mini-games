@@ -129,8 +129,8 @@ html.land .cover-actions { justify-content: flex-start; }
 .zone-encounter { left: 54%; top: 1%; width: 44%; height: 11.5%; display: flex; flex-direction: column; overflow: hidden; }
 .zone-supply { left: 3%; top: 13.6%; width: 46%; height: 4%; }
 .zone-durability { left: 51%; top: 13.6%; width: 46%; height: 4%; }
-.zone-grid { left: 3%; top: 18.2%; width: 94%; height: 54%; display: flex; align-items: center; justify-content: center; }
-.zone-route { left: 4%; top: 73%; width: 92%; height: 8%; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.zone-grid { left: 3%; top: 18.2%; width: 94%; height: 51%; display: flex; align-items: center; justify-content: center; }
+.zone-route { left: 4%; top: 70%; width: 92%; height: 11.5%; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .zone-buttons {
   left: 2%; top: 81.5%; width: 96%; height: 17.5%;
   display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
@@ -189,6 +189,7 @@ html.land .enc-frame { height: auto; flex: 1 1 auto; }
 .ov.on { opacity: 0.92; }
 #cell-box { position: absolute; }
 #cells, #pieces, #arrows { position: absolute; inset: 0; }
+#arrows { pointer-events: none; }
 #cells { display: grid; }
 .cell { border-radius: 4px; }
 .cell.block {
@@ -236,7 +237,7 @@ html.land .enc-frame { height: auto; flex: 1 1 auto; }
   filter: drop-shadow(0 2px 3px rgba(0,0,0,.45));
 }
 #forecast {
-  margin: 0;
+  margin: 0 0 0 46px;
   font-size: 13px;
   line-height: 1.35;
   color: #f6f1e6;
@@ -244,10 +245,11 @@ html.land .enc-frame { height: auto; flex: 1 1 auto; }
   border-radius: 8px;
   padding: 2px 6px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+html.land #forecast { margin-left: 0; }
 #nodes { display: flex; gap: 6px; align-items: center; padding-left: 46px; }
 html.land #nodes { padding-left: 0; }
 .node { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
@@ -257,19 +259,19 @@ html.land #nodes { padding-left: 0; }
 #route-picks { min-height: 0; }
 .route-choice {
   flex: 1;
-  min-height: 40px;
+  min-height: 44px;
   text-align: left;
   border-radius: 12px;
   border: 1px solid rgba(230, 200, 120, 0.4);
   background: rgba(26, 22, 18, 0.72);
   color: var(--ink);
-  padding: 4px 8px;
+  padding: 3px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.route-choice b { font-size: 13px; letter-spacing: 0.08em; color: var(--gold); }
-.route-choice small { font-size: 11px; color: var(--paper); }
+.route-choice b { font-size: 13px; line-height: 1.2; letter-spacing: 0.06em; color: var(--gold); }
+.route-choice small { display: block; font-size: 11px; line-height: 1.2; color: var(--paper); }
 .route-choice.on { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(230, 200, 120, 0.35); }
 .img-btn {
   min-width: 52px;
@@ -287,7 +289,7 @@ html.land #nodes { padding-left: 0; }
 .img-btn span { font-size: 11px; letter-spacing: 0.06em; }
 .img-btn.tiny img { width: 36px; height: 36px; }
 #tool-row { justify-content: space-between; flex-wrap: wrap; }
-#tool-row .btn { min-height: 36px; padding: 0 8px; font-size: 13px; }
+#tool-row .btn { min-height: 44px; padding: 0 10px; font-size: 13px; }
 .img-btn { min-width: 44px; }
 .img-btn img { width: 32px; height: 32px; }
 
@@ -313,12 +315,19 @@ html.land #stash-tray {
   top: 58%;
   bottom: auto;
   height: 10%;
+  min-height: 52px;
   border-radius: 12px;
+  align-items: center;
+  padding: 4px 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
-html.land #stash-tray .chip img { width: 42px; height: 42px; }
+html.land #stash-tray .chip img { width: 36px; height: 36px; }
+html.land #stash-tray .btn { min-height: 44px; flex: 0 0 auto; }
 .chip {
   flex: 0 0 auto;
   width: 76px;
+  min-height: 44px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--paper);
@@ -423,7 +432,27 @@ html.land .zone-buttons { overflow: auto; }
 @media (max-width: 420px) {
   .zone-badges img { width: 34px; height: 34px; }
   .img-btn img { width: 34px; height: 34px; }
-  .route-choice small { display: none; }
+  .route-choice { min-height: 44px; padding: 2px 6px; }
+  .route-choice b { font-size: 12px; letter-spacing: 0.02em; }
+  .route-choice small { display: block; font-size: 10px; }
+}
+@media (max-height: 420px) {
+  html.land .zone-encounter { top: 14%; height: 22%; }
+  html.land .zone-supply { top: 37%; height: 5%; }
+  html.land .zone-durability { top: 42%; height: 5%; }
+  html.land #stash-tray {
+    top: 48%;
+    height: 52px;
+    min-height: 52px;
+  }
+  html.land #stash-tray .chip { width: 64px; min-height: 44px; }
+  html.land #stash-tray .chip img { width: 28px; height: 28px; }
+  html.land #stash-tray .chip small { display: none; }
+  html.land #stash-tray .chip span { font-size: 10px; line-height: 12px; }
+  html.land .zone-route { top: 62%; height: 14%; }
+  html.land #forecast { font-size: 12px; line-height: 1.25; -webkit-line-clamp: 2; }
+  html.land .zone-buttons { top: 76%; height: 23%; overflow: hidden; }
+  html.land .node { width: 16px; height: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .node.now { transform: none; }
