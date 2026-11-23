@@ -1,0 +1,63 @@
+{
+  "fw": 396,
+  "fh": 458,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b26-mascot-sheet-hop.webp"
+  ],
+  "fallback": "b26-mascot-sheet-hop.png",
+  "still": "b26-mascot-still-hop.png",
+  "body": {
+    "crop_from_video": [
+      23,
+      47,
+      419,
+      505
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b26-anim-03-hop.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      196.51949918610623,
+      282.46011291941784
+    ],
+    "anchor_norm": [
+      0.49626136158107637,
+      0.6167251373786415
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

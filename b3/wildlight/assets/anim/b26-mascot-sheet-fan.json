@@ -1,0 +1,63 @@
+{
+  "fw": 480,
+  "fh": 404,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b26-mascot-sheet-fan.webp"
+  ],
+  "fallback": "b26-mascot-sheet-fan.png",
+  "still": "b26-mascot-still-fan.png",
+  "body": {
+    "crop_from_video": [
+      0,
+      101,
+      480,
+      505
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b26-anim-01-fan.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      219.53502207956697,
+      228.4650618545479
+    ],
+    "anchor_norm": [
+      0.4573646293324312,
+      0.5655075788478908
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}
