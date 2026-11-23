@@ -1,0 +1,63 @@
+{
+  "fw": 306,
+  "fh": 426,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b03-mascot-sheet-hat-nod.webp"
+  ],
+  "fallback": "b03-mascot-sheet-hat-nod.png",
+  "still": "b03-mascot-still-hat-nod.png",
+  "body": {
+    "crop_from_video": [
+      87,
+      125,
+      393,
+      551
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b03-anim-01-hat-nod.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      156.96735749394742,
+      215.51806752437028
+    ],
+    "anchor_norm": [
+      0.5129652205684556,
+      0.5059109566299772
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

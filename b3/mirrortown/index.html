@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="倒影街区：转动三档视角，让水中倒影成为可走的街道，把两封信笺送到信箱。">
+  <title>倒影街区</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 8h12M8 3v10' stroke='%235BA4B8' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <section id="screen-cover" class="screen">
+    <div class="cover-stage">
+      <img class="plate" id="cover-bg" alt="">
+      <div id="cover-anchor" aria-hidden="true"></div>
+      <div class="cover-copy">
+        <div class="cover-bar">
+          <a class="text-btn" href="../index.html">返回预览</a>
+          <span style="flex:1"></span>
+          <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+        </div>
+        <p class="eyebrow">信笺 · 三档机位</p>
+        <h1>倒影街区</h1>
+        <p class="sub">转动视角，让水中倒影成为真正可走的街道。</p>
+        <ul class="rules">
+          <li>拖动街区，镜头只停在正面、右侧、左侧。</li>
+          <li>连续亮线可以走，断开的亮线会让笺仔停在断口前。</li>
+          <li>两封信笺都亲手放进信箱，这一章就完成。不限时，也不限步。</li>
+        </ul>
+        <div class="actions" id="cover-actions"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-play" class="screen play" hidden>
+    <div class="zone-town" id="zone-town">
+      <div class="plate-wrap" id="plate-wrap">
+        <img class="layer" id="plate" alt="">
+        <img class="layer" id="tide" alt="">
+        <canvas id="glow"></canvas>
+        <img class="pin" id="pin-check" alt="" hidden>
+        <img id="actor" alt="笺仔">
+        <div id="fx" hidden></div>
+        <div id="hint-ring" hidden></div>
+      </div>
+    </div>
+    <div class="zone-hud">
+      <div class="hud-side">
+        <a class="text-btn" href="../index.html">返回</a>
+        <button type="button" class="text-btn" id="btn-cover">封面</button>
+      </div>
+      <div class="hud-side">
+        <div class="pill" id="letter-status"></div>
+        <div class="pill" id="tide-status"></div>
+        <button type="button" class="icon-btn" data-music aria-label="音乐">乐</button>
+      </div>
+    </div>
+    <p class="status-line" id="meta-line"></p>
+    <div class="zone-compass">
+      <button type="button" id="compass" aria-label="罗盘">
+        <img id="compass-img" alt="">
+      </button>
+    </div>
+    <p class="coach" id="coach" aria-live="polite"></p>
+    <div class="zone-buttons">
+      <button type="button" class="tool" id="btn-undo">
+        <img alt="" id="img-undo">
+        <span>撤回</span>
+      </button>
+      <button type="button" class="tool" id="btn-letter">
+        <img alt="" id="img-letter">
+        <span>信笺</span>
+      </button>
+      <button type="button" class="tool" id="btn-tide">
+        <img alt="" id="img-tide">
+        <span>潮汐</span>
+      </button>
+      <button type="button" class="tool" id="btn-reset">
+        <img alt="" id="img-reset" hidden>
+        <span>重开</span>
+      </button>
+    </div>
+    <div id="closeup" class="closeup" hidden>
+      <div class="closeup-card">
+        <p class="eyebrow" id="closeup-kicker">信笺</p>
+        <div class="closeup-art">
+          <img class="letter" id="closeup-letter" alt="">
+          <img class="box" id="closeup-box" alt="">
+        </div>
+        <p id="closeup-copy"></p>
+        <div class="closeup-actions">
+          <button type="button" class="btn-main" id="closeup-ok">知道了</button>
+        </div>
+      </div>
+    </div>
+    <div id="clear" class="clear" hidden>
+      <div class="clear-card">
+        <div id="clear-anchor"></div>
+        <p class="eyebrow">这一章</p>
+        <h2>信已送达</h2>
+        <p id="clear-text"></p>
+        <div class="clear-actions">
+          <button type="button" class="btn-main" id="btn-again">再送一次</button>
+          <a class="btn-ghost" href="../index.html">返回预览</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="level.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
