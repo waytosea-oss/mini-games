@@ -39,10 +39,15 @@ button { cursor: pointer; }
   color: #f3e2c2;
   text-decoration: none;
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 0 12px;
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
 }
-.icon-btn { min-width: 36px; padding: 6px 10px; }
+.icon-btn { min-width: 44px; padding: 0 10px; }
 .icon-btn[aria-pressed="false"] { opacity: .45; }
 .icon-btn:focus-visible, .text-link:focus-visible, .btn:focus-visible, .btn-gold:focus-visible, .level:focus-visible {
   outline: 2px solid var(--brass);
@@ -81,14 +86,14 @@ h2 { font-size: 28px; }
   position: absolute;
   left: 7%;
   right: 7%;
-  top: 4.5%;
+  top: 72px;
   z-index: 2;
   max-width: 16em;
 }
 #screen-cover .eyebrow { color: #6d4d86; }
 #screen-cover h1 { color: #241433; text-shadow: 0 1px 0 rgba(255, 248, 236, .35); }
 #screen-cover .sub { color: #3c2a48; }
-html.land .cover-copy { left: 4%; right: auto; top: 6%; width: min(34vw, 420px); }
+html.land .cover-copy { left: 4%; right: auto; top: 72px; width: min(34vw, 420px); }
 .mascot {
   position: absolute;
   left: 24%;
@@ -145,7 +150,7 @@ html.land .cover-actions { left: 4%; right: auto; bottom: 8%; }
   color: var(--ink);
   border-radius: 12px;
 }
-.sens button { border-radius: 999px; padding: 6px 12px; }
+.sens button { border-radius: 999px; padding: 0 14px; min-width: 44px; min-height: 44px; }
 .sens button[aria-pressed="true"] { background: #c4a35a; color: #241433; }
 .level-list { display: grid; gap: 10px; margin-top: 14px; }
 .level {
@@ -198,19 +203,22 @@ html.land .zone-brake { left: 74%; top: 66%; width: 22%; height: 28%; }
   position: absolute;
   left: 6px;
   right: 6px;
-  top: 6px;
+  top: 4px;
   z-index: 4;
+  min-height: 44px;
 }
 .maze-tools .text-link, .maze-tools .icon-btn {
   background: rgba(26, 18, 40, .72);
   font-size: 13px;
-  padding: 4px 8px;
+  padding: 0 10px;
+  min-width: 44px;
+  min-height: 44px;
 }
 .coach {
   position: absolute;
   left: 8px;
   right: 8px;
-  top: 38px;
+  top: 54px;
   margin: 0;
   z-index: 4;
   padding: 6px 10px;
@@ -277,7 +285,6 @@ html.land .zone-brake { left: 74%; top: 66%; width: 22%; height: 28%; }
 @media (max-width: 420px) {
   h1 { font-size: 32px; }
   .coach { font-size: 13px; }
-  .maze-tools .text-link { padding: 3px 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .mascot { transition: none; }

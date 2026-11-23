@@ -227,6 +227,8 @@
 
   function restart(state) {
     applySnap(state, state.startSnap);
+    state.fills = 0;
+    state.snapshot = capture(state, state.x, state.y, state.z);
     state.events = ['restart'];
   }
 

@@ -108,6 +108,37 @@ function micro() {
   run(st, 1.2);
   assert(st.phase === 'win', '在信箱里停稳才送达');
 
+  var pitLevel = levels.LEVELS[1];
+  st = sim.create(pitLevel, null, 'mid');
+  var pitStartX = st.x;
+  var pitStartY = st.y;
+  st.x = 1.5;
+  st.y = 9.5;
+  sim.step(st, 1 / 60);
+  assert(Math.abs(st.snapshot.x - 1.5) < 0.01, '经过西侧检查点后快照在西侧 ' + st.snapshot.x.toFixed(2));
+  st.x = 8.5;
+  st.y = 8.5;
+  sim.step(st, 1 / 60);
+  assert(st.phase === 'fail', '未重开时坐坑失败');
+  run(st, 1.2);
+  assert(Math.abs(st.x - 1.5) < 0.01 && Math.abs(st.y - 9.5) < 0.01, '未重开时坐坑仍回西侧检查点 ' + st.x.toFixed(2) + ',' + st.y.toFixed(2));
+
+  st = sim.create(pitLevel, null, 'mid');
+  st.x = 1.5;
+  st.y = 9.5;
+  sim.step(st, 1 / 60);
+  sim.restart(st);
+  assert(Math.abs(st.x - pitStartX) < 0.01 && Math.abs(st.y - pitStartY) < 0.01, '重开回到本关起点 ' + st.x.toFixed(2) + ',' + st.y.toFixed(2));
+  assert(Math.abs(st.snapshot.x - pitStartX) < 0.01 && Math.abs(st.snapshot.y - pitStartY) < 0.01, '重开后失败快照改回起点');
+  assert(st.snapshot !== st.startSnap && st.snapshot.seenCp !== st.startSnap.seenCp && st.snapshot.usedSupply !== st.startSnap.usedSupply, '重开快照与起点不共享对象');
+  assert(!st.seenCp['1,9'], '重开后西侧检查点记为未经过');
+  st.x = 8.5;
+  st.y = 8.5;
+  sim.step(st, 1 / 60);
+  assert(st.phase === 'fail' && st.failReason === 'pit', '重开后坐坑进入失败');
+  run(st, 1.2);
+  assert(st.phase === 'play' && Math.abs(st.x - pitStartX) < 0.01 && Math.abs(st.y - pitStartY) < 0.01, '重开后坐坑回到起点 ' + st.x.toFixed(2) + ',' + st.y.toFixed(2));
+
   st = sim.create(room(['#####', '#o..#', '#.s.#', '#####']), null, 'mid');
   var homeX = st.x;
   var homeY = st.y;

@@ -70,6 +70,7 @@
   var trail = [];
   var won = false;
   var debug = /(?:\?|&)debug=1(?:&|$)/.test(location.search);
+  var layout = { chrome: 0, tileTop: 0 };
   var paused = false;
   var clipName = 'tilt';
   var clipFrame = 0;
@@ -410,10 +411,16 @@
     var h = canvas.height / dpr;
     ctx.fillStyle = '#1a1228';
     ctx.fillRect(0, 0, w, h);
-    var chrome = 68;
+    var toolsEl = document.querySelector('.maze-tools');
+    var coachEl = $('coach');
+    var chrome = 12;
+    if (toolsEl) chrome = Math.max(chrome, toolsEl.offsetTop + toolsEl.offsetHeight + 8);
+    if (coachEl && coachEl.textContent) chrome = Math.max(chrome, coachEl.offsetTop + coachEl.offsetHeight + 8);
     var cell = Math.min(w / level.cols, (h - chrome) / level.rows);
     var ox = (w - cell * level.cols) / 2;
     var oy = chrome + Math.max(0, (h - chrome - cell * level.rows) / 2);
+    layout.chrome = chrome;
+    layout.tileTop = oy;
     function px(x) { return ox + x * cell; }
     function py(y) { return oy + y * cell; }
 
@@ -835,6 +842,7 @@
     startLevel: startLevel,
     medalCount: medalCount,
     pause: function (v) { paused = !!v; },
+    get layout() { return layout; },
     errors: []
   };
   window.addEventListener('error', function (ev) {
