@@ -55,7 +55,9 @@ img { display: block; max-width: 100%; }
 .back, .music {
   position: absolute;
   z-index: 6;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -64,11 +66,12 @@ img { display: block; max-width: 100%; }
   background: rgba(244, 239, 228, 0.92);
   border: 0;
   border-radius: 999px;
-  padding: 0 12px;
+  padding: 0 14px;
   font-size: 14px;
+  line-height: 1;
 }
-.back { top: 1.1%; left: 2%; }
-.music { top: 1.1%; right: 2%; width: 36px; height: 36px; padding: 0; }
+.back { top: 8px; left: 8px; }
+.music { top: 8px; right: 8px; width: 44px; height: 44px; padding: 0; }
 .music[aria-pressed="false"] { opacity: 0.5; }
 
 .cover-copy {
@@ -119,8 +122,8 @@ h1 {
 .zone-dura, .zone-supply {
   position: absolute;
   z-index: 4;
-  left: 22%;
-  width: 26%;
+  left: 100px;
+  width: calc(50% - 108px);
 }
 .zone-dura { top: 2.2%; height: 4.6%; }
 .zone-supply { top: 7%; height: 4.2%; }
@@ -189,17 +192,24 @@ h1 {
 }
 .rose img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .wind-name { margin: 0; font-size: 13px; color: var(--ink); background: rgba(244, 239, 228, 0.82); border-radius: 999px; padding: 2px 8px; justify-self: start; }
-.reaches { display: flex; gap: 4px; align-items: flex-end; }
+.reaches { display: flex; gap: 4px; align-items: center; flex: 1 0 100%; }
 .reaches button {
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border: 2px solid transparent;
   background: rgba(244, 239, 228, 0.72);
   border-radius: 8px;
-  padding: 2px;
-  height: 30px;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
 }
 .reaches button.on { border-color: var(--brass-dk); }
-.reaches { flex: 1 0 100%; }
-.reaches img { height: 20px; width: auto; }
+.reaches img { width: 36px; height: 18px; object-fit: contain; }
 
 .hint {
   position: absolute;
@@ -346,8 +356,8 @@ html.land .cover-copy .sub,
 html.land .cover-copy .wait { margin-left: 0; }
 html.land .actions { justify-content: flex-start; }
 html.land .zone-board { left: 2%; top: 4%; width: 64%; height: 92%; }
-html.land .zone-dura { left: 70%; top: 4%; width: 27%; height: 6%; }
-html.land .zone-supply { left: 70%; top: 11%; width: 27%; height: 6%; }
+html.land .zone-dura { left: 70%; top: 4%; width: calc(28% - 60px); height: 6%; min-height: 36px; }
+html.land .zone-supply { left: 70%; top: 11%; width: 27%; height: 6%; min-height: 36px; }
 html.land .zone-wind {
   left: 70%;
   top: 20%;
@@ -360,7 +370,9 @@ html.land .zone-wind {
   align-content: start;
 }
 html.land .rose { width: 120px; height: 120px; grid-row: auto; }
-html.land .reaches img { height: 36px; }
+html.land .reaches { flex: none; justify-content: center; }
+html.land .reaches button { width: auto; min-width: 44px; height: 44px; flex: 0 0 auto; padding: 4px 8px; }
+html.land .reaches img { width: auto; height: 26px; max-width: none; }
 html.land .zone-bench {
   left: 70%;
   top: 52%;
@@ -371,12 +383,61 @@ html.land .zone-bench {
   justify-content: flex-start;
 }
 html.land .cards, html.land .ops { justify-content: center; }
-html.land .hint { top: 8px; }
+html.land .hint { top: 10px; left: 112px; right: 8px; }
 html.land .banner { left: 4%; right: 36%; bottom: 3%; }
 html.land .sheet { left: 70%; right: 2%; bottom: 4%; }
 html.land .report { left: 16%; right: 30%; top: 12%; }
-html.land .music { top: 1%; right: 2%; }
-html.land .back { top: 1%; left: 2%; }
+html.land .music { top: 8px; right: 8px; }
+html.land .back { top: 8px; left: 8px; }
+
+@media (max-height: 520px) {
+  html.land .cover-copy { top: 60px; left: 16px; right: 46%; }
+  html.land h1 { font-size: 36px; }
+  html.land .zone-board { left: 8px; top: 8px; width: calc(66% - 12px); height: calc(100% - 16px); }
+  html.land .hint { top: 6px; left: 108px; right: 8px; }
+  html.land .zone-dura {
+    left: 67%;
+    top: 8px;
+    width: calc(33% - 60px);
+    height: 32px;
+    min-height: 32px;
+  }
+  html.land .zone-supply {
+    left: 67%;
+    top: 56px;
+    width: calc(33% - 16px);
+    height: 28px;
+    min-height: 28px;
+  }
+  html.land .zone-wind {
+    left: 67%;
+    top: 90px;
+    width: calc(33% - 16px);
+    height: 112px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: 64px 44px;
+    justify-items: start;
+    align-items: center;
+    align-content: start;
+    gap: 4px 8px;
+  }
+  html.land .rose { width: 64px; height: 64px; grid-row: 1; grid-column: 1; }
+  html.land .wind-name { grid-column: 2; grid-row: 1; margin: 0; }
+  html.land .reaches { grid-column: 1 / -1; grid-row: 2; width: auto; justify-content: flex-start; }
+  html.land .zone-bench {
+    left: 67%;
+    top: 210px;
+    width: calc(33% - 16px);
+    height: calc(100% - 218px);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+  html.land .banner { left: 8px; right: 36%; bottom: 8px; }
+  html.land .sheet { left: 67%; right: 8px; bottom: 8px; }
+}
 
 @media (max-width: 420px) {
   .card { width: 56px; height: 76px; }

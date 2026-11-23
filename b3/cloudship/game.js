@@ -159,7 +159,7 @@
       if (p.y > maxY) maxY = p.y;
     });
     var land = landMode();
-    var top = land ? 36 : 72;
+    var top = land ? (window.innerHeight <= 520 ? 64 : 44) : 72;
     var bot = 8;
     var padX = STEP_X * 0.7;
     var padY = STEP_Y * 0.76;
