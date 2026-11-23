@@ -1,0 +1,63 @@
+{
+  "fw": 378,
+  "fh": 358,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b26-mascot-sheet-look.webp"
+  ],
+  "fallback": "b26-mascot-sheet-look.png",
+  "still": "b26-mascot-still-look.png",
+  "body": {
+    "crop_from_video": [
+      35,
+      148,
+      413,
+      506
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b26-anim-02-look.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      184.522378451043,
+      181.47002406471665
+    ],
+    "anchor_norm": [
+      0.48815444034667466,
+      0.506899508560661
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

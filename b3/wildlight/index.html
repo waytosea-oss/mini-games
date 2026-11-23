@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="野光图鉴：在一片林地里观察原创林鸟，对焦拍下饮水、展羽和喂食。">
+  <title>野光图鉴</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23E8C04A' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <section id="screen-cover" class="screen">
+      <img id="cover-bg" class="fill" alt="">
+      <canvas id="cover-actor" class="fill" aria-hidden="true"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="cover-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div class="cover-copy">
+        <p class="eyebrow">林地 · 观察</p>
+        <h1>野光图鉴</h1>
+        <p class="sub">拖视角找观察位，对焦拍下饮水、展羽和喂食。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-start">开始观察</button>
+          <button type="button" class="primary" id="btn-continue" hidden>继续这本图鉴</button>
+          <button type="button" class="secondary" id="btn-reset" hidden>重新观察</button>
+        </div>
+      </div>
+      <p id="enter-line" class="enter-line" hidden>走进这一片林地</p>
+    </section>
+
+    <section id="screen-play" class="screen" hidden>
+      <canvas id="world"></canvas>
+      <div id="look"></div>
+      <img id="focus-frame" class="hud" alt="">
+      <img id="focus-ring" class="hud" alt="" hidden>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="play-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div id="film" class="film hud" aria-label="胶片还够">
+        <img id="film-track" class="layer" alt="">
+        <div id="film-clip" class="clip"><img id="film-fill" alt=""></div>
+        <img id="film-frame" class="layer" alt="">
+      </div>
+      <div id="behaviors" class="hud">
+        <div class="beh" data-k="drink"><img alt="" id="icon-drink"><span>饮水</span></div>
+        <div class="beh" data-k="display"><img alt="" id="icon-display"><span>展羽</span></div>
+        <div class="beh" data-k="feed"><img alt="" id="icon-feed"><span>喂食</span></div>
+      </div>
+      <p id="phase-chip" class="hud">晨光</p>
+      <p id="banner" class="banner hud" aria-live="polite"></p>
+      <div id="omen" class="omen" hidden><img id="omen-img" alt=""><span id="omen-text"></span></div>
+      <div id="tools" class="tools hud">
+        <button type="button" id="btn-lure"><img alt="" id="icon-lure"><span>叶杯</span></button>
+        <button type="button" id="btn-skip"><img alt="" id="icon-skip"><span>快进</span></button>
+        <button type="button" id="btn-guide"><img alt="" id="icon-guide"><span>图鉴</span></button>
+        <button type="button" id="btn-camp"><img alt="" id="icon-camp"><span>营地</span></button>
+      </div>
+      <div id="photos" class="photos hud">
+        <div class="slot" data-k="drink"><img class="pic" alt="" hidden><img class="rim" alt=""><span>饮水</span></div>
+        <div class="slot" data-k="display"><img class="pic" alt="" hidden><img class="rim" alt=""><span>展羽</span></div>
+        <div class="slot" data-k="feed"><img class="pic" alt="" hidden><img class="rim" alt=""><span>喂食</span></div>
+      </div>
+      <button type="button" id="shutter" class="shutter hud" aria-label="快门"><img id="shutter-img" alt=""></button>
+      <div id="distance" class="distance hud"><img id="dist-ring" alt=""><span id="dist-label">树荫</span></div>
+
+      <div id="panel-tutor" class="panel" hidden>
+        <h2>怎么观察</h2>
+        <p>拖动画面挑选观察位。苔绿金圈可以拍，珊瑚红圈表示靠得太近。靠得太近它会暂时避开，退回观察位就会回来。</p>
+        <p>按住画面对焦，锁上之后点快门。望水之后会喝水，理羽之后会展羽。暮色放下叶杯，它会来啄食。</p>
+        <p>快进时间不用干等。胶片用完了，回营地补充。照片只看有没有对焦、主体在不在框里、行为对不对。</p>
+        <div class="actions"><button type="button" class="primary" id="btn-tutor">知道了</button></div>
+      </div>
+      <div id="panel-camp" class="panel" hidden>
+        <h2>营地</h2>
+        <p>这一轮胶片可以在这里补充。已经收进图鉴的照片还在。叶杯也会收回，下一轮可以再放一次。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-refill">补充胶片</button>
+          <button type="button" class="secondary" id="btn-camp-close">回到林地</button>
+        </div>
+      </div>
+      <div id="panel-guide" class="panel" hidden>
+        <h2>图鉴</h2>
+        <div id="guide-list"></div>
+        <div class="actions"><button type="button" class="primary" id="btn-guide-close">回到林地</button></div>
+      </div>
+      <div id="panel-done" class="panel" hidden>
+        <h2>这一片林地记下来了</h2>
+        <p>饮水、展羽、喂食都拍到了。照片和行为都在图鉴里。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-done-guide">打开图鉴</button>
+          <button type="button" class="secondary" id="btn-done-close">继续观察</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    document.getElementById('cover-bg').src = innerWidth > innerHeight
+      ? 'assets/cover/b26-cover-16x9-bg.webp'
+      : 'assets/cover/b26-cover-3x4-bg.webp';
+  </script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
