@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="云端攀行：按住手脚换抓点，在休息台恢复体力，再攀到山脊。">
+  <title>云端攀行</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 12 L8 3 L14 12' fill='none' stroke='%23C43C2C' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <section id="screen-cover" class="screen">
+      <img id="cover-bg" class="cover-bg" alt="">
+      <canvas id="cover-actor" aria-hidden="true"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="iconbtn music" id="cover-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div class="cover-copy">
+        <p class="eyebrow">云上 · 岩壁</p>
+        <h1>云端攀行</h1>
+        <p class="sub">按住手脚换抓点，在休息台把体力喘回来，再摸到山脊。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-start">开始攀登</button>
+          <button type="button" id="btn-continue" hidden>继续这一程</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-play" class="screen" hidden>
+      <img id="scene" alt="">
+      <img id="ov-haze" class="overlay" alt="">
+      <img id="ov-dusk" class="overlay" alt="">
+      <img id="ov-wind" class="overlay" alt="">
+      <canvas id="board"></canvas>
+      <a class="back" id="play-back" href="../index.html">返回预览</a>
+      <div id="stamina" class="plate">
+        <canvas id="stamina-canvas" width="256" height="256"></canvas>
+        <b id="stamina-num">100</b>
+        <span id="stamina-read" class="sr">体力 100</span>
+      </div>
+      <div id="slots"></div>
+      <div id="limbs"></div>
+      <div id="tools"></div>
+      <p id="status" aria-live="polite"></p>
+      <div id="hint" class="modal" hidden>
+        <div class="panel">
+          <p>按住一只手或一只脚，拖到亮着的抓点，松手确认。灰色抓点配着没有数字的距离圈，表示超出固定距离。至少留一处抓稳。只有稳站休息台才会恢复体力。</p>
+          <button type="button" class="primary" id="btn-hint">知道了</button>
+        </div>
+      </div>
+      <div id="pause" class="modal" hidden>
+        <div class="panel">
+          <h2>先停在岩壁上</h2>
+          <p id="pause-copy">体力先停住。</p>
+          <div class="actions">
+            <button type="button" class="primary" id="btn-resume">继续攀</button>
+            <button type="button" id="btn-restart">重开这一面</button>
+            <button type="button" id="btn-pause-assist">辅助关着</button>
+            <button type="button" id="btn-pause-music">音乐开着</button>
+            <a class="textlink" href="../index.html">返回预览</a>
+          </div>
+        </div>
+      </div>
+      <div id="result" class="modal" hidden>
+        <div class="panel">
+          <h2 id="result-title">到山脊了</h2>
+          <p id="result-copy"></p>
+          <div class="actions">
+            <button type="button" class="primary" id="btn-again">再攀一次</button>
+            <a class="textlink" href="../index.html">返回预览</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="rules.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
