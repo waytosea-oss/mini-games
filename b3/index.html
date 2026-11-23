@@ -16,7 +16,7 @@
       color: #f6f1e6;
       background:
         linear-gradient(180deg, rgba(5,10,18,.45), rgba(5,10,18,.82)),
-        url("starlock/assets/bg.webp") center / cover no-repeat fixed,
+        url("starlock/assets/cover-bg-3x4.webp") center / cover no-repeat fixed,
         #071018;
     }
     main { width: min(560px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
@@ -41,7 +41,7 @@
     a.card:focus-visible { outline: 2px solid #e7c98a; outline-offset: 3px; }
     .sprite {
       width: 112px;
-      aspect-ratio: 420 / 640;
+      aspect-ratio: 382 / 374;
       background-repeat: no-repeat;
       filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));
     }
@@ -55,7 +55,7 @@
     <h1>试玩预览</h1>
     <p>这里只列出本批已经做好的试玩。进度存在这台设备上。</p>
     <a class="card" href="starlock/index.html">
-      <div class="sprite" id="cover-sprite" role="img" aria-label="司环动画封面"></div>
+      <div class="sprite" id="cover-sprite" role="img" aria-label="星核动画封面"></div>
       <div>
         <h2>九环星锁</h2>
         <p>转动带缺口的星环，让星核逐层脱锁。</p>
@@ -67,22 +67,27 @@
     (function () {
       var el = document.getElementById("cover-sprite");
       var img = new Image();
-      var frames = 8;
-      var frame = 0;
+      var fw = 382, fh = 374, cols = 6, n = 24, frame = 0;
       img.onload = function () {
-        var fw = img.naturalWidth / frames;
         var tick = function () {
           var w = el.clientWidth || 112;
           var scale = w / fw;
+          var col = frame % cols;
+          var row = Math.floor(frame / cols);
           el.style.backgroundImage = "url('" + img.src + "')";
-          el.style.backgroundSize = (img.naturalWidth * scale) + "px " + (img.naturalHeight * scale) + "px";
-          el.style.backgroundPosition = (-frame * fw * scale) + "px 0";
+          el.style.backgroundSize = (fw * cols * scale) + "px " + (fh * 4 * scale) + "px";
+          el.style.backgroundPosition = (-col * fw * scale) + "px " + (-row * fh * scale) + "px";
         };
         tick();
-        setInterval(function () { frame = (frame + 1) % frames; tick(); }, 180);
+        setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
         window.addEventListener("resize", tick);
       };
-      img.src = "starlock/assets/hero-sheet.webp";
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        img.src = "starlock/assets/mascot/ring-turn.png";
+      };
+      img.src = "starlock/assets/mascot/ring-turn.webp";
     })();
   </script>
 </body>
