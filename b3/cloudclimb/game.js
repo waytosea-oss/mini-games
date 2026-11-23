@@ -243,6 +243,7 @@
 
   function noteWeather(w) {
     if (drag) return;
+    if (performance.now() < statusUntil) return;
     var key = w.wind === 'on' ? 'wind' : w.dusk === 'on' ? 'dusk' : w.haze === 'on' ? 'haze' : '';
     if (!key || announced[key]) return;
     announced.haze = announced.haze || w.haze === 'on';
@@ -454,17 +455,33 @@
     } else {
       var colW = Math.min(300, Math.max(220, (right - left) * 0.34));
       var colX = right - colW;
-      var y = Math.max(16, h * 0.04);
+      var limbBlock = btn * 2 + gap;
+      var top = Math.max(16, h * 0.04);
       var arc = Math.min(120, colW);
+      var afterArc = 8;
+      var statusReserve = 92;
+      var afterLimbs = 12;
+      var afterSlots = 12;
+      var stack = top + arc + afterArc + statusReserve + limbBlock + afterLimbs + btn + afterSlots + btn;
+      if (stack > h - 8) {
+        top = 8;
+        afterArc = 6;
+        statusReserve = 54;
+        afterLimbs = 6;
+        afterSlots = 6;
+        var fixed = top + afterArc + statusReserve + limbBlock + afterLimbs + btn + afterSlots + btn;
+        arc = Math.max(72, Math.min(arc, h - 8 - fixed));
+      }
+      var y = top;
       place(el.stamina, colX, y, arc, arc);
-      y += arc + 8;
+      y += arc + afterArc;
       place(el.status, colX, y, colW, null);
-      y += 92;
-      place(el.limbs, colX, y, btn * 2 + gap, btn * 2 + gap);
+      y += statusReserve;
+      place(el.limbs, colX, y, limbBlock, limbBlock);
       el.limbs.style.flexWrap = 'wrap';
-      y += btn * 2 + gap + 12;
+      y += limbBlock + afterLimbs;
       place(el.slots, colX, y, btn * 3 + gap * 2, btn);
-      y += btn + 12;
+      y += btn + afterSlots;
       place($('btn-assist'), colX, y, btn, btn);
       place($('btn-pause'), colX + btn + gap, y, btn, btn);
       place($('btn-music'), colX + (btn + gap) * 2, y, btn, btn);
@@ -861,10 +878,35 @@
     return '松在了空处，这只' + noun(limb) + '还留在原地。';
   }
 
+  function farFromWall(norm) {
+    var lay = layout();
+    var best = Infinity;
+    lay.holds.forEach(function (p) { best = Math.min(best, RULES.dist(norm, p, state.mode)); });
+    lay.rests.forEach(function (p) { best = Math.min(best, RULES.dist(norm, p, state.mode)); });
+    best = Math.min(best, RULES.dist(norm, lay.ridge, state.mode));
+    best = Math.min(best, RULES.dist(norm, lay.start, state.mode));
+    return best > 0.075;
+  }
+
   function commitDrag(info) {
     var wth = weatherAt(performance.now());
     var snap = RULES.snapTarget(state, info.limb, info.norm, wth);
     if (!snap) {
+      var held = state.limbs[info.limb] && state.limbs[info.limb].kind !== 'free';
+      if (held && info.norm && farFromWall(info.norm)) {
+        var released = RULES.applyMove(state, info.limb, { kind: 'free' });
+        if (released.ok) {
+          say(RULES.limbLabel(info.limb) + '松开了。这一处放开，还留着别的抓点。现在 ' + Math.round(state.stamina) + '。', true);
+          writeSave();
+          return;
+        }
+        if (released.reason === 'stamina') {
+          say('松开这一下会把体力用尽。这只' + noun(info.limb) + '先留在原地。', true);
+          return;
+        }
+        say(reasonLine(released.reason, info.limb), true);
+        return;
+      }
       say(nearestExplain(info.norm, info.limb, wth), true);
       return;
     }

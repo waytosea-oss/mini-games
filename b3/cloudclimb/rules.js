@@ -200,7 +200,6 @@
     if (sameAttach(current, target)) return { ok: false, reason: 'same' };
     if (gripCount(state.limbs, limb) < 1) return { ok: false, reason: 'last' };
     if (target.kind === 'free') {
-      if (!HANDS[limb]) return { ok: false, reason: 'kind' };
       if (state.stamina - RELEASE_COST < 1) return { ok: false, reason: 'stamina', cost: RELEASE_COST };
       return { ok: true, reason: 'ok', cost: RELEASE_COST, dist: 0, point: null };
     }
@@ -233,7 +232,7 @@
   function applyMove(state, limb, target) {
     var verdict = evaluate(state, limb, target, state.weather || null);
     if (!verdict.ok) return verdict;
-    state.limbs[limb] = { kind: target.kind, id: target.id };
+    state.limbs[limb] = target.kind === 'free' ? { kind: 'free' } : { kind: target.kind, id: target.id };
     state.stamina = Math.max(0, state.stamina - verdict.cost);
     state.moves += 1;
     if (!stableRest(state.limbs)) state.restHold = 0;

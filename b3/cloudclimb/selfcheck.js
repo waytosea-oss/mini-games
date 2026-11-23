@@ -116,6 +116,23 @@ function run() {
     if (last.ok || last.reason !== 'last') fail(mode + ' 最后一处抓握被放行 ' + last.reason);
     if (!only.ok && only.reason === 'last') fail(mode + ' 双脚在起点时左脚无法试探');
 
+    var release = rules.freshState(mode);
+    release.limbs.hand_r = { kind: 'hold', id: 0 };
+    release.stamina = 40;
+    var letGo = rules.applyMove(release, 'hand_r', { kind: 'free' });
+    if (!letGo.ok || release.limbs.hand_r.kind !== 'free') fail(mode + ' 手没有松开');
+    if (Math.abs(release.stamina - 34) > 0.01) fail(mode + ' 松手耗体不是 6');
+    var foot = rules.freshState(mode);
+    foot.limbs.hand_r = { kind: 'hold', id: 0 };
+    var letFoot = rules.applyMove(foot, 'foot_l', { kind: 'free' });
+    if (!letFoot.ok || foot.limbs.foot_l.kind !== 'free') fail(mode + ' 脚没有松开');
+    var lone = rules.freshState(mode);
+    lone.limbs.foot_r = { kind: 'free' };
+    lone.limbs.hand_l = { kind: 'free' };
+    lone.limbs.hand_r = { kind: 'free' };
+    var keep = rules.applyMove(lone, 'foot_l', { kind: 'free' });
+    if (keep.ok || keep.reason !== 'last') fail(mode + ' 最后一处被松开');
+
     var pointer = layout.holds[0].slice();
     var snap = rules.snapTarget(rules.freshState(mode), 'hand_r', pointer, null);
     if (!snap || snap.kind !== 'hold' || snap.id !== 0) fail(mode + ' 吸附没有落到第 0 个可达点');
