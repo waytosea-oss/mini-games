@@ -41,6 +41,7 @@
     a.card + a.card { margin-top: 14px; }
     a.card:focus-visible { outline: 2px solid #e7c98a; outline-offset: 3px; }
     .sprite.lantern { aspect-ratio: 443 / 420; }
+    .sprite.parcel { aspect-ratio: 368 / 382; }
     .sprite {
       width: 112px;
       aspect-ratio: 382 / 374;
@@ -69,6 +70,14 @@
       <div>
         <h2>风暴牌旅</h2>
         <p>用天气牌改写下一场遭遇，护送商队穿过六个气候节点。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="gravipost/index.html">
+      <div class="sprite parcel" id="post-sprite" role="img" aria-label="搪瓷圆身随重力轻倾"></div>
+      <div>
+        <h2>重力邮局</h2>
+        <p>拨动重力，让易碎圆包裹滚进信箱。</p>
         <p class="go">进入试玩</p>
       </div>
     </a>
@@ -122,6 +131,47 @@
         var row = Math.floor(frame / cols);
         el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
         el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("post-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 368, fh = 382, cols = 6, n = 24, ax = 171.66665818398113, ay = 207.90467419125326, frame = 0;
+      var sheet = "gravipost/assets/anim/b05-mascot-sheet-tilt.webp";
+      var still = "gravipost/assets/anim/b05-mascot-still-tilt.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        var ox = (w - dw) / 2 + (fw / 2 - ax) * scale;
+        var oy = (el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale;
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ox + "px " + oy + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = (ox - col * dw) + "px " + (oy - row * dh) + "px";
       }
       var img = new Image();
       img.onload = function () {
