@@ -518,4 +518,31 @@ canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 }
 @media (orientation: landscape) and (max-height: 560px) {
   .hero-wrap.sm { height: 0; overflow: hidden; }
+  #screen-play .chip-grid {
+    width: 248px;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  #screen-play .chip {
+    min-height: 44px;
+    height: 44px;
+    padding: 0 8px;
+    gap: 4px;
+  }
+  #screen-play .chip span,
+  #screen-play .chip b {
+    white-space: nowrap;
+  }
+  #status-line {
+    top: 104px;
+    width: 248px;
+  }
+  #screen-play .coach {
+    top: auto;
+    bottom: 60px;
+    width: 248px;
+    max-height: calc(100% - 176px);
+    margin: 0;
+    overflow: auto;
+  }
 }

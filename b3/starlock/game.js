@@ -21,7 +21,7 @@
     { id: 1, name: '三环入门', levels: [1, 2, 3], blurb: '认识缺口、卡扣和出口。三只环先共用下方的出口。' },
     { id: 2, name: '卡扣顺序', levels: [4, 5, 6], blurb: '有的环要等另一只环转到指定刻度，通道才打开。' },
     { id: 3, name: '侧向出口', levels: [7, 8], blurb: '有的环从侧面抽离。先看清箭头在哪一边。' },
-    { id: 4, name: '星核试炼', levels: [9, 10], blurb: '出口、卡扣和转动限制会叠在一起。' }
+    { id: 4, name: '星核试炼', levels: [9, 10], blurb: '出口、卡扣和锁转条件会叠在一起。' }
   ];
 
   var LEVELS = [
@@ -1051,7 +1051,7 @@
   function renderHome() {
     var btn = $('btn-continue');
     if (save.resume && save.resume.levelId && !save.resume.won) btn.textContent = '继续第' + save.resume.levelId + '关';
-    else if (!nextUncleared()) btn.textContent = '十关都已拆开';
+    else if (!nextUncleared()) btn.textContent = '再玩第 1 关';
     else btn.textContent = '开始第' + nextUncleared() + '关';
     var list = $('chapter-list');
     list.innerHTML = '';
@@ -1735,6 +1735,7 @@
     var selected = byId(level, session.selected);
     if (!handle || !selected || session.out[selected.id] || !session.handles) {
       if (handle) handle.hidden = true;
+      placeChrome();
       return;
     }
     handle.hidden = false;
@@ -1754,11 +1755,54 @@
     }
     if (blocked) {
       handle.hidden = true;
+      placeChrome();
       return;
     }
     handle.style.left = clamp(hp.x, 30, view.w - 30) + 'px';
     handle.style.top = clamp(hp.y, 30, Math.max(30, maxY)) + 'px';
     handle.setAttribute('aria-label', '转动' + selected.name + '的手柄');
+    placeChrome();
+  }
+
+  function placeChrome() {
+    var box = document.querySelector('#screen-play .stage-ui.left');
+    if (!box || !canvas) return;
+    if (view.h < view.w) {
+      box.style.top = '';
+      box.style.bottom = '';
+      box.style.left = '';
+      return;
+    }
+    var tool = document.querySelector('#screen-play .tool-row');
+    var sr = canvas.getBoundingClientRect();
+    var h = box.offsetHeight || 44;
+    var w = box.offsetWidth || 54;
+    var y = view.h - 180;
+    if (tool && tool.getBoundingClientRect().height > 2) {
+      y = tool.getBoundingClientRect().top - sr.top - 10 - h;
+    }
+    function overlaps(x, y0) {
+      var a = { l: x, t: y0, r: x + w, b: y0 + h };
+      var nodes = document.querySelectorAll('#screen-play .exit-arrow, #screen-play .tool-row button, #screen-play .action-row button, #screen-play .stage-ui.right button');
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (el.hidden) continue;
+        var r = el.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) continue;
+        var b = { l: r.left - sr.left, t: r.top - sr.top, r: r.right - sr.left, b: r.bottom - sr.top };
+        if (Math.min(a.r, b.r) - Math.max(a.l, b.l) > 0 && Math.min(a.b, b.b) - Math.max(a.t, b.t) > 0) return true;
+      }
+      return false;
+    }
+    var x = 8;
+    var guard = 0;
+    while (overlaps(x, y) && y > 56 && guard < 12) {
+      y -= 12;
+      guard += 1;
+    }
+    box.style.left = x + 'px';
+    box.style.bottom = 'auto';
+    box.style.top = Math.max(56, y) + 'px';
   }
 
   function hitRing(wx, wy) {
