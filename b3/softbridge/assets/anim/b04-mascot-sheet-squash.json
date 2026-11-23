@@ -1,0 +1,63 @@
+{
+  "fw": 404,
+  "fh": 412,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b04-mascot-sheet-squash.webp"
+  ],
+  "fallback": "b04-mascot-sheet-squash.png",
+  "still": "b04-mascot-still-squash.png",
+  "body": {
+    "crop_from_video": [
+      37,
+      119,
+      441,
+      531
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b04-anim-01-squash.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      206.6751970696203,
+      214.28743608388498
+    ],
+    "anchor_norm": [
+      0.5115722699743077,
+      0.5201151361259344
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

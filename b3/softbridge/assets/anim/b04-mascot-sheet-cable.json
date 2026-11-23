@@ -1,0 +1,63 @@
+{
+  "fw": 362,
+  "fh": 499,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b04-mascot-sheet-cable.webp"
+  ],
+  "fallback": "b04-mascot-sheet-cable.png",
+  "still": "b04-mascot-still-cable.png",
+  "body": {
+    "crop_from_video": [
+      47,
+      141,
+      409,
+      640
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b04-anim-02-cable.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      196.67837178139405,
+      192.2921175902058
+    ],
+    "anchor_norm": [
+      0.543310419285619,
+      0.38535494507055273
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "fw": 286,
+  "fh": 420,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b03-mascot-sheet-letter-show.webp"
+  ],
+  "fallback": "b03-mascot-sheet-letter-show.png",
+  "still": "b03-mascot-still-letter-show.png",
+  "body": {
+    "crop_from_video": [
+      97,
+      125,
+      383,
+      545
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b03-anim-02-letter-show.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      147.0028965925456,
+      215.5093434047062
+    ],
+    "anchor_norm": [
+      0.5139961419319776,
+      0.5131174842969195
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

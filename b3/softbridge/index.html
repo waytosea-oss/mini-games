@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="软桥救援：用有限的软胶和拉索，把三只小兽送过峡谷。">
+  <title>软桥救援</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='7' width='12' height='3' rx='1' fill='%237EC8B4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <section id="screen-cover" class="screen">
+      <img id="cover-bg" class="fill" alt="">
+      <canvas id="cover-actor" class="fill" aria-hidden="true"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="cover-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div class="cover-copy">
+        <p class="eyebrow">峡谷 · 救援</p>
+        <h1>软桥救援</h1>
+        <p class="sub">用有限的软胶和拉索，把三只小兽送过峡谷。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-start">开始搭桥</button>
+          <button type="button" id="btn-continue" hidden>继续这版桥</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-play" class="screen" hidden>
+      <img id="scene" class="fill" alt="">
+      <canvas id="board"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="play-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <p class="hud-title">软桥救援</p>
+      <div class="budget" id="budget">
+        <img class="layer" id="budget-track" alt="">
+        <div class="fillclip" id="fillclip"><img id="fillimg" alt=""></div>
+        <img class="layer" id="budget-frame" alt="">
+        <b id="budget-num">余 100</b>
+      </div>
+      <div class="queue" id="queue"></div>
+      <button type="button" class="heat" id="btn-heat" aria-label="热力图" aria-pressed="false">
+        <img id="heat-img" alt="">
+      </button>
+      <p class="banner" id="banner" aria-live="polite"></p>
+      <button type="button" class="tutor" id="btn-tutor">知道了</button>
+      <div class="dock">
+        <button type="button" class="textbtn on" id="btn-gel">胶梁</button>
+        <button type="button" class="textbtn" id="btn-cable">拉索</button>
+        <button type="button" class="imgbtn" id="btn-play" aria-label="试载">
+          <img id="icon-play" alt="">
+          <span>试载</span>
+        </button>
+        <button type="button" class="imgbtn" id="btn-pause" aria-label="暂停">
+          <img id="icon-pause" alt="">
+          <span>暂停</span>
+        </button>
+        <button type="button" class="imgbtn" id="btn-reset" aria-label="重置">
+          <img id="icon-reset" alt="">
+          <span>重置</span>
+        </button>
+        <button type="button" class="textbtn" id="btn-tool">连结</button>
+      </div>
+      <div class="inspect" id="inspect" hidden>
+        <p id="inspect-copy"></p>
+        <button type="button" class="textbtn" id="btn-remove">拆除</button>
+      </div>
+      <div class="result" id="result" hidden>
+        <h2 id="result-title">三只都到对岸了</h2>
+        <div class="stars" id="stars"></div>
+        <p id="result-copy"></p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-tweak">再改一改</button>
+          <button type="button" id="btn-retry">再试一次</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="physics.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+  <script>
+    (function () {
+      var land = document.documentElement.classList.contains('land');
+      document.getElementById('cover-bg').src = land
+        ? 'assets/cover/b04-cover-16x9-bg.webp'
+        : 'assets/cover/b04-cover-3x4-bg.webp';
+    })();
+  </script>
+</body>
+</html>

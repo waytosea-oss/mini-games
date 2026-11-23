@@ -1,0 +1,63 @@
+{
+  "fw": 338,
+  "fh": 460,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b05-mascot-sheet-bounce.webp"
+  ],
+  "fallback": "b05-mascot-sheet-bounce.png",
+  "still": "b05-mascot-still-bounce.png",
+  "body": {
+    "crop_from_video": [
+      67,
+      57,
+      405,
+      517
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b05-anim-02-bounce.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      171.665212534453,
+      285.9170797357869
+    ],
+    "anchor_norm": [
+      0.5078852441847722,
+      0.6215588689908411
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

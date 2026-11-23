@@ -1,0 +1,63 @@
+{
+  "fw": 374,
+  "fh": 468,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b07-mascot-sheet-clasp-nod.webp"
+  ],
+  "fallback": "b07-mascot-sheet-clasp-nod.png",
+  "still": "b07-mascot-still-clasp-nod.png",
+  "body": {
+    "crop_from_video": [
+      54,
+      147,
+      428,
+      615
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b07-anim-02-clasp-nod.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      184.8809699457282,
+      272.6603478964234
+    ],
+    "anchor_norm": [
+      0.49433414423991495,
+      0.5826075809752637
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

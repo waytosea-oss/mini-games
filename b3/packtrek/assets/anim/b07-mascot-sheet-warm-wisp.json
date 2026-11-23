@@ -1,0 +1,63 @@
+{
+  "fw": 372,
+  "fh": 616,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b07-mascot-sheet-warm-wisp.webp"
+  ],
+  "fallback": "b07-mascot-sheet-warm-wisp.png",
+  "still": "b07-mascot-still-warm-wisp.png",
+  "body": {
+    "crop_from_video": [
+      55,
+      0,
+      427,
+      616
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b07-anim-03-warm-wisp.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "anchor": [
+      183.87830825724453,
+      419.65958706380457
+    ],
+    "anchor_norm": [
+      0.494296527573238,
+      0.6812655634152671
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}
