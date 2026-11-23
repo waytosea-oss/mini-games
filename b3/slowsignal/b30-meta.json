@@ -1,0 +1,1199 @@
+{
+  "id": "B3-30",
+  "title": "慢信号台",
+  "slug_candidate": "slowsignal",
+  "prefix": "b30-",
+  "mascot": {
+    "chosen": "A",
+    "name": "频仔",
+    "alternates": [
+      {
+        "id": "B",
+        "name_candidate": "讯仔",
+        "note": "靛蓝提灯小灵，肚上琥珀灯火，更偏提灯，旋钮调频可读性较弱"
+      },
+      {
+        "id": "C",
+        "name_candidate": "台仔",
+        "note": "靛蓝木屋信号台活物，屋顶黄铜风向标，电台旋钮较弱"
+      }
+    ],
+    "hero": "mascot/b30-mascot-hero.png",
+    "chroma": "mascot/b30-mascot-chroma-720x960.png",
+    "chroma_hex": "#FF00AA",
+    "note": "正式名「频仔」经斟酌后写入文档，不画进画面。品红抠像 #FF00AA，不用绿幕。保护黄铜与旧木（红大于蓝）、琥珀灯光与靛蓝毛毡。"
+  },
+  "palette": {
+    "靛蓝": [
+      "#1B2A4A",
+      "#2C4A7A",
+      "#0E1A33"
+    ],
+    "琥珀": [
+      "#E8A83A",
+      "#F2C05A",
+      "#C47A1A"
+    ],
+    "黄铜": [
+      "#C4A054",
+      "#E8C878",
+      "#8A6A28"
+    ],
+    "旧木": [
+      "#5A3A22",
+      "#8A5A32"
+    ],
+    "chroma": "#FF00AA"
+  },
+  "camera": "电台近景桌面加救援地图。不要水平翻转，灯塔、码头等地标方位须固定。",
+  "safe_zones": {
+    "origin": "top-left, normalized",
+    "viewport_390x844": "电台、波形、回复卡、地图与队伍标记都尽量收在约 0.10 到 0.90，以免窄屏裁掉。",
+    "portrait": {
+      "radio": [
+        0.1,
+        0.05,
+        0.9,
+        0.34
+      ],
+      "map": [
+        0.1,
+        0.36,
+        0.9,
+        0.66
+      ],
+      "cards": [
+        0.1,
+        0.68,
+        0.9,
+        0.9
+      ],
+      "meters": [
+        0.1,
+        0.9,
+        0.52,
+        0.97
+      ],
+      "teams": [
+        0.54,
+        0.9,
+        0.9,
+        0.97
+      ]
+    },
+    "landscape": {
+      "radio": [
+        0.04,
+        0.08,
+        0.48,
+        0.92
+      ],
+      "map": [
+        0.5,
+        0.08,
+        0.96,
+        0.7
+      ],
+      "cards": [
+        0.5,
+        0.72,
+        0.96,
+        0.92
+      ],
+      "meters": [
+        0.5,
+        0.92,
+        0.72,
+        0.98
+      ],
+      "teams": [
+        0.74,
+        0.92,
+        0.96,
+        0.98
+      ]
+    },
+    "portrait_note": "竖图电台在上，地图在中，回复卡在下。",
+    "landscape_note": "横图电台在左，地图在右上，回复卡在右下，不要挡住关键地标。"
+  },
+  "play_rules_for_code": {
+    "fiction": "虚构海岸夜班，所有呼叫均为虚构剧情，不接入真实电话、位置或紧急救援服务。",
+    "time": "每次回复与派遣推进明确的剧情时间，阅读日志不扣时间。",
+    "verify": "未经核实的坐标标为不确定，可先问关键问题；确认行动后写入可追溯事件树。",
+    "teams": "两支救援队有待命、出发、途中、返程状态，占用时不能瞬移接另一任务；改派有公开时间成本。",
+    "ending": "没有唯一完美结局，结束展示信息、选择与资源如何导致结果，允许跳回关键节点。",
+    "scope": "首版：文字加音效、三呼叫、两队、一个完整可解释结章。不做真人求救接入、全分支配音或无限开放叙事。",
+    "bars": "剧情时间可用无数字钟面加指针，或琥珀弧：先铺 fill 再叠 frame。时间成本用圆点分段，不要写分钟数字。",
+    "flip": "不要水平翻转场景或地图。返程队标可沿竖轴镜像以表示折返方向。"
+  },
+  "scenes": {
+    "portrait": {
+      "file": "scene/b30-scene-portrait.png",
+      "webp": "scene/b30-scene-portrait.webp",
+      "size": [
+        1080,
+        1920
+      ],
+      "note": "电台近景桌面构图底，中下预留给地图层与回复卡。无人物、无真实地名、无界面文字。不要水平翻转。"
+    },
+    "landscape": {
+      "file": "scene/b30-scene-landscape.png",
+      "webp": "scene/b30-scene-landscape.webp",
+      "size": [
+        1920,
+        1080
+      ],
+      "note": "左侧电台桌面，右侧预留给地图层。无人物、无真实地名、无界面文字。不要水平翻转。"
+    },
+    "map": {
+      "file": "scene/b30-map.png",
+      "webp": "scene/b30-map.webp",
+      "size": [
+        1600,
+        1200
+      ],
+      "note": "虚构海岸地图层，可单独使用。灯塔在右侧岬角，旧码头在左侧海湾，桥在中部溪流。不要把三条呼叫的终局位置画死。不要水平翻转，地标方位须固定。无文字、无数字、无路线、无图钉。"
+    }
+  },
+  "props": [
+    {
+      "id": "knob",
+      "file": "props/b30-knob.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "anchor_note": "轴心，旋转用",
+      "note": "可旋转黄铜主旋钮，锚点在轴心。"
+    },
+    {
+      "id": "dial",
+      "file": "props/b30-dial.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.52498507864067,
+        255.67678626254687
+      ],
+      "anchor_note": "轴心，与旋钮同心",
+      "note": "刻度盘只有刻度，无数字、无字母。"
+    },
+    {
+      "id": "team-boat-idle",
+      "file": "props/b30-team-boat-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "stand_anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        332,
+        199
+      ],
+      "note": "靛蓝木船标记，外形可与板车区分，不要写一队二队。 待命态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-boat-depart",
+      "file": "props/b30-team-boat-depart.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "stand_anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        332,
+        199
+      ],
+      "note": "靛蓝木船标记，外形可与板车区分，不要写一队二队。 出发态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-boat-route",
+      "file": "props/b30-team-boat-route.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "stand_anchor": [
+        230.97126795752655,
+        338.2204871955028
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        332,
+        199
+      ],
+      "note": "靛蓝木船标记，外形可与板车区分，不要写一队二队。 途中态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-boat-return",
+      "file": "props/b30-team-boat-return.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        280.02873204247345,
+        338.2204871955028
+      ],
+      "stand_anchor": [
+        280.02873204247345,
+        338.2204871955028
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        332,
+        199
+      ],
+      "note": "靛蓝木船标记，外形可与板车区分，不要写一队二队。 返程态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-cart-idle",
+      "file": "props/b30-team-cart-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "stand_anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        352,
+        247
+      ],
+      "note": "琥珀木板车标记，外形可与木船区分，不要写一队二队。 待命态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-cart-depart",
+      "file": "props/b30-team-cart-depart.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "stand_anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        352,
+        247
+      ],
+      "note": "琥珀木板车标记，外形可与木船区分，不要写一队二队。 出发态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-cart-route",
+      "file": "props/b30-team-cart-route.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "stand_anchor": [
+        257.2325447201385,
+        358.8522792844778
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        352,
+        247
+      ],
+      "note": "琥珀木板车标记，外形可与木船区分，不要写一队二队。 途中态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "team-cart-return",
+      "file": "props/b30-team-cart-return.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        253.7674552798615,
+        358.8522792844778
+      ],
+      "stand_anchor": [
+        253.7674552798615,
+        358.8522792844778
+      ],
+      "shared_scale": 0.7302904564315352,
+      "content_size": [
+        352,
+        247
+      ],
+      "note": "琥珀木板车标记，外形可与木船区分，不要写一队二队。 返程态。锚点在底座。返程态沿竖轴镜像以表示折返，地图本身不要翻转。"
+    },
+    {
+      "id": "landmark-lighthouse",
+      "file": "props/b30-landmark-lighthouse.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        254.48554153522608,
+        451.762267788293
+      ],
+      "stand_anchor": [
+        254.48554153522608,
+        451.762267788293
+      ],
+      "shared_scale": 0.8804554079696395,
+      "content_size": [
+        341,
+        464
+      ],
+      "note": "灯塔地标，只靠形状，不要写红灯塔。 锚点在底座。"
+    },
+    {
+      "id": "landmark-dock",
+      "file": "props/b30-landmark-dock.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        276.483550295858,
+        464.956449704142
+      ],
+      "stand_anchor": [
+        276.483550295858,
+        464.956449704142
+      ],
+      "shared_scale": 0.8804554079696395,
+      "content_size": [
+        329,
+        275
+      ],
+      "note": "旧码头地标，只靠形状。 锚点在底座。"
+    },
+    {
+      "id": "landmark-bridge",
+      "file": "props/b30-landmark-bridge.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        309.46032847559565,
+        464.13393476752253
+      ],
+      "stand_anchor": [
+        309.46032847559565,
+        464.13393476752253
+      ],
+      "shared_scale": 0.8804554079696395,
+      "content_size": [
+        410,
+        284
+      ],
+      "note": "桥地标，只靠形状。 锚点在底座。"
+    },
+    {
+      "id": "pin-unverified",
+      "file": "props/b30-pin-unverified.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        430.0
+      ],
+      "anchor_note": "范围圈锚在圆心；图钉锚在针尖。",
+      "note": "未经核实的图钉，空心或浅色，无文字。"
+    },
+    {
+      "id": "pin-verified",
+      "file": "props/b30-pin-verified.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        430.0
+      ],
+      "anchor_note": "范围圈锚在圆心；图钉锚在针尖。",
+      "note": "已核实的图钉，实心，无文字。"
+    },
+    {
+      "id": "pin-range",
+      "file": "props/b30-pin-range.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "anchor_note": "范围圈锚在圆心；图钉锚在针尖。",
+      "note": "不确定范围圈，无数字。"
+    },
+    {
+      "id": "route-short",
+      "file": "props/b30-route-short.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.09751329228408,
+        256.4745573806435
+      ],
+      "shared_scale": 0.4628099173553719,
+      "content_size": [
+        94,
+        37
+      ],
+      "note": "路线虚线，源长度约 180 像素，三件共用缩放以保留长短差。无文字。"
+    },
+    {
+      "id": "route-mid",
+      "file": "props/b30-route-mid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.23962334967104,
+        256.47454408972493
+      ],
+      "shared_scale": 0.4628099173553719,
+      "content_size": [
+        150,
+        37
+      ],
+      "note": "路线虚线，源长度约 300 像素，三件共用缩放以保留长短差。无文字。"
+    },
+    {
+      "id": "route-long",
+      "file": "props/b30-route-long.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.03707698923478,
+        256.47458108905914
+      ],
+      "shared_scale": 0.4628099173553719,
+      "content_size": [
+        224,
+        37
+      ],
+      "note": "路线虚线，源长度约 460 像素，三件共用缩放以保留长短差。无文字。"
+    }
+  ],
+  "ui": [
+    {
+      "id": "card-ask",
+      "file": "ui/b30-ui-card-ask.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "询问用大号回复卡空底板，无文字。"
+    },
+    {
+      "id": "card-dispatch",
+      "file": "ui/b30-ui-card-dispatch.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "派遣用大号回复卡空底板，无文字。"
+    },
+    {
+      "id": "cost-1",
+      "file": "ui/b30-ui-cost-1.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "时间成本只用分段圆点表示，不要写耗时数字。"
+    },
+    {
+      "id": "cost-2",
+      "file": "ui/b30-ui-cost-2.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "时间成本只用分段圆点表示，不要写耗时数字。"
+    },
+    {
+      "id": "cost-3",
+      "file": "ui/b30-ui-cost-3.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "时间成本只用分段圆点表示，不要写耗时数字。"
+    },
+    {
+      "id": "clock-face",
+      "file": "ui/b30-ui-clock-face.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "剧情时间钟面，只有刻度，无数字。指针为独立道具，绕轴心旋转。"
+    },
+    {
+      "id": "clock-hand-short",
+      "file": "ui/b30-ui-clock-hand-short.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "钟面短针，锚点在轴心。"
+    },
+    {
+      "id": "clock-hand-long",
+      "file": "ui/b30-ui-clock-hand-long.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "钟面长针，锚点在轴心。"
+    },
+    {
+      "id": "time-fill-full",
+      "file": "ui/b30-ui-time-fill-full.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "剧情时间琥珀弧，先铺 fill 再叠 frame，满档，无数字。"
+    },
+    {
+      "id": "time-fill-mid",
+      "file": "ui/b30-ui-time-fill-mid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "剧情时间琥珀弧中档，无数字。"
+    },
+    {
+      "id": "time-fill-low",
+      "file": "ui/b30-ui-time-fill-low.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "剧情时间琥珀弧低档，无数字。"
+    },
+    {
+      "id": "time-frame",
+      "file": "ui/b30-ui-time-frame.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "剧情时间琥珀弧外框，叠在 fill 之上。"
+    },
+    {
+      "id": "mark-log",
+      "file": "ui/b30-ui-mark-log.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "阅读日志标记，阅读不扣剧情时间。形状与耗时行动区分。"
+    },
+    {
+      "id": "mark-action",
+      "file": "ui/b30-ui-mark-action.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "耗时行动标记，回复与派遣才推进剧情时间。"
+    },
+    {
+      "id": "node-empty",
+      "file": "ui/b30-ui-node-empty.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "事件树空节点，无文字。"
+    },
+    {
+      "id": "node-current",
+      "file": "ui/b30-ui-node-current.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "事件树当前节点，无文字。"
+    },
+    {
+      "id": "node-chosen",
+      "file": "ui/b30-ui-node-chosen.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "事件树已选节点，无文字。"
+    },
+    {
+      "id": "node-untraveled",
+      "file": "ui/b30-ui-node-untraveled.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "事件树未走节点，无文字。"
+    },
+    {
+      "id": "icon-jumpback",
+      "file": "ui/b30-ui-icon-jumpback.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "跳回关键节点，只靠形状。"
+    },
+    {
+      "id": "icon-pause",
+      "file": "ui/b30-ui-icon-pause.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "暂停，只靠形状。"
+    },
+    {
+      "id": "icon-confirm",
+      "file": "ui/b30-ui-icon-confirm.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "确认派遣，只靠形状。"
+    },
+    {
+      "id": "team-idle",
+      "file": "ui/b30-ui-team-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "队伍空闲状态点，只靠形状。"
+    },
+    {
+      "id": "team-busy",
+      "file": "ui/b30-ui-team-busy.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "队伍占用状态点，只靠形状。占用时不能瞬移改派。"
+    },
+    {
+      "id": "wave-silent",
+      "file": "ui/b30-ui-wave-silent.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "波形静默态，无文字、无频率数字。冷磷光，绿大于红。"
+    },
+    {
+      "id": "wave-noisy",
+      "file": "ui/b30-ui-wave-noisy.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "波形嘈杂态，无文字、无频率数字。"
+    },
+    {
+      "id": "wave-lock",
+      "file": "ui/b30-ui-wave-lock.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "波形清晰落入区，用括号形落入框标出，无文字、无频率数字。"
+    }
+  ],
+  "fx": [
+    {
+      "id": "fx-lock",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b30-fx-lock-sheet.png",
+      "pattern": "fx/b30-fx-lock-{i:02d}.png"
+    },
+    {
+      "id": "fx-dispatch",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b30-fx-dispatch-sheet.png",
+      "pattern": "fx/b30-fx-dispatch-{i:02d}.png"
+    },
+    {
+      "id": "fx-uncertain",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b30-fx-uncertain-sheet.png",
+      "pattern": "fx/b30-fx-uncertain-{i:02d}.png"
+    },
+    {
+      "id": "fx-close",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b30-fx-close-sheet.png",
+      "pattern": "fx/b30-fx-close-{i:02d}.png"
+    }
+  ],
+  "covers": {
+    "b30-cover-3x4": {
+      "file": "b30-cover-3x4.png",
+      "webp": "b30-cover-3x4.webp",
+      "size": [
+        1080,
+        1440
+      ]
+    },
+    "b30-cover-3x4-bg": {
+      "file": "b30-cover-3x4-bg.png",
+      "webp": "b30-cover-3x4-bg.webp",
+      "size": [
+        1080,
+        1440
+      ]
+    },
+    "b30-cover-16x9": {
+      "file": "b30-cover-16x9.png",
+      "webp": "b30-cover-16x9.webp",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    "b30-cover-16x9-bg": {
+      "file": "b30-cover-16x9-bg.png",
+      "webp": "b30-cover-16x9-bg.webp",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    "cover_3x4": {
+      "size": [
+        1080,
+        1440
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        1.0,
+        0.28
+      ],
+      "mascot_note": "频仔站在下方左侧旧木桌前，标题放上方夜空，画面无写实人物后背、无真实求救海报、无文字"
+    },
+    "cover_16x9": {
+      "size": [
+        1920,
+        1080
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        0.4,
+        0.86
+      ],
+      "mascot_note": "频仔站在左侧空木墙与桌面上，电台窗在右侧，标题放左上，画面无写实人物后背、无真实求救海报、无文字"
+    }
+  },
+  "animation": {
+    "fps_src": 24,
+    "fps_play": 12,
+    "chroma": "#FF00AA",
+    "video_default_resolution": "480p（480×640）",
+    "key_note": "品红抠像 #FF00AA，不用绿幕；去溢色时保护黄铜与旧木（红大于蓝）、琥珀灯光，以免铜面或灯火被抠灰。波形若用冷磷光，另保护绿大于红。",
+    "clips_meta": {
+      "tune": {
+        "fw": 374,
+        "fh": 456,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b30-mascot-sheet-tune.webp"
+        ],
+        "fallback": "b30-mascot-sheet-tune.png",
+        "still": "b30-mascot-still-tune.png",
+        "body": {
+          "crop_from_video": [
+            35,
+            89,
+            409,
+            545
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b30-anim-01-tune.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护靛蓝毛毡、琥珀灯光、黄铜与旧木（红大于蓝），不用绿幕",
+          "anchor": [
+            203.83467725405836,
+            260.20060985225825
+          ],
+          "anchor_norm": [
+            0.545012506026894,
+            0.5706153724830225
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "signal": {
+        "fw": 479,
+        "fh": 506,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b30-mascot-sheet-signal.webp"
+        ],
+        "fallback": "b30-mascot-sheet-signal.png",
+        "still": "b30-mascot-still-signal.png",
+        "body": {
+          "crop_from_video": [
+            1,
+            87,
+            480,
+            593
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b30-anim-02-signal.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护靛蓝毛毡、琥珀灯光、黄铜与旧木（红大于蓝），不用绿幕",
+          "anchor": [
+            237.84375781348535,
+            262.2245519955503
+          ],
+          "anchor_norm": [
+            0.4965422918861907,
+            0.5182303399121547
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "listen": {
+        "fw": 352,
+        "fh": 454,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b30-mascot-sheet-listen.webp"
+        ],
+        "fallback": "b30-mascot-sheet-listen.png",
+        "still": "b30-mascot-still-listen.png",
+        "body": {
+          "crop_from_video": [
+            75,
+            91,
+            427,
+            545
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b30-anim-03-listen.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护靛蓝毛毡、琥珀灯光、黄铜与旧木（红大于蓝），不用绿幕",
+          "anchor": [
+            163.8478022567503,
+            258.21007200075593
+          ],
+          "anchor_norm": [
+            0.465476710956677,
+            0.5687446519840439
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      }
+    }
+  },
+  "title_safe": {
+    "3x4": [
+      0.0,
+      0.0,
+      1.0,
+      0.28
+    ],
+    "16x9": [
+      0.0,
+      0.0,
+      0.4,
+      0.86
+    ]
+  }
+}
