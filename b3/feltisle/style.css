@@ -57,8 +57,10 @@ html.land #cover-bg { object-position: 70% 50%; }
 }
 [hidden] { display: none !important; }
 
-.back, .music, .textbtn, .imgbtn, .primary {
-  min-height: 40px;
+.back, .music, .textbtn, .imgbtn, .primary,
+.actions > button, .demand > button, .veil > button {
+  min-width: 44px;
+  min-height: 44px;
   border: 0;
   border-radius: 999px;
   background: rgba(246, 237, 212, 0.94);
@@ -76,7 +78,7 @@ html.land #cover-bg { object-position: 70% 50%; }
   font-size: 14px;
 }
 .back { top: 10px; left: 10px; }
-.music { width: 44px; padding: 0; }
+.music { width: 44px; height: 44px; padding: 0; flex: 0 0 44px; }
 .top-icons {
   position: absolute;
   z-index: 5;
@@ -86,6 +88,7 @@ html.land #cover-bg { object-position: 70% 50%; }
   gap: 6px;
 }
 .top-icons .music { position: static; }
+.top-icons .imgbtn { flex: 0 0 44px; }
 .music[aria-pressed="false"] { opacity: 0.55; }
 #cover-music { top: 10px; right: 10px; }
 
@@ -112,11 +115,12 @@ h1 {
 .textbtn, .imgbtn { padding: 0 12px; font-size: 14px; }
 .imgbtn {
   width: 44px;
-  height: 40px;
+  height: 44px;
   padding: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 44px;
 }
 .imgbtn img { width: 26px; height: 26px; object-fit: contain; pointer-events: none; }
 button:disabled { opacity: 0.45; cursor: default; }
@@ -183,6 +187,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   left: 10%;
   top: 78%;
   width: 80%;
+  min-height: 48px;
   height: 6%;
   display: flex;
   align-items: center;
@@ -222,11 +227,12 @@ html.land .hud-title { left: 24%; }
 .card {
   position: relative;
   flex: 1;
-  min-width: 0;
+  min-width: 44px;
+  min-height: 44px;
   border: 0;
   padding: 0;
   background: transparent;
-  border-radius: 16px;
+  border-radius: 0;
 }
 .card .frame, .card .tile {
   position: absolute;
@@ -251,7 +257,9 @@ html.land .hud-title { left: 24%; }
 .gauge span { font-size: 12px; letter-spacing: 0.08em; line-height: 16px; color: var(--ink); }
 
 .species {
-  width: 30%;
+  flex: 1 1 44px;
+  min-width: 44px;
+  width: auto;
   height: 86%;
   padding: 0;
   border: 0;
@@ -287,6 +295,43 @@ html.land .hud-title { left: 24%; }
 .result h2, .demand p { position: relative; }
 #result-actor { width: 140px; height: 160px; display: block; margin: 0 auto; background: transparent; }
 .veil { width: min(280px, 70%); }
+
+@media (orientation: landscape) and (max-height: 480px) {
+  html.land .zone-cards {
+    left: 66%;
+    top: 62px;
+    width: 28%;
+    height: 150px;
+  }
+  html.land .zone-cards .card {
+    flex: 1 0 44px;
+    min-height: 44px;
+  }
+  html.land .zone-meters {
+    left: 66%;
+    top: 218px;
+    width: 28%;
+    height: 62px;
+  }
+  html.land .zone-species {
+    left: 66%;
+    top: 284px;
+    width: 28%;
+    height: 52px;
+  }
+  html.land .zone-assist {
+    left: 66%;
+    top: 340px;
+    width: 28%;
+    height: 46px;
+    min-height: 46px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 520px) {
+  .zone-meters { width: 40%; }
+  .zone-species { left: 52%; width: 38%; }
+}
 
 @media (max-width: 420px) {
   h1 { font-size: 30px; }
