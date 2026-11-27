@@ -1,0 +1,1294 @@
+{
+  "id": "B3-29",
+  "title": "方寸生态",
+  "slug_candidate": "feltisle",
+  "prefix": "b29-",
+  "mascot": {
+    "chosen": "A",
+    "name": "屿仔",
+    "alternates": [
+      {
+        "id": "B",
+        "name_candidate": "泽仔",
+        "note": "湖蓝陶土小兽，背上森林绿毛毡，更偏泽地"
+      },
+      {
+        "id": "C",
+        "name_candidate": "种籽身（未另取正式名）",
+        "note": "沙黄毛毡种籽身、绿叶帽与湖蓝围巾，岛屿身份较弱"
+      }
+    ],
+    "hero": "mascot/b29-mascot-hero.png",
+    "chroma": "mascot/b29-mascot-chroma-720x960.png",
+    "chroma_hex": "#FF00AA",
+    "note": "正式名「屿仔」经斟酌后写入文档，不画进画面。品红抠像 #FF00AA，不用绿幕。保护绿大于红的毛毡与苔面，以及湖蓝水面与沙黄。"
+  },
+  "palette": {
+    "森林绿": [
+      "#2F6B3A",
+      "#4A8A52",
+      "#1E4A28"
+    ],
+    "湖蓝": [
+      "#3A8FBF",
+      "#5EB0D4",
+      "#2A6A8A"
+    ],
+    "沙黄": [
+      "#D4B06A",
+      "#E8C87A",
+      "#B89048"
+    ],
+    "chroma": "#FF00AA"
+  },
+  "camera": "俯视平顶六角微缩，不要水平翻转。地块必须能整齐拼接。概念界面里的六角是平顶，本包一律用平顶，不要做成尖顶。",
+  "hex": {
+    "orientation": "flat-top",
+    "edge_index": "从平顶边开始按顺时针编号 0 到 5：0 顶、1 右上、2 右下、3 底、4 左下、5 左上",
+    "anchor": "质心，512 画布中心 (256, 256)",
+    "size_units": 236.0,
+    "spacing": "相邻中心：轴向 q 增加时 x += 1.5 * size，y += sqrt(3) * size * (r + q/2)"
+  },
+  "safe_zones": {
+    "origin": "top-left, normalized",
+    "viewport_390x844": "棋盘、三张候选地块、水质或连通条、多样性或物种图标都尽量收在约 0.10 到 0.90，以免窄屏裁掉。",
+    "portrait": {
+      "board": [
+        0.1,
+        0.08,
+        0.9,
+        0.64
+      ],
+      "cards": [
+        0.1,
+        0.66,
+        0.9,
+        0.84
+      ],
+      "meters": [
+        0.1,
+        0.85,
+        0.56,
+        0.96
+      ],
+      "species": [
+        0.58,
+        0.85,
+        0.9,
+        0.96
+      ]
+    },
+    "landscape": {
+      "board": [
+        0.04,
+        0.08,
+        0.64,
+        0.92
+      ],
+      "cards": [
+        0.68,
+        0.08,
+        0.94,
+        0.4
+      ],
+      "meters": [
+        0.68,
+        0.42,
+        0.94,
+        0.62
+      ],
+      "species": [
+        0.68,
+        0.64,
+        0.94,
+        0.82
+      ],
+      "assist_pause": [
+        0.68,
+        0.84,
+        0.94,
+        0.94
+      ]
+    },
+    "portrait_note": "竖图棋盘在中上，三张地块卡和指标靠下。",
+    "landscape_note": "横图棋盘在左中，候选与指标在右侧。"
+  },
+  "play_rules_for_code": {
+    "camera": "俯视平顶六角，不要翻转",
+    "placement": "新地块必须与已有岛屿相邻。拖到边缘，点旋转看接口。",
+    "rivers": "河流接口不匹配即断流，用形状和颜色提示，不要靠文字。边编号见 hex.edge_index 与各瓦片 river_edges。",
+    "species": "物种按公开栖地条件出现，例如连续水岸或相邻草林边缘，不靠随机抽到稀有动物达标。",
+    "diversity": "多样性不只累计同类数量，单一栖地过度扩张会挤占另一种需求。",
+    "victory": "地块用尽前，在 15 片内同时满足多样性与连通双目标即胜利。完成迁徙目标可补少量地块，奖励次数有限。没达标可复盘每步指标变化。",
+    "scope": "首版四种地块、三种物种、15 片限制。不做敌波塔防、战斗单位、种植收割或在线市场。",
+    "bars": "水质或连通条、多样性条先铺 fill 再叠 frame。剩余片数用十五枚平顶六角分段表示。"
+  },
+  "scenes": {
+    "portrait": {
+      "file": "scene/b29-scene-portrait.png",
+      "webp": "scene/b29-scene-portrait.webp",
+      "size": [
+        1080,
+        1920
+      ],
+      "note": "俯视布面构图底，仅一小块受损起始岛轮廓，未画死十五片终局岛；无文字、无写实大型动物。不要水平翻转。"
+    },
+    "landscape": {
+      "file": "scene/b29-scene-landscape.png",
+      "webp": "scene/b29-scene-landscape.webp",
+      "size": [
+        1920,
+        1080
+      ],
+      "note": "俯视布面构图底，仅一小块受损起始岛轮廓，未画死十五片终局岛；无文字、无写实大型动物。不要水平翻转。"
+    }
+  },
+  "tiles": [
+    {
+      "file": "props/b29-tile-water-straight.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-water-straight",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "水系直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-water-meander.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-water-meander",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "水系微弯直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-forest-solid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-forest-solid",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "林地实心，无河流边"
+    },
+    {
+      "file": "props/b29-tile-grass-solid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-grass-solid",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "草地实心，无河流边"
+    },
+    {
+      "file": "props/b29-tile-wetland-straight.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-wetland-straight",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "湿地直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-wetland-meander.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-wetland-meander",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "湿地微弯直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-forest-stream.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-forest-stream",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "林地带溪流直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-grass-stream.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-grass-stream",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        3
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "草地带溪流直行，河流边 0 与 3"
+    },
+    {
+      "file": "props/b29-tile-start-damaged.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-start-damaged",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "受损沙黄起始底格，非正式可购买地块，无河流边"
+    },
+    {
+      "file": "props/b29-tile-water-turn60.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-water-turn60",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        1
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "水系转弯 60 度，河流边 0 与 1"
+    },
+    {
+      "file": "props/b29-tile-water-turn120.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-water-turn120",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        2
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "水系转弯 120 度，河流边 0 与 2"
+    },
+    {
+      "file": "props/b29-tile-wetland-turn60.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-wetland-turn60",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        1
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "湿地转弯 60 度，河流边 0 与 1"
+    },
+    {
+      "file": "props/b29-tile-wetland-turn120.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-wetland-turn120",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        2
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "湿地转弯 120 度，河流边 0 与 2"
+    },
+    {
+      "file": "props/b29-tile-forest-turn120.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-forest-turn120",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        2
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "林地溪流转弯 120 度，河流边 0 与 2"
+    },
+    {
+      "file": "props/b29-tile-grass-turn120.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-grass-turn120",
+      "hex": "flat-top",
+      "size_units": 236.0,
+      "river_edges": [
+        0,
+        2
+      ],
+      "edge_index": "从平顶边开始按顺时针编号 0 到 5（0 顶、1 右上、2 右下、3 底、4 左下、5 左上）",
+      "note": "草地溪流转弯 120 度，河流边 0 与 2"
+    },
+    {
+      "file": "props/b29-tile-state-selected.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-state-selected",
+      "note": "高亮或选中，金色平顶六角描边"
+    },
+    {
+      "file": "props/b29-tile-state-broken.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-state-broken",
+      "note": "断流或非法提示，只用形状和颜色，不要写断流"
+    },
+    {
+      "file": "props/b29-tile-state-preview.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "tile-state-preview",
+      "note": "半透明预览"
+    },
+    {
+      "file": "props/b29-mark-migration.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "mark-migration",
+      "note": "迁徙通道标记，无文字"
+    },
+    {
+      "file": "props/b29-mark-bonus.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "mark-bonus",
+      "note": "补片奖励标记，无文字"
+    }
+  ],
+  "species": [
+    {
+      "file": "props/b29-species-forest-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        251.10764806266417,
+        435.0
+      ],
+      "id": "species-forest-idle",
+      "shared_scale": 0.9188118811881189,
+      "content_size": [
+        300,
+        429
+      ],
+      "stand_anchor": [
+        251.10764806266417,
+        435.0
+      ],
+      "note": "林栖种，毛毡枝角小兽，出现于林地连通。不要写成现生种学名。 锚点在脚爪或驻留点。"
+    },
+    {
+      "file": "props/b29-species-forest-appear.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        251.10764806266417,
+        435.0
+      ],
+      "id": "species-forest-appear",
+      "shared_scale": 0.9188118811881189,
+      "stand_anchor": [
+        251.10764806266417,
+        435.0
+      ],
+      "note": "林栖种，毛毡枝角小兽，出现于林地连通。不要写成现生种学名。 出现态。"
+    },
+    {
+      "file": "props/b29-species-edge-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.3060679662606,
+        376.96000000000004
+      ],
+      "id": "species-edge-idle",
+      "shared_scale": 0.9188118811881189,
+      "content_size": [
+        253,
+        292
+      ],
+      "stand_anchor": [
+        257.3060679662606,
+        376.96000000000004
+      ],
+      "note": "林缘种，沙黄毛毡圆兽，出现于草地与林地的相邻边缘。不要写成现生种学名。 锚点在脚爪或驻留点。"
+    },
+    {
+      "file": "props/b29-species-edge-appear.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        257.3060679662606,
+        376.96000000000004
+      ],
+      "id": "species-edge-appear",
+      "shared_scale": 0.9188118811881189,
+      "stand_anchor": [
+        257.3060679662606,
+        376.96000000000004
+      ],
+      "note": "林缘种，沙黄毛毡圆兽，出现于草地与林地的相邻边缘。不要写成现生种学名。 出现态。"
+    },
+    {
+      "file": "props/b29-species-shore-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        252.70145639211862,
+        449.20000000000005
+      ],
+      "id": "species-shore-idle",
+      "shared_scale": 0.9188118811881189,
+      "content_size": [
+        211,
+        464
+      ],
+      "stand_anchor": [
+        252.70145639211862,
+        449.20000000000005
+      ],
+      "note": "水岸种，湖蓝毛毡涉水鸟，出现于连续水岸。不要写成现生种学名。 锚点在脚爪或驻留点。"
+    },
+    {
+      "file": "props/b29-species-shore-appear.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        252.70145639211862,
+        449.20000000000005
+      ],
+      "id": "species-shore-appear",
+      "shared_scale": 0.9188118811881189,
+      "stand_anchor": [
+        252.70145639211862,
+        449.20000000000005
+      ],
+      "note": "水岸种，湖蓝毛毡涉水鸟，出现于连续水岸。不要写成现生种学名。 出现态。"
+    }
+  ],
+  "ui": [
+    {
+      "file": "ui/b29-ui-card-a.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "card-a",
+      "note": "候选地块空卡框，无文字"
+    },
+    {
+      "file": "ui/b29-ui-card-b.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "card-b",
+      "note": "候选地块空卡框，无文字"
+    },
+    {
+      "file": "ui/b29-ui-card-c.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "card-c",
+      "note": "候选地块空卡框，无文字"
+    },
+    {
+      "file": "ui/b29-ui-icon-rotate.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "icon-rotate",
+      "note": "旋转提示，只靠形状"
+    },
+    {
+      "file": "ui/b29-ui-connect-fill-full.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "connect-fill-full",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-connect-frame.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "connect-frame",
+      "note": "外框叠在 fill 之上"
+    },
+    {
+      "file": "ui/b29-ui-connect-fill-low.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "connect-fill-low",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-connect-fill-mid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "connect-fill-mid",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-diversity-fill-full.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "diversity-fill-full",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-diversity-frame.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "diversity-frame",
+      "note": "外框叠在 fill 之上"
+    },
+    {
+      "file": "ui/b29-ui-diversity-fill-low.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "diversity-fill-low",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-diversity-fill-mid.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "diversity-fill-mid",
+      "note": "先铺 fill 再叠 frame，无数字"
+    },
+    {
+      "file": "ui/b29-ui-pips-full.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "pips-full",
+      "note": "剩余片数用十五枚平顶六角分段表示，满档，无数字"
+    },
+    {
+      "file": "ui/b29-ui-pips-low.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "pips-low",
+      "note": "剩余片数低档，无数字"
+    },
+    {
+      "file": "ui/b29-ui-pips-empty.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "pips-empty",
+      "note": "剩余片数空档，可与填充叠加"
+    },
+    {
+      "file": "ui/b29-ui-need-woodland.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "need-woodland",
+      "note": "林地需求，只靠形状"
+    },
+    {
+      "file": "ui/b29-ui-need-edge.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "need-edge",
+      "note": "林缘需求，只靠形状"
+    },
+    {
+      "file": "ui/b29-ui-need-shore.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "need-shore",
+      "note": "水岸需求，只靠形状"
+    },
+    {
+      "file": "ui/b29-ui-species-forest-ok.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-forest-ok",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-species-forest-off.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-forest-off",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-species-edge-ok.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-edge-ok",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-species-edge-off.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-edge-off",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-species-shore-ok.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-shore-ok",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-species-shore-off.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "species-shore-off",
+      "note": "物种图标，满足与未满足两态，无文字、无学名"
+    },
+    {
+      "file": "ui/b29-ui-panel-demand.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        256.0
+      ],
+      "id": "panel-demand",
+      "note": "长按说明底板，无字"
+    },
+    {
+      "file": "ui/b29-ui-icon-pause.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "icon-pause",
+      "note": "暂停，只靠形状"
+    },
+    {
+      "file": "ui/b29-ui-icon-replay.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128.0,
+        128.0
+      ],
+      "id": "icon-replay",
+      "note": "复盘步进，只靠形状"
+    }
+  ],
+  "fx": [
+    {
+      "id": "fx-place",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b29-fx-place-sheet.png",
+      "pattern": "fx/b29-fx-place-{i:02d}.png"
+    },
+    {
+      "id": "fx-connect",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b29-fx-connect-sheet.png",
+      "pattern": "fx/b29-fx-connect-{i:02d}.png"
+    },
+    {
+      "id": "fx-appear",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b29-fx-appear-sheet.png",
+      "pattern": "fx/b29-fx-appear-{i:02d}.png"
+    },
+    {
+      "id": "fx-broken",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b29-fx-broken-sheet.png",
+      "pattern": "fx/b29-fx-broken-{i:02d}.png"
+    },
+    {
+      "id": "fx-win",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b29-fx-win-sheet.png",
+      "pattern": "fx/b29-fx-win-{i:02d}.png"
+    }
+  ],
+  "covers": {
+    "cover_3x4": {
+      "size": [
+        1080,
+        1440
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        1.0,
+        0.3
+      ],
+      "mascot_note": "屿仔站在下方沙黄布面，标题放上方空布，画面无写实野生动物、无战斗单位、无文字"
+    },
+    "cover_16x9": {
+      "size": [
+        1920,
+        1080
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        0.48,
+        0.36
+      ],
+      "mascot_note": "屿仔站在左侧沙黄布面，毛毡小岛留在右侧，标题放左上，画面无写实野生动物、无战斗单位、无文字"
+    }
+  },
+  "animation": {
+    "fps_src": 24,
+    "fps_play": 12,
+    "chroma": "#FF00AA",
+    "video_default_resolution": "480p（480×640）",
+    "key_note": "品红抠像 #FF00AA，不用绿幕；去溢色时保护绿大于红的毛毡、草木和苔面，以及湖蓝水面与沙黄，以免绿地被抠穿。",
+    "clips_meta": {
+      "place": {
+        "fw": 370,
+        "fh": 454,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b29-mascot-sheet-place.webp"
+        ],
+        "fallback": "b29-mascot-sheet-place.png",
+        "still": "b29-mascot-still-place.png",
+        "body": {
+          "crop_from_video": [
+            53,
+            103,
+            423,
+            557
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b29-anim-01-place.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护绿大于红的毛毡与苔面、湖蓝水面与沙黄靴，不用绿幕",
+          "anchor": [
+            185.3894527699707,
+            266.44488982577997
+          ],
+          "anchor_norm": [
+            0.5010525750539748,
+            0.5868830172374008
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "look": {
+        "fw": 312,
+        "fh": 446,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b29-mascot-sheet-look.webp"
+        ],
+        "fallback": "b29-mascot-sheet-look.png",
+        "still": "b29-mascot-still-look.png",
+        "body": {
+          "crop_from_video": [
+            82,
+            112,
+            394,
+            558
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b29-anim-02-look.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护绿大于红的毛毡与苔面、湖蓝水面与沙黄靴，不用绿幕",
+          "anchor": [
+            156.37941698401713,
+            257.451873709154
+          ],
+          "anchor_norm": [
+            0.5012160800769779,
+            0.5772463536079685
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "ripple": {
+        "fw": 338,
+        "fh": 432,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b29-mascot-sheet-ripple.webp"
+        ],
+        "fallback": "b29-mascot-sheet-ripple.png",
+        "still": "b29-mascot-still-ripple.png",
+        "body": {
+          "crop_from_video": [
+            71,
+            117,
+            409,
+            549
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b29-anim-03-ripple.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "key_note": "品红抠像 #FF00AA，保护绿大于红的毛毡与苔面、湖蓝水面与沙黄靴，不用绿幕",
+          "anchor": [
+            167.39496861123249,
+            252.42366314126593
+          ],
+          "anchor_norm": [
+            0.49525138642376476,
+            0.5843140350492267
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      }
+    }
+  },
+  "anchors": {
+    "hero_canvas": [
+      1360,
+      1360
+    ],
+    "tiles": "平顶六角，质心 (256, 256)，同类共用缩放",
+    "species": "512 画布，锚点在脚爪或驻留点（包围盒下方约百分之九十二），三态共用同一缩放",
+    "fx": [
+      256,
+      256
+    ],
+    "ui": "条的中心 (256,256)；先铺 fill 再叠 frame。图标中心在 256 或 128 画布中心。",
+    "animation": "静息姿态为第零帧最大连通域质心，见各 json"
+  }
+}

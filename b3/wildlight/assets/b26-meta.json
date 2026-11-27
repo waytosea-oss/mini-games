@@ -1,0 +1,1024 @@
+{
+  "id": "B3-26",
+  "slug": "wildlight",
+  "title": "野光图鉴",
+  "mascot": {
+    "name": "羽仔",
+    "pick": "A",
+    "reason": "最接近两头身的原创林鸟活物：灰帽、奶油胸、苔绿翅、日光金尾扇，背面仍可辨。选定名字时斟酌后定为羽仔。适合轻轻展尾再收拢、头侧转张望、原地轻跳。可玩的鸟保持更写实的小型鸟形，以免与吉祥物撞脸。",
+    "chroma": "#FF00AA",
+    "hero": "mascot/b26-mascot-hero.png",
+    "chroma_file": "mascot/b26-mascot-chroma-720x960.png",
+    "rejects": [
+      "候选 B 苔绿圆身加金叶冠与小相机，更接近苔仔备选，没有尾羽可展",
+      "候选 C 通身日光金加苔绿叶巾，更接近光羽备选，与首版鸟的灰白金身份较弱"
+    ]
+  },
+  "palette": {
+    "moss": "#4A7A4A",
+    "moss_lt": "#6B9A5A",
+    "moss_dk": "#2F5A38",
+    "gold": "#E8C04A",
+    "gold_lt": "#F5D76A",
+    "gold_dk": "#C4922A",
+    "cream": "#F2EDE4",
+    "slate": "#6B7380",
+    "coral": "#CC6052",
+    "navy": "#18201C",
+    "chroma": "#FF00AA"
+  },
+  "play": {
+    "camera": "第一人称观察，玩家人体不出现在林中。",
+    "shot": "拖视角选择观察位，长按对焦、点快门；可放一次无伤害诱导物。",
+    "basis": "对焦清晰与主体入框是基础条件，拍到指定行为才过关。照片不因艺术审美被否决。",
+    "behaviors": "首版一种原创鸟，三种目标行为：饮水、展羽、喂食。前兆可见（理羽或望水），不靠隐藏概率空等。",
+    "distance": "靠得太近鸟会暂时避开，退回观察位后恢复，不永久错失该关。观察位与距离用形状和颜色提示，不写数字。",
+    "film": "失败只消耗本轮胶片，营地可补充；章节内可快进时间。",
+    "victory": "拍到目标行为并清楚识别主体即可过关，照片与行为记录进入图鉴。",
+    "scope": "首版先一片林地、一种鸟、三种行为。"
+  },
+  "zones": {
+    "origin": "top-left",
+    "normalized": true,
+    "portrait_1080x1920": {
+      "hud": [
+        0.06,
+        0.015,
+        0.94,
+        0.12
+      ],
+      "film": [
+        0.06,
+        0.022,
+        0.4,
+        0.088
+      ],
+      "behavior": [
+        0.58,
+        0.022,
+        0.94,
+        0.11
+      ],
+      "viewfinder": [
+        0.12,
+        0.14,
+        0.88,
+        0.7
+      ],
+      "photos": [
+        0.06,
+        0.73,
+        0.3,
+        0.96
+      ],
+      "shutter": [
+        0.38,
+        0.78,
+        0.62,
+        0.97
+      ],
+      "distance": [
+        0.66,
+        0.8,
+        0.94,
+        0.96
+      ]
+    },
+    "landscape_1920x1080": {
+      "viewfinder": [
+        0.04,
+        0.08,
+        0.68,
+        0.9
+      ],
+      "hud": [
+        0.72,
+        0.04,
+        0.98,
+        0.2
+      ],
+      "film": [
+        0.74,
+        0.05,
+        0.97,
+        0.13
+      ],
+      "behavior": [
+        0.74,
+        0.15,
+        0.97,
+        0.3
+      ],
+      "photos": [
+        0.74,
+        0.32,
+        0.97,
+        0.58
+      ],
+      "shutter": [
+        0.78,
+        0.62,
+        0.94,
+        0.82
+      ],
+      "distance": [
+        0.74,
+        0.84,
+        0.97,
+        0.96
+      ]
+    },
+    "viewport_390x844": "竖图安全区按同一归一化坐标使用。竖图画布为九点一六，三九零乘八四四视口更窄，会裁掉左右两侧；取景框、快门与三格照片已收在大约 0.10–0.90 的水平范围内。"
+  },
+  "scenes": {
+    "b26-scene-portrait": [
+      1080,
+      1920
+    ],
+    "b26-scene-landscape": [
+      1920,
+      1080
+    ],
+    "b26-scene-shade": [
+      1080,
+      1920
+    ]
+  },
+  "landmarks": {
+    "portrait": "第一人称溪边观察位，中央浅溪与苔石、倒木可作落脚，上方林冠透日光金，下方蕨类留给快门。无人物、无鸟、无界面。",
+    "landscape": "溪流与苔石在左中，右侧稍开的雾林留给界面。请不要水平翻转。",
+    "shade": "树荫稍远的变体，左侧大树干取景，溪与远处石台更小。"
+  },
+  "tiles": [],
+  "props": [
+    {
+      "file": "props/b26-bird-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        407.96
+      ],
+      "content_bbox": [
+        156,
+        74,
+        357,
+        437
+      ],
+      "id": "bird-idle",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        205,
+        367
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "待机，尾羽自然下垂"
+    },
+    {
+      "file": "props/b26-bird-drink.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.5,
+        357.64
+      ],
+      "content_bbox": [
+        78,
+        135,
+        435,
+        377
+      ],
+      "id": "bird-drink",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        361,
+        246
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "饮水，头颈下探"
+    },
+    {
+      "file": "props/b26-bird-display.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        402.16
+      ],
+      "content_bbox": [
+        47,
+        82,
+        465,
+        430
+      ],
+      "id": "bird-display",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        422,
+        352
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "展羽，金尾展开"
+    },
+    {
+      "file": "props/b26-bird-feed.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        255.5,
+        359.32
+      ],
+      "content_bbox": [
+        34,
+        133,
+        477,
+        379
+      ],
+      "id": "bird-feed",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        447,
+        250
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "喂食，喙中衔果"
+    },
+    {
+      "file": "props/b26-bird-preen.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        370.24
+      ],
+      "content_bbox": [
+        81,
+        120,
+        431,
+        392
+      ],
+      "id": "bird-preen",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        354,
+        276
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "理羽前兆，回头梳理金尾"
+    },
+    {
+      "file": "props/b26-bird-startle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.0,
+        382.0
+      ],
+      "content_bbox": [
+        26,
+        106,
+        486,
+        406
+      ],
+      "id": "bird-startle",
+      "shared_scale": 1.154228855721393,
+      "content_size": [
+        464,
+        304
+      ],
+      "anchor_note": "脚爪接触点，约包围盒下方百分之九十二，六态共用同一缩放",
+      "note": "受惊避开，翅将起"
+    },
+    {
+      "file": "props/b26-clue-footprints.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        254.4,
+        260.73
+      ],
+      "content_bbox": [
+        31,
+        106,
+        481,
+        407
+      ],
+      "id": "clue-footprints",
+      "shared_scale": 1.6227758007117439,
+      "content_size": [
+        456,
+        308
+      ],
+      "note": "岸边湿脚印，无文字"
+    },
+    {
+      "file": "props/b26-clue-insects.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        252.38,
+        249.95
+      ],
+      "content_bbox": [
+        225,
+        223,
+        287,
+        288
+      ],
+      "id": "clue-insects",
+      "shared_scale": 1.6227758007117439,
+      "content_size": [
+        68,
+        71
+      ],
+      "note": "飞向水面的小虫，无文字"
+    },
+    {
+      "file": "props/b26-lure-leaf.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        244.92,
+        261.86
+      ],
+      "content_bbox": [
+        112,
+        118,
+        400,
+        394
+      ],
+      "id": "lure-leaf",
+      "shared_scale": 1.6227758007117439,
+      "content_size": [
+        294,
+        282
+      ],
+      "note": "无伤害诱导物，叶杯与浆果"
+    },
+    {
+      "file": "props/b26-mark-stone.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256.91,
+        260.88
+      ],
+      "content_bbox": [
+        96,
+        114,
+        416,
+        398
+      ],
+      "id": "mark-stone",
+      "shared_scale": 1.6227758007117439,
+      "content_size": [
+        326,
+        290
+      ],
+      "note": "树荫观察位苔石标记"
+    },
+    {
+      "file": "overlays/b26-ring-safe.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "content_bbox": [
+        26,
+        24,
+        486,
+        488
+      ],
+      "id": "ring-safe",
+      "shared_scale": 2.175115207373272,
+      "content_size": [
+        468,
+        472
+      ],
+      "note": "安全圈为苔绿金边，过近圈为珊瑚红，无数字"
+    },
+    {
+      "file": "overlays/b26-ring-close.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "content_bbox": [
+        78,
+        80,
+        433,
+        431
+      ],
+      "id": "ring-close",
+      "shared_scale": 2.175115207373272,
+      "content_size": [
+        363,
+        359
+      ],
+      "note": "安全圈为苔绿金边，过近圈为珊瑚红，无数字"
+    }
+  ],
+  "ui": [
+    {
+      "id": "shutter-idle",
+      "file": "ui/b26-ui-shutter-idle.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "大号快门，闲置与按下两态，无文字"
+    },
+    {
+      "id": "shutter-pressed",
+      "file": "ui/b26-ui-shutter-pressed.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "大号快门，闲置与按下两态，无文字"
+    },
+    {
+      "id": "focus-soft",
+      "file": "ui/b26-ui-focus-soft.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦框：模糊、清晰、锁定，无百分数"
+    },
+    {
+      "id": "focus-sharp",
+      "file": "ui/b26-ui-focus-sharp.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦框：模糊、清晰、锁定，无百分数"
+    },
+    {
+      "id": "focus-lock",
+      "file": "ui/b26-ui-focus-lock.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦框：模糊、清晰、锁定，无百分数"
+    },
+    {
+      "id": "focus-progress-00",
+      "file": "ui/b26-ui-focus-progress-00.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦进度用分段环，无百分数"
+    },
+    {
+      "id": "focus-progress-01",
+      "file": "ui/b26-ui-focus-progress-01.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦进度用分段环，无百分数"
+    },
+    {
+      "id": "focus-progress-02",
+      "file": "ui/b26-ui-focus-progress-02.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦进度用分段环，无百分数"
+    },
+    {
+      "id": "focus-progress-03",
+      "file": "ui/b26-ui-focus-progress-03.png",
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "note": "对焦进度用分段环，无百分数"
+    },
+    {
+      "id": "photo-slot-empty",
+      "file": "ui/b26-ui-photo-slot-empty.png",
+      "size": [
+        256,
+        320
+      ],
+      "anchor": [
+        128,
+        160
+      ],
+      "note": "三格照片空框与已拍槽，槽内无预写字"
+    },
+    {
+      "id": "photo-slot-filled",
+      "file": "ui/b26-ui-photo-slot-filled.png",
+      "size": [
+        256,
+        320
+      ],
+      "anchor": [
+        128,
+        160
+      ],
+      "note": "三格照片空框与已拍槽，槽内无预写字"
+    },
+    {
+      "id": "icon-drink",
+      "file": "ui/b26-ui-icon-drink.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-display",
+      "file": "ui/b26-ui-icon-display.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-feed",
+      "file": "ui/b26-ui-icon-feed.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-preen",
+      "file": "ui/b26-ui-icon-preen.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-lookwater",
+      "file": "ui/b26-ui-icon-lookwater.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-guide",
+      "file": "ui/b26-ui-icon-guide.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "icon-skiptime",
+      "file": "ui/b26-ui-icon-skiptime.png",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "film-track",
+      "file": "ui/b26-film-track.png",
+      "size": [
+        768,
+        96
+      ],
+      "anchor": [
+        384.0,
+        48.0
+      ]
+    },
+    {
+      "id": "film-fill-full",
+      "file": "ui/b26-film-fill-full.png",
+      "size": [
+        768,
+        96
+      ],
+      "anchor": [
+        384.0,
+        48.0
+      ]
+    },
+    {
+      "id": "film-fill-low",
+      "file": "ui/b26-film-fill-low.png",
+      "size": [
+        768,
+        96
+      ],
+      "anchor": [
+        384.0,
+        48.0
+      ]
+    },
+    {
+      "id": "film-frame",
+      "file": "ui/b26-film-frame.png",
+      "size": [
+        768,
+        96
+      ],
+      "anchor": [
+        384.0,
+        48.0
+      ],
+      "note": "先铺 track 与 fill，再叠 frame。不要把次数画进图里。"
+    }
+  ],
+  "fx": [
+    {
+      "id": "fx-flash",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b26-fx-flash-sheet.png",
+      "pattern": "fx/b26-fx-flash-{i:02d}.png"
+    },
+    {
+      "id": "fx-ok",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b26-fx-ok-sheet.png",
+      "pattern": "fx/b26-fx-ok-{i:02d}.png"
+    },
+    {
+      "id": "fx-startle",
+      "frames": 8,
+      "size": [
+        512,
+        512
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "sheet": "fx/b26-fx-startle-sheet.png",
+      "pattern": "fx/b26-fx-startle-{i:02d}.png"
+    }
+  ],
+  "covers": {
+    "cover_3x4": {
+      "size": [
+        1080,
+        1440
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        1.0,
+        0.3
+      ],
+      "mascot_note": "羽仔在左下苔石上，标题放上方日光金空，画面无写实摄影师"
+    },
+    "cover_16x9": {
+      "size": [
+        1920,
+        1080
+      ],
+      "title_safe": [
+        0.0,
+        0.0,
+        0.44,
+        0.34
+      ],
+      "mascot_note": "羽仔在左侧岩台，溪流与林木留在右侧，标题放左上暖空，画面无写实摄影师"
+    }
+  },
+  "animation": {
+    "clips": [
+      "fan",
+      "look",
+      "hop"
+    ],
+    "sheet": "6x4",
+    "fps_src": 24,
+    "fps_play": 12,
+    "chroma": "#FF00AA",
+    "video_default_resolution": "480p（480×640）",
+    "key_note": "品红抠像，不用绿幕；去溢色时保护绿大于红的苔藓、叶子和鸟羽，以及日光金尾与奶油胸，以免苔藓被抠穿。",
+    "clips_meta": {
+      "fan": {
+        "fw": 480,
+        "fh": 404,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b26-mascot-sheet-fan.webp"
+        ],
+        "fallback": "b26-mascot-sheet-fan.png",
+        "still": "b26-mascot-still-fan.png",
+        "body": {
+          "crop_from_video": [
+            0,
+            101,
+            480,
+            505
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b26-anim-01-fan.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            219.53502207956697,
+            228.4650618545479
+          ],
+          "anchor_norm": [
+            0.4573646293324312,
+            0.5655075788478908
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "look": {
+        "fw": 378,
+        "fh": 358,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b26-mascot-sheet-look.webp"
+        ],
+        "fallback": "b26-mascot-sheet-look.png",
+        "still": "b26-mascot-still-look.png",
+        "body": {
+          "crop_from_video": [
+            35,
+            148,
+            413,
+            506
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b26-anim-02-look.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            184.522378451043,
+            181.47002406471665
+          ],
+          "anchor_norm": [
+            0.48815444034667466,
+            0.506899508560661
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      },
+      "hop": {
+        "fw": 396,
+        "fh": 458,
+        "cols": 6,
+        "rows": 4,
+        "n": 24,
+        "fps": 12,
+        "sheets": [
+          "b26-mascot-sheet-hop.webp"
+        ],
+        "fallback": "b26-mascot-sheet-hop.png",
+        "still": "b26-mascot-still-hop.png",
+        "body": {
+          "crop_from_video": [
+            23,
+            47,
+            419,
+            505
+          ],
+          "video_size": [
+            480,
+            640
+          ],
+          "src": "b26-anim-03-hop.mp4",
+          "sample_indices": [
+            0,
+            5,
+            10,
+            16,
+            21,
+            26,
+            31,
+            37,
+            42,
+            47,
+            52,
+            57,
+            63,
+            68,
+            73,
+            78,
+            83,
+            89,
+            94,
+            99,
+            104,
+            110,
+            115,
+            120
+          ],
+          "loop_blend_frames": 10,
+          "chroma": "#FF00AA",
+          "anchor": [
+            196.51949918610623,
+            282.46011291941784
+          ],
+          "anchor_norm": [
+            0.49626136158107637,
+            0.6167251373786415
+          ],
+          "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+        }
+      }
+    }
+  },
+  "anchors": {
+    "hero_canvas": [
+      1360,
+      1360
+    ],
+    "prop": "鸟 512 画布，锚点取脚爪接触点（包围盒下方约百分之九十二），六态共用同一缩放。诱导物与线索默认质心。安全圈与过近圈中心 (256,256)。",
+    "fx": [
+      256,
+      256
+    ],
+    "ui": "快门与对焦框中心；胶片条为先铺 track 与 fill，再叠 frame",
+    "animation": "静息姿态为第零帧最大连通域质心，见各 json"
+  },
+  "bird_states": [
+    "idle",
+    "drink",
+    "display",
+    "feed",
+    "preen",
+    "startle"
+  ]
+}
