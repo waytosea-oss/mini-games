@@ -1,0 +1,18 @@
+{
+  "fw": 280,
+  "fh": 480,
+  "cols": 4,
+  "rows": 3,
+  "n": 12,
+  "fps": 10,
+  "loop": true,
+  "anchor": {
+    "x": 140,
+    "y": 450
+  },
+  "sheets": [
+    "acc-shoulder.webp"
+  ],
+  "still": "acc-shoulder-still.webp",
+  "body": "full-frame, not cut into parts"
+}

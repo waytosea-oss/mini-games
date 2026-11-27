@@ -58,6 +58,26 @@
     }
     h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: .08em; }
     .go { color: #e7c98a; margin: 8px 0 0; }
+    .thumb {
+      width: 112px;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center 18%;
+      border-radius: 12px;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.4));
+    }
+    h2 .new {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 7px 1px;
+      border-radius: 999px;
+      background: #e7c98a;
+      color: #2a1608;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      vertical-align: 2px;
+    }
   </style>
 </head>
 <body>
@@ -65,6 +85,14 @@
     <p class="eyebrow">第三批 · 预览目录</p>
     <h1>试玩预览</h1>
     <p>这里只列出本批已经做好的试玩。进度存在这台设备上。</p>
+    <a class="card" href="lampdress/index.html">
+      <img class="thumb" src="lampdress/art/cover/cover.webp" alt="折纸礼服模特站在拱门灯下">
+      <div>
+        <h2>灯影换装 <span class="new">NEW</span></h2>
+        <p>同一件衣服，正面是造型，灯下是另一场戏。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
     <a class="card" href="cloudship/index.html">
       <div class="sprite sail" id="cloud-sprite" role="img" aria-label="云舰动画封面"></div>
       <div>
