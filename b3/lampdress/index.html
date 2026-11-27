@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#4a2040">
+<title>灯影换装</title>
+<link rel="icon" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<link rel="preload" as="image" href="art/cover/cover.webp?v=20261127a">
+<link rel="stylesheet" href="style.css?v=20261127a">
+</head><body>
+<div id="toast"></div>
+<div class="scr on" id="menu">
+  <div class="coverWrap" aria-hidden="true">
+    <img class="coverBlur" src="art/cover/cover.webp?v=20261127a" alt="">
+    <img class="cover" id="coverImg" src="art/cover/cover.webp?v=20261127a" alt="">
+    <video class="cover" id="coverVid" muted playsinline autoplay loop preload="none" poster="art/cover/cover.webp?v=20261127a"></video>
+  </div>
+  <div class="topRow">
+    <button class="ic light" id="mHub" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="sp"></div>
+    <button class="ic light" id="mHelp">？</button>
+    <button class="ic light" id="mSnd">声</button>
+  </div>
+  <div class="mTitle"><h1>灯影换装</h1><p>正面是造型，灯下是另一场戏</p><p class="ver" id="verTag">v20261127a</p></div>
+  <div class="mGrow"></div>
+  <div class="mFooter">
+    <div class="modeLine">
+      <button type="button" id="modeFree" class="on">自由选题</button>
+      <button type="button" id="modeDaily">今日一题</button>
+    </div>
+    <div class="resStars" id="resStars">灯影星章 0／54</div>
+    <div class="mission">
+      <div class="mh"><span>工坊</span><span class="ms" id="mMeta">结构题 · 不打美丑分</span></div>
+      <div class="siteList" id="siteList"></div>
+      <div class="lvMap" id="lvMap"></div>
+    </div>
+    <div class="goalLine" id="goalLine">目标：宽肩收腰，保留1层透光</div>
+    <button class="cta" id="bPlay">上台 · 三角剪影</button>
+  </div>
+  <div class="aiNote">部分美术与动画由 AI 生成</div>
+</div>
+<div class="scr" id="play">
+  <canvas id="cv" width="390" height="844"></canvas>
+  <div class="hud">
+    <div class="hudTop">
+      <button class="ic" id="pBack">←</button>
+      <div class="pill" id="accPill">配件 0／3</div>
+      <div class="sp"></div>
+      <div class="pill ok" id="structPill">结构 0／3</div>
+      <div class="sp"></div>
+      <button class="ic" id="pSnd" aria-label="声音">声</button>
+      <button class="ic" id="pPause">Ⅱ</button>
+    </div>
+  </div>
+  <button type="button" class="edgeToggle" id="bEdge" aria-pressed="false">目标边缘</button>
+  <div class="coach" id="coach"></div>
+  <div class="playMsg" id="playMsg"></div>
+  <div class="dock">
+    <button class="mod" id="bLayer">分层</button>
+    <button class="mod" id="bColor">配色</button>
+    <button class="mod go" id="bPhoto">拍照</button>
+  </div>
+  <div class="hintBar">分层穿衣 · 拖灯看剪影 · 结构达标再拍照</div>
+</div>
+<div class="modal" id="layerModal" hidden>
+  <div class="modalCard">
+    <button class="x" id="layerX">×</button>
+    <div class="mcTitle">服装分层</div>
+    <div class="mcDesc">先选定内／中／外层再点服装放入，也可以把衣服拖到页签上。半透明与镂空保留透光。</div>
+    <div class="layerTabs"><button class="lt on" data-l="inner">内层</button><button class="lt" data-l="mid">中层</button><button class="lt" data-l="outer">外层</button><button class="lt" data-l="acc">配件</button></div>
+    <div class="wardrobe" id="wardrobe"></div>
+    <button class="ghost" id="bClearLayer">清空当前层</button>
+  </div>
+</div>
+<div class="modal" id="colorModal" hidden>
+  <div class="modalCard">
+    <button class="x" id="colorX">×</button>
+    <div class="mcTitle">配色</div>
+    <div class="mcDesc">颜色不影响结构判定，只影响正面观感。</div>
+    <div class="swatches" id="swatches"></div>
+  </div>
+</div>
+<div class="scr" id="result">
+  <div class="coverWrap" id="resultStage" aria-hidden="true">
+    <img class="coverBlur" id="resultBlur" alt="">
+    <img class="cover" id="resultCover" alt="">
+    <div class="resultArt" id="resultArt">
+      <canvas class="resultPhoto" id="photoFront"></canvas>
+      <canvas class="resultPhoto" id="photoSil"></canvas>
+      <img class="resultFrame" id="resultFrame" alt="">
+      <div class="resultCap" id="capFront">正面</div>
+      <div class="resultCap" id="capSil">剪影</div>
+    </div>
+  </div>
+  <div class="rHead" id="rHeadBox"><h2 id="rTitle">双联照已收藏</h2><p id="rSub">结构条件全部满足</p></div>
+  <div class="rBody">
+    <div class="stars" id="rStars"></div>
+    <div class="rCard" id="rCard">
+      <div class="rH"><span>结构条件</span><span class="rCount" id="rStructCount">0／0</span></div>
+      <div class="rPills" id="rPills"></div>
+      <div class="rMeta" id="rMeta">配件 0／3 · 配色由你决定，不计分</div>
+    </div>
+    <div class="rCard unlock hide" id="rUnlock">
+      <div class="uTag">已解锁</div>
+      <div class="uRow"><img class="uIcon" id="uIcon" alt=""><div><div class="uLab">下一主题</div><div class="uName" id="uName">对称斗篷</div><div class="uDesc" id="uDesc">新材质组合</div></div></div>
+    </div>
+    <button class="cta" id="bAgain">再上一题</button>
+    <button class="link" id="bAlbum">查看收藏</button>
+    <button class="link" id="bMenu">返回选题</button>
+  </div>
+</div>
+<div class="modal" id="pauseModal" hidden><div class="modalCard thin"><div class="mcTitle">暂停</div>
+  <button class="cta" id="bResume">继续</button><button class="ghost" id="bRestart">重开本题</button><button class="ghost" id="bQuit">返回选题</button>
+</div></div>
+<div class="modal" id="helpModal" hidden><div class="modalCard"><button class="x" id="helpX">×</button><div class="mcTitle">怎么玩</div>
+  <ul class="helpList">
+    <li>先选定内／中／外层，再点服装放入；也可以把衣服拖到某一层。配饰进配件槽，最多 3 件。</li>
+    <li>灯位是一条解法轴。侧光、低灯、高灯或正中，留在起点过不了后面的结构题。</li>
+    <li>对比窗可打开「目标边缘」，只叠目标轮廓，不判断美丑。颜色也不打分。</li>
+    <li>半透明与镂空会透出内层。结构达标才可拍照通关。</li>
+    <li>一次拍过是 3 星，试拍失败 1－2 次是 2 星，再多是 1 星。</li>
+    <li>完成「层叠透光」后开放自由造型，无失败只收藏。首页有灯影星章与今日一题。</li>
+  </ul>
+  <button class="cta" id="helpOk">知道了</button>
+</div></div>
+
+<div class="modal" id="albumModal" hidden>
+  <div class="modalCard albumCard">
+    <button class="x" id="albumX">×</button>
+    <div class="mcTitle">收藏</div>
+    <div class="mcDesc" id="albumMeta">尚无收藏</div>
+    <div class="albumGrid" id="albumGrid"></div>
+  </div>
+</div>
+<div class="modal" id="albumView" hidden>
+  <div class="modalCard albumViewCard">
+    <button class="x" id="albumViewX">×</button>
+    <div class="mcTitle" id="albumViewTitle">双联照</div>
+    <div class="mcDesc" id="albumViewSub"></div>
+    <div class="albumPair">
+      <figure class="albumFig"><div class="albumBig" id="viewFrontWrap"></div><figcaption>正面</figcaption></figure>
+      <figure class="albumFig"><div class="albumBig" id="viewSilWrap"></div><figcaption>剪影</figcaption></figure>
+    </div>
+  </div>
+</div>
+<script src="pk.js?v=20261127a"></script>
+<script src="game.js?v=20261127a"></script>
+</body></html>
