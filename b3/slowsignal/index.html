@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="慢信号台：虚构海岸的一夜。转动旋钮，听清呼叫，再把靛蓝木船和琥珀木板车派出去。">
+  <meta name="theme-color" content="#0E1A33">
+  <title>慢信号台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='3' width='10' height='10' rx='2' fill='%232C4A7A'/%3E%3Ccircle cx='8' cy='8' r='2' fill='%23E8A83A'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <section id="screen-cover" class="screen">
+    <img id="cover-bg" class="cover-bg" alt="" src="b30-cover-3x4-bg.webp">
+    <div class="topbar">
+      <a class="tool" href="../index.html">返回预览</a>
+      <span class="grow"></span>
+      <button type="button" class="icon-btn" data-music aria-pressed="true" aria-label="音乐">乐</button>
+    </div>
+    <div class="cover-copy">
+      <p class="eyebrow">海岸夜班</p>
+      <h1>慢信号台</h1>
+      <p class="sub">转动旋钮，听清虚构的呼叫，再把靛蓝木船和琥珀木板车派出去。</p>
+      <p class="fiction">所有呼叫都是虚构的，不连接真实电话、位置或紧急救援。</p>
+    </div>
+    <div id="cover-mascot" class="cover-mascot" data-clip="tune" tabindex="0" role="button" aria-label="靛蓝毛毡电台在调频"></div>
+    <div class="cover-actions">
+      <button type="button" class="btn-gold" id="btn-start">开始夜班</button>
+      <button type="button" class="btn" id="btn-continue" hidden>继续夜班</button>
+    </div>
+  </section>
+
+  <section id="screen-play" class="screen" hidden>
+    <img id="scene-bg" class="scene-bg" alt="" src="scene/b30-scene-portrait.webp">
+    <div class="zone zone-radio">
+      <div id="play-mascot" class="play-mascot" role="img" aria-label="靛蓝毛毡电台"></div>
+      <img id="wave" class="wave" alt="" src="ui/b30-ui-wave-silent.png">
+      <button type="button" class="nudge down" id="btn-knob-down">偏低</button>
+      <div class="knob-wrap" id="knob-wrap" role="slider" aria-label="调频旋钮" aria-valuemin="0" aria-valuemax="1" tabindex="0">
+        <img class="dial" alt="" src="props/b30-dial.png">
+        <img class="knob" id="knob" alt="" src="props/b30-knob.png">
+      </div>
+      <button type="button" class="nudge up" id="btn-knob-up">偏高</button>
+      <p id="subtitle" class="subtitle">这一段很安静。</p>
+      <div class="radio-tools">
+        <a class="tool" href="../index.html">返回</a>
+        <button type="button" class="icon-btn" id="btn-log" aria-label="阅读日志">
+          <img alt="" src="ui/b30-ui-mark-log.png">
+        </button>
+        <button type="button" class="tool" id="btn-tree">事件</button>
+        <button type="button" class="icon-btn" id="btn-pause" aria-label="暂停">
+          <img alt="" src="ui/b30-ui-icon-pause.png">
+        </button>
+        <span class="grow"></span>
+        <button type="button" class="icon-btn" data-music aria-pressed="true" aria-label="音乐">乐</button>
+      </div>
+    </div>
+    <div class="zone zone-map">
+      <div class="map-stage" id="map-stage">
+        <img id="map-img" alt="" src="scene/b30-map.webp">
+        <div id="tokens"></div>
+      </div>
+      <p id="coach" class="coach"></p>
+    </div>
+    <div class="zone zone-cards" id="cards"></div>
+    <div class="zone zone-meters" aria-label="剧情时间">
+      <div class="clock" id="clock">
+        <img alt="" src="ui/b30-ui-clock-face.png">
+        <img class="hand" id="hand-long" alt="" src="ui/b30-ui-clock-hand-long.png">
+        <img class="hand" id="hand-short" alt="" src="ui/b30-ui-clock-hand-short.png">
+      </div>
+      <div class="arc" id="arc">
+        <img id="arc-fill" alt="" src="ui/b30-ui-time-fill-full.png">
+        <img alt="" src="ui/b30-ui-time-frame.png">
+      </div>
+    </div>
+    <div class="zone zone-teams">
+      <button type="button" class="pip" id="pip-boat" data-team="boat">
+        <img id="pip-boat-mark" alt="" src="ui/b30-ui-team-idle.png">
+        <span><b>靛蓝木船</b><em id="pip-boat-phase">待命</em></span>
+      </button>
+      <button type="button" class="pip" id="pip-cart" data-team="cart">
+        <img id="pip-cart-mark" alt="" src="ui/b30-ui-team-idle.png">
+        <span><b>琥珀木板车</b><em id="pip-cart-phase">待命</em></span>
+      </button>
+    </div>
+    <img id="fx" alt="" hidden>
+    <p id="toast" class="toast" hidden></p>
+
+    <div id="overlay-log" class="overlay" hidden>
+      <div class="panel" role="dialog" aria-label="日志">
+        <h2>日志</h2>
+        <p class="fiction">翻开日志停在原处，不推动这一夜。</p>
+        <div id="log-list"></div>
+        <div class="panel-actions">
+          <button type="button" class="btn-gold" data-close="overlay-log">合上</button>
+        </div>
+      </div>
+    </div>
+    <div id="overlay-tree" class="overlay" hidden>
+      <div class="panel" role="dialog" aria-label="事件树">
+        <h2>事件</h2>
+        <p class="fiction">实心是走过的节点，空心是没有沿用的分支。跳回停在那个节点，不另扣时间。</p>
+        <div id="tree-list"></div>
+        <div class="panel-actions">
+          <button type="button" class="btn" id="btn-close-chapter">收束这一夜</button>
+          <button type="button" class="btn-gold" data-close="overlay-tree">回到台前</button>
+        </div>
+      </div>
+    </div>
+    <div id="overlay-pause" class="overlay" hidden>
+      <div class="panel" role="dialog" aria-label="暂停">
+        <h2>先停在这里</h2>
+        <p>夜班停在这一刻。所有呼叫都是虚构的，不连接真实电话、位置或紧急救援。</p>
+        <div class="panel-actions">
+          <button type="button" class="btn-gold" id="btn-resume">继续</button>
+          <button type="button" class="btn" id="btn-restart">再值一夜</button>
+          <a class="tool" href="../index.html">返回预览</a>
+        </div>
+      </div>
+    </div>
+    <div id="overlay-ending" class="overlay" hidden>
+      <div class="panel" role="dialog" aria-label="结章">
+        <p class="eyebrow">这一夜</p>
+        <h2 id="end-title"></h2>
+        <div id="end-lines"></div>
+        <div class="panel-actions">
+          <button type="button" class="btn" id="btn-end-tree">事件</button>
+          <button type="button" class="btn" id="btn-end-root">跳回入夜</button>
+          <button type="button" class="btn-gold" id="btn-end-restart">再值一夜</button>
+          <a class="tool" href="../index.html">返回预览</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="logic.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

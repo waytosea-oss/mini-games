@@ -40,6 +40,11 @@
     }
     a.card + a.card { margin-top: 14px; }
     a.card:focus-visible { outline: 2px solid #e7c98a; outline-offset: 3px; }
+    .sprite.sail { aspect-ratio: 358 / 422; }
+    .sprite.fan { aspect-ratio: 480 / 404; }
+    .sprite.climb { aspect-ratio: 392 / 444; }
+    .sprite.isle { aspect-ratio: 370 / 454; }
+    .sprite.radio { aspect-ratio: 374 / 456; }
     .sprite.lantern { aspect-ratio: 443 / 420; }
     .sprite.postman { aspect-ratio: 306 / 426; }
     .sprite.jelly { aspect-ratio: 404 / 412; }
@@ -60,6 +65,46 @@
     <p class="eyebrow">第三批 · 预览目录</p>
     <h1>试玩预览</h1>
     <p>这里只列出本批已经做好的试玩。进度存在这台设备上。</p>
+    <a class="card" href="cloudship/index.html">
+      <div class="sprite sail" id="cloud-sprite" role="img" aria-label="云舰动画封面"></div>
+      <div>
+        <h2>云舰棋局</h2>
+        <p>在六角云海上排布小舰队，借风向和预设敌阵打满八个回合。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="wildlight/index.html">
+      <div class="sprite fan" id="wild-sprite" role="img" aria-label="展尾动画封面"></div>
+      <div>
+        <h2>野光图鉴</h2>
+        <p>拖视角找观察位，对焦拍下饮水、展羽和喂食。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="cloudclimb/index.html">
+      <div class="sprite climb" id="climb-sprite" role="img" aria-label="探手动画封面"></div>
+      <div>
+        <h2>云端攀行</h2>
+        <p>沿抓点往上攀，在休息台把体力喘回来，再到山脊。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="feltisle/index.html">
+      <div class="sprite isle" id="isle-sprite" role="img" aria-label="毛毡岛灵动画封面"></div>
+      <div>
+        <h2>方寸生态</h2>
+        <p>在十五片平顶六角里，让连通和多样性一起站住。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
+    <a class="card" href="slowsignal/index.html">
+      <div class="sprite radio" id="slow-sprite" role="img" aria-label="调频动画封面"></div>
+      <div>
+        <h2>慢信号台</h2>
+        <p>转动旋钮，听清虚构海岸上的呼叫，再把两支队伍派出去。</p>
+        <p class="go">进入试玩</p>
+      </div>
+    </a>
     <a class="card" href="starlock/index.html">
       <div class="sprite" id="cover-sprite" role="img" aria-label="星核动画封面"></div>
       <div>
@@ -300,6 +345,206 @@
       var fw = 382, fh = 460, cols = 6, n = 24, ax = 187.87, ay = 262.68, frame = 0;
       var sheet = "packtrek/assets/anim/b07-mascot-sheet-glow-pulse.webp";
       var still = "packtrek/assets/anim/b07-mascot-still-glow-pulse.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("cloud-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 358, fh = 422, cols = 6, n = 24, ax = 146.131, ay = 242.744, frame = 0;
+      var sheet = "cloudship/assets/anim/b08-mascot-sheet-wind.webp";
+      var still = "cloudship/assets/anim/b08-mascot-still-wind.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.86) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("wild-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 480, fh = 404, cols = 6, n = 24, ax = 219.535, ay = 228.465, frame = 0;
+      var sheet = "wildlight/assets/anim/b26-mascot-sheet-fan.webp";
+      var still = "wildlight/assets/anim/b26-mascot-still-fan.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("climb-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 392, fh = 444, cols = 6, n = 24, ax = 222.6439917135615, ay = 232.70595165346208, frame = 0;
+      var sheet = "cloudclimb/assets/anim/b27-mascot-sheet-reach.webp";
+      var still = "cloudclimb/assets/anim/b27-mascot-still-reach.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell")) return;
+        img.setAttribute("data-fell", "1");
+        sheet = still;
+        reduce = true;
+        img.src = still;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("isle-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 370, fh = 454, cols = 6, n = 24, ax = 185.3894527699707, ay = 266.44488982577997, frame = 0;
+      var sheet = "feltisle/assets/anim/b29-mascot-sheet-place.webp";
+      var png = "feltisle/assets/anim/b29-mascot-sheet-place.png";
+      var still = "feltisle/assets/anim/b29-mascot-still-place.png";
+      function tick() {
+        var w = el.clientWidth || 112;
+        var scale = (w * 0.92) / fw;
+        var dw = fw * scale;
+        var dh = fh * scale;
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundImage = "url('" + (reduce ? still : sheet) + "')";
+        if (reduce) {
+          el.style.backgroundSize = dw + "px " + dh + "px";
+          el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale) + "px";
+          return;
+        }
+        var col = frame % cols;
+        var row = Math.floor(frame / cols);
+        el.style.backgroundSize = (dw * cols) + "px " + (dh * 4) + "px";
+        el.style.backgroundPosition = ((w - dw) / 2 + (fw / 2 - ax) * scale - col * dw) + "px " + ((el.clientHeight - dh) / 2 + (fh / 2 - ay) * scale - row * dh) + "px";
+      }
+      var img = new Image();
+      img.onload = function () {
+        tick();
+        if (!reduce) setInterval(function () { frame = (frame + 1) % n; tick(); }, 1000 / 12);
+        window.addEventListener("resize", tick);
+      };
+      img.onerror = function () {
+        if (img.getAttribute("data-fell") === "png") {
+          sheet = still;
+          reduce = true;
+          img.src = still;
+          return;
+        }
+        img.setAttribute("data-fell", "png");
+        sheet = png;
+        img.src = png;
+      };
+      img.src = sheet;
+    })();
+    (function () {
+      var el = document.getElementById("slow-sprite");
+      if (!el) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var fw = 374, fh = 456, cols = 6, n = 24, ax = 203.83467725405836, ay = 260.20060985225825, frame = 0;
+      var sheet = "slowsignal/anim/b30-mascot-sheet-tune.webp";
+      var still = "slowsignal/anim/b30-mascot-still-tune.png";
       function tick() {
         var w = el.clientWidth || 112;
         var scale = (w * 0.92) / fw;

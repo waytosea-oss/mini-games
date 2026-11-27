@@ -1,0 +1,64 @@
+{
+  "fw": 374,
+  "fh": 456,
+  "cols": 6,
+  "rows": 4,
+  "n": 24,
+  "fps": 12,
+  "sheets": [
+    "b30-mascot-sheet-tune.webp"
+  ],
+  "fallback": "b30-mascot-sheet-tune.png",
+  "still": "b30-mascot-still-tune.png",
+  "body": {
+    "crop_from_video": [
+      35,
+      89,
+      409,
+      545
+    ],
+    "video_size": [
+      480,
+      640
+    ],
+    "src": "b30-anim-01-tune.mp4",
+    "sample_indices": [
+      0,
+      5,
+      10,
+      16,
+      21,
+      26,
+      31,
+      37,
+      42,
+      47,
+      52,
+      57,
+      63,
+      68,
+      73,
+      78,
+      83,
+      89,
+      94,
+      99,
+      104,
+      110,
+      115,
+      120
+    ],
+    "loop_blend_frames": 10,
+    "chroma": "#FF00AA",
+    "key_note": "品红抠像 #FF00AA，保护靛蓝毛毡、琥珀灯光、黄铜与旧木（红大于蓝），不用绿幕",
+    "anchor": [
+      203.83467725405836,
+      260.20060985225825
+    ],
+    "anchor_norm": [
+      0.545012506026894,
+      0.5706153724830225
+    ],
+    "anchor_note": "rest-pose body centroid of largest CC on frame 0"
+  }
+}

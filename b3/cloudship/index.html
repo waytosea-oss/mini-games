@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="云舰棋局：在尖顶六角云海上排布小舰队，借风向和预设敌阵打八个回合。">
+  <title>云舰棋局</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.2 14 4.6v6.8L8 14.8 2 11.4V4.6Z' fill='none' stroke='%23C4A35A' stroke-width='1.4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.toggle('land', innerWidth > innerHeight);</script>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <section id="screen-cover" class="screen">
+      <img id="cover-bg" class="fill" alt="">
+      <canvas id="cover-actor" class="fill" aria-hidden="true"></canvas>
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="cover-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <div class="cover-copy">
+        <p class="eyebrow">云海 · 回合</p>
+        <h1>云舰棋局</h1>
+        <p class="sub">排布小云舰，看清风向再和预设敌阵交手。</p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-teach">教学四回合</button>
+          <button type="button" id="btn-chapter">八回合章节</button>
+          <button type="button" id="btn-continue" hidden>继续本局</button>
+        </div>
+        <p class="wait" id="cover-wait">云图还在铺开。</p>
+      </div>
+    </section>
+
+    <section id="screen-play" class="screen" hidden>
+      <img id="scene" class="fill" alt="">
+      <a class="back" href="../index.html">返回预览</a>
+      <button type="button" class="music" id="play-music" aria-label="音乐" aria-pressed="true">乐</button>
+      <p class="turn" id="turn-label">回合 1</p>
+
+      <div class="zone-dura" id="dura">
+        <img class="layer" id="dura-track" alt="">
+        <div class="clip" id="dura-clip"><img id="dura-fill" alt=""></div>
+        <img class="layer" id="dura-frame" alt="">
+        <b id="dura-num">耐久 18</b>
+      </div>
+      <div class="zone-supply" id="supply">
+        <img class="layer" id="supply-track" alt="">
+        <div class="clip" id="supply-clip"><img id="supply-fill" alt=""></div>
+        <img class="layer" id="supply-frame" alt="">
+        <b id="supply-num">可花 5</b>
+      </div>
+
+      <div class="zone-wind">
+        <button type="button" class="rose" id="rose" aria-label="转动风向">
+          <img id="rose-bg" alt="">
+          <img id="rose-ptr" alt="">
+        </button>
+        <p class="wind-name" id="wind-name">东 · 短</p>
+        <div class="reaches" id="reaches">
+          <button type="button" data-reach="1" aria-label="短风"><img id="reach-1" alt=""></button>
+          <button type="button" data-reach="2" aria-label="中风"><img id="reach-2" alt=""></button>
+          <button type="button" data-reach="3" aria-label="长风"><img id="reach-3" alt=""></button>
+        </div>
+      </div>
+
+      <div class="zone-board">
+        <canvas id="board"></canvas>
+        <p class="hint" id="hint"></p>
+      </div>
+
+      <div class="zone-bench">
+        <div class="cards" id="cards">
+          <button type="button" class="card" data-cls="light" aria-label="购买轻舰">
+            <img class="frame" alt="">
+            <img class="mini" id="card-light" alt="">
+            <span>轻舰</span>
+            <b>3</b>
+          </button>
+          <button type="button" class="card" data-cls="heavy" aria-label="购买重舰">
+            <img class="frame" alt="">
+            <img class="mini" id="card-heavy" alt="">
+            <span>重舰</span>
+            <b>4</b>
+          </button>
+        </div>
+        <div class="ops">
+          <button type="button" class="op" id="btn-battle" aria-label="开战">
+            <img id="icon-battle" alt="">
+            <span>开战</span>
+          </button>
+          <button type="button" class="op" id="btn-slow" aria-label="慢镜" aria-pressed="false">
+            <img id="icon-slow" alt="">
+            <span>慢镜</span>
+          </button>
+          <button type="button" class="op" id="btn-end" aria-label="结束整备">
+            <img id="icon-end" alt="">
+            <span>结束整备</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet" hidden>
+        <p id="sheet-title">选一次专精</p>
+        <button type="button" id="btn-escort" aria-label="护航"><img id="icon-escort" alt=""><span>护航</span></button>
+        <button type="button" id="btn-scout" aria-label="侦察"><img id="icon-scout" alt=""><span>侦察</span></button>
+        <button type="button" id="btn-sell">收回</button>
+      </div>
+
+      <p class="banner" id="banner" aria-live="polite"></p>
+
+      <div class="report" id="report" hidden>
+        <h2 id="report-title">这一回合</h2>
+        <div class="stars" id="stars" aria-label="胜因"></div>
+        <p id="report-copy"></p>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-next">下一回合</button>
+          <button type="button" id="btn-retry">再布这一回合</button>
+          <button type="button" id="btn-restart">从头再来</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="sim.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
